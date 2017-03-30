@@ -1,0 +1,346 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{09DEFCE2-5843-4250-8825-9049C0565B64}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ConsoleApplication1</RootNamespace>
+    <AssemblyName>ConsoleApplication1</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;MARKERS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;MARKERS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FTD2XX_NET">
+      <HintPath>..\..\freepository\Loopback-New\trunk\bin\FTD2XX_NET.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlRenderer, Version=1.5.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlRenderer.Core.1.5.0.6\lib\net45\HtmlRenderer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="HtmlRenderer.WinForms, Version=1.5.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlRenderer.WinForms.1.5.0.6\lib\net45\HtmlRenderer.WinForms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ConcurrencyVisualizer.Markers">
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\Extensions\igymbvey.4hf\SDK\Managed\4.0\Microsoft.ConcurrencyVisualizer.Markers.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.D3DCompiler, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\SharpDX.D3DCompiler.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct3D11, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\SharpDX.Direct3D11.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Library\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpHelper">
+      <HintPath>..\SharpHelper\bin\Debug\SharpHelper.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsFormsControlLibrary1">
+      <HintPath>..\..\stuff\WindowsFormsApplication2\WindowsFormsControlLibrary1\bin\Debug\WindowsFormsControlLibrary1.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AboutBox1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutBox1.Designer.cs">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AccessBitmap.cs" />
+    <Compile Include="AppSettings.cs" />
+    <Compile Include="Change.cs" />
+    <Compile Include="cntxtMenuItem.cs" />
+    <Compile Include="Dialogs\DialogsBase.cs" />
+    <Compile Include="Dialogs\dlgProps.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\dlgProps.Designer.cs" />
+    <Compile Include="Dialogs\IDialogs.cs" />
+    <Compile Include="DisplayInfo.cs" />
+    <Compile Include="DrawData.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="IPixelSource.cs" />
+    <Compile Include="PixelBMP.cs" />
+    <Compile Include="PixelList.cs" />
+    <Compile Include="PixSrc\IPixSrc.cs" />
+    <Compile Include="PixSrc\MapPixPS.cs" />
+    <Compile Include="PixSrc\PaletPS.cs" />
+    <Compile Include="PixSrc\PS.cs" />
+    <Compile Include="PixSrc\PSData.cs" />
+    <Compile Include="PixSrc\SingleColorPS.cs" />
+    <Compile Include="PixSrc\TintPS.cs" />
+    <Compile Include="PixSrc\XFadePS.cs" />
+    <Compile Include="StepTransition.cs" />
+    <Compile Include="StepTransition_Fade.cs" />
+    <Compile Include="ILiteEffect.cs" />
+    <Compile Include="ILiteElement.cs" />
+    <Compile Include="IRunTime.cs" />
+    <Compile Include="KeyFrame.cs" />
+    <Compile Include="Models\BitMapImg.cs" />
+    <Compile Include="ObservableDictionary.cs" />
+    <Compile Include="StepTransition_Position.cs" />
+    <Compile Include="PropDialogItem.cs" />
+    <Compile Include="RunTime.cs" />
+    <Compile Include="SampleAggregator.cs" />
+    <Compile Include="Steps\StepAttribute.cs" />
+    <Compile Include="TimeMark.cs" />
+    <Compile Include="Views\DMXLit.cs" />
+    <Compile Include="Views\DMXStrand.cs" />
+    <Compile Include="Views\GECELit.cs" />
+    <Compile Include="Views\Strand.cs" />
+    <Compile Include="Visuals\SliderThumb.cs" />
+    <Compile Include="Visuals\SliderThumbRes.cs" />
+    <Compile Include="Visuals\SliderRes.cs" />
+    <Compile Include="Visuals\Slider.cs" />
+    <Compile Include="Visuals\Drag.cs" />
+    <Compile Include="Visuals\Beat.cs" />
+    <Compile Include="Cntrl\Cntrl.cs" />
+    <Compile Include="Cntrl\TreeCntrl.cs" />
+    <Compile Include="Cntrl\USBCntrl.cs" />
+    <Compile Include="CustomStripRenderer.cs" />
+    <Compile Include="Display.cs" />
+    <Compile Include="TreeTransition.cs" />
+    <Compile Include="Dynamic.cs" />
+    <Compile Include="FontUpdate.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Global.cs" />
+    <Compile Include="Visuals\DragMode.cs" />
+    <Compile Include="Visuals\DragRes.cs" />
+    <Compile Include="Visuals\BeatRes.cs" />
+    <Compile Include="Visuals\LoopBegin.cs" />
+    <Compile Include="Visuals\LoopBeginRes.cs" />
+    <Compile Include="Visuals\LoopEnd.cs" />
+    <Compile Include="Visuals\LoopEndRes.cs" />
+    <Compile Include="Visuals\LoopRange.cs" />
+    <Compile Include="Visuals\LoopRangeRes.cs" />
+    <Compile Include="Visuals\Lyric.cs" />
+    <Compile Include="Visuals\LyricBg.cs" />
+    <Compile Include="MarqueUpdate.cs" />
+    <Compile Include="Visuals\LyricRes.cs" />
+    <Compile Include="Visuals\Measure.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="Point3D.cs" />
+    <Compile Include="Program1.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="RC2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="RC1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Visuals\MeasureRes.cs" />
+    <Compile Include="Visuals\Rule.cs" />
+    <Compile Include="Song.cs" />
+    <Compile Include="Visuals\RuleRes.cs" />
+    <Compile Include="Visuals\StepBgRes.cs" />
+    <Compile Include="Visuals\StepI.cs" />
+    <Compile Include="Visuals\StepBase.cs" />
+    <Compile Include="Visuals\StepMessage.cs" />
+    <Compile Include="Visuals\StepV.cs" />
+    <Compile Include="Visuals\StepBg.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Structs\IndexVertex.cs" />
+    <Compile Include="Update.cs" />
+    <Compile Include="StepTransition_Base.cs" />
+    <Compile Include="Tree.cs" />
+    <Compile Include="Vari.cs" />
+    <Compile Include="Views\Clr.cs" />
+    <Compile Include="Views\Lit.cs" />
+    <Compile Include="Views\MonoLit.cs" />
+    <Compile Include="Views\Pgm.cs" />
+    <Compile Include="Views\RGBLit.cs" />
+    <Compile Include="Views\GECEStrand.cs" />
+    <Compile Include="Views\View.cs" />
+    <Compile Include="Visuals\StepIRes.cs" />
+    <Compile Include="Visuals\StepBaseRes.cs" />
+    <Compile Include="Visuals\StepVRes.cs" />
+    <Compile Include="Visuals\Viz.cs" />
+    <Compile Include="Visuals\VizFactory.cs" />
+    <Compile Include="Visuals\VizRes.cs" />
+    <Compile Include="Visuals\Wave.cs" />
+    <Compile Include="Visuals\WaveRes.cs" />
+    <Compile Include="WaveformSampler.cs" />
+    <Compile Include="Win32Support.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Graphics\Stop.bmp" />
+    <None Include="Graphics\Pause.bmp" />
+    <None Include="Graphics\Repeat.bmp" />
+    <None Include="Graphics\NewDocument.bmp" />
+    <None Include="Graphics\OpenFile.bmp" />
+    <None Include="Graphics\Save.bmp" />
+    <Content Include="BitMapImgs\blueball1.bmp" />
+    <Content Include="BitMapImgs\eight.bmp" />
+    <Content Include="BitMapImgs\five.bmp" />
+    <Content Include="BitMapImgs\four.bmp" />
+    <Content Include="BitMapImgs\green2.bmp" />
+    <Content Include="BitMapImgs\green3.bmp" />
+    <Content Include="BitMapImgs\greenball1.bmp" />
+    <Content Include="BitMapImgs\Ho.bmp" />
+    <Content Include="BitMapImgs\nine.bmp" />
+    <Content Include="BitMapImgs\one.bmp" />
+    <Content Include="BitMapImgs\redball.bmp" />
+    <Content Include="BitMapImgs\redball1.bmp" />
+    <Content Include="BitMapImgs\seven.bmp" />
+    <Content Include="BitMapImgs\six.bmp" />
+    <Content Include="BitMapImgs\ten.bmp" />
+    <Content Include="BitMapImgs\three.bmp" />
+    <Content Include="BitMapImgs\tree.bmp" />
+    <Content Include="BitMapImgs\treeHO.bmp" />
+    <Content Include="BitMapImgs\treeHO1.bmp" />
+    <Content Include="BitMapImgs\treeHO2.bmp" />
+    <Content Include="BitMapImgs\two.bmp" />
+    <Content Include="BitMapImgs\zero.bmp" />
+    <Content Include="Graphics\GotoFirstRow_287_24.bmp" />
+    <Content Include="Graphics\GotoFirstRow_287_32.bmp" />
+    <Content Include="BitMapImgs\green - Copy.bmp" />
+    <Content Include="BitMapImgs\green.bmp" />
+    <Content Include="HLSLA.txt" />
+    <Content Include="HLSLRGB.txt" />
+    <Content Include="HLSL1A.txt" />
+    <Content Include="HLSL.txt" />
+    <Content Include="music.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Resources\Play.bmp" />
+    <Content Include="textfont.dds" />
+    <Content Include="Tree.txt" />
+    <Content Include="Model.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AboutBox1.resx">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\dlgProps.resx" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form2.resx">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RC2.resx">
+      <DependentUpon>RC2.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.6">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.6 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

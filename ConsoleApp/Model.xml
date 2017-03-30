@@ -1,0 +1,1404 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <Controllers>
+    <USBController nm="USB1" serial="A6FOL1K7">
+      <!--
+      <Strand nm="USB1_0" port="0"></Strand>
+      <Strand nm="USB1_1" port="1"></Strand>
+      <Strand nm="USB1_2" port="2"></Strand>
+      <Strand nm="USB1_3" port="3"></Strand>
+      -->
+      <Strand nm="USB1_4" port="4"></Strand>
+      <Strand nm="USB1_5" port="5"></Strand>
+      <Strand nm="USB1_6" port="6"></Strand>
+      <Strand nm="USB1_7" port="7"></Strand>
+      <Strand nm="USB1_8" port="8"></Strand>
+      <Strand nm="USB1_9" port="9"></Strand>
+      <Strand nm="USB1_10" port="10"></Strand>
+      <Strand nm="USB1_11" port="11"></Strand>
+      <Strand nm="USB1_12" port="12"></Strand>
+      <Strand nm="USB1_13" port="13"></Strand>
+      <Strand nm="USB1_14" port="14"></Strand>
+      <Strand nm="USB1_15" port="15"></Strand>
+      <Strand nm="USB1_16" port="16"></Strand>
+      <Strand nm="USB1_17" port="17"></Strand>
+      <Strand nm="USB1_18" port="18"></Strand>
+      <Strand nm="USB1_19" port="19"></Strand>
+      <Strand nm="USB1_20" port="20"></Strand>
+    </USBController>
+    <USBController nm="USB2" serial="A6FOL1FD">
+      <!-- il -->
+      <!--
+      <Strand nm="USB1_0" port="0"></Strand>
+      <Strand nm="USB1_1" port="1"></Strand>
+      <Strand nm="USB1_2" port="2"></Strand>
+      <Strand nm="USB1_3" port="3"></Strand>
+      -->
+      <Strand nm="USB2_4" port="4"></Strand>
+      <Strand nm="USB2_5" port="5"></Strand>
+      <Strand nm="USB2_6" port="6"></Strand>
+      <Strand nm="USB2_7" port="7"></Strand>
+      <Strand nm="USB2_8" port="8"></Strand>
+      <Strand nm="USB2_9" port="9"></Strand>
+      <Strand nm="USB2_10" port="10"></Strand>
+      <Strand nm="USB2_11" port="11"></Strand>
+      <Strand nm="USB2_12" port="12"></Strand>
+      <Strand nm="USB2_13" port="13"></Strand>
+      <Strand nm="USB2_14" port="14"></Strand>
+      <Strand nm="USB2_15" port="15"></Strand>
+    </USBController>
+    <!--
+    <USBController nm="USB3" serial="A6F0L1FD">
+      <Strand nm="USB1_0" port="0"></Strand>
+      <Strand nm="USB1_1" port="1"></Strand>b
+      <Strand nm="USB1_2" port="2"></Strand>
+      <Strand nm="USB1_3" port="3"></Strand>
+      <Strand nm="USB3_4" port="4"></Strand>
+      <Strand nm="USB3_5" port="5"></Strand>
+      <Strand nm="USB3_6" port="6"></Strand>
+      <Strand nm="USB3_7" port="7"></Strand>
+      <Strand nm="USB3_8" port="8"></Strand>
+      <Strand nm="USB3_9" port="9"></Strand>
+      <Strand nm="USB3_10" port="10"></Strand>
+      <Strand nm="USB3_11" port="11"></Strand>
+      <Strand nm="USB3_12" port="12"></Strand>
+      <Strand nm="USB3_13" port="13"></Strand>
+      <Strand nm="USB3_14" port="14"></Strand>
+      <Strand nm="USB3_15" port="15"></Strand>
+    </USBController>
+    -->
+
+    <TreeController nm="tree" portname="" baudrate="9600" parity="None" databits="8" stopbits="One">
+      <Font filename="treefont.xml"/>
+    </TreeController>/>
+
+  </Controllers>
+
+  <Views>
+    <View nm="hm" main="true"  offset="-300,0,0">  <!--xexp="8 * Column - 80" yexp="8 * Row + 10"-->
+      <!--        //0x97 - test    96 - right rail   95 - porch rof   94 - main roogf
+        //   9f - chads    09e - blake     9d - left rail    9c - garage   
+        //  9b - heather   9a - jodie      9 - gable left    98 - gable right
+        //private static byte[] ports = new byte[] { 0x97 };
+
+        //private static byte[] ports = new byte[] { 0x97, 0x96, 0x95, 0x94, 0x9f, 0x9e, 0x9d, 0x9c, 0x9b, 0x9a, 0x99, 0x98 };
+-->
+      <View nm="glf" view="additionleft" rowoff="0" coloff="0" strand="USB1_9"/>
+      <View nm="grt" view="additionright" rowoff="0" coloff="0" strand="USB1_8"/>
+      <View nm="g" view="garage" rowoff="0" coloff="0" strand="USB1_12"/>
+      <View nm="plt" view="porchleft" rowoff="0" coloff="0" strand="USB1_13"/>
+      <View nm="prt" view="porchright" rowoff="0" coloff="0" strand="USB1_6"/>
+      <View nm="prf" view="porchroof" rowoff="0" coloff="0" strand="USB1_5"/>
+      <View nm="urf" view="upperroof" rowoff="0" coloff="0" strand="USB1_4"/>
+      <View nm="cdl:lt" view="candlesleft" rowoff="0" coloff="0" strand="USB2_4"/>
+      <View nm="cdl:rt" view="candlesright" rowoff="0" coloff="0" strand="USB2_5"/>
+      
+      <View nm="w1" view="win" rowoff="19" coloff="6" strand="USB1_11,USB1_16" offset="33,162,-2"/>
+      <View nm="w2" view="win" rowoff="19" coloff="25" strand="USB1_10,USB1_17" offset="156,162,-2"/>
+      <View nm="w3" view="win" rowoff="19" coloff="46" strand="USB1_15,USB1_18" offset="318,162,46"/>
+      <View nm="w4" view="win" rowoff="19" coloff="65" strand="USB1_14,USB1_19" offset="470,162,46"/>
+
+      <!--<View nm="m1" view="mini" rowoff="99" coloff="0" strand="USB2_7"/>-->
+      <Groups>
+        <Group nm="$all"/>
+        <Group nm="$r#" row="0-49"/>
+        <Group nm="$c#" col="0-84"/>
+      </Groups>
+      <GrpSeqs>
+        <GrpSeq nm="$topdown">
+          <Group grp="$r#" ndx="49-0"/>
+        </GrpSeq>
+        <GrpSeq nm="$bottomup">
+          <Group grp="$r#" ndx="0-49"/>
+        </GrpSeq>
+        <GrpSeq nm="$leftright">
+          <Group grp="$c#" ndx="0-84"/>
+        </GrpSeq>
+        <GrpSeq nm="$rightleft">
+          <Group grp="$c#" ndx="84-0"/>
+        </GrpSeq>
+      </GrpSeqs>
+    </View>
+
+    <View nm="m1" offset="50,0,-700" main="true">
+      <View nm="mm1" view="mini" strand="USB2_11"/>
+    </View>
+    <View nm="m2" offset="200,0,-700" main="true">
+      <View nm="mm2" view="mini" strand="USB2_10"/>
+    </View>
+    <View nm="m3" offset="350,0,-700" main="true">
+      <View nm="mm3" view="mini" strand="USB2_14"/>
+    </View>
+    <View nm="m4" offset="500,0,-700" main="true">
+      <View nm="mm4" view="mini" strand="USB2_12"/>
+    </View>
+    <View nm="m5" offset="650,0,-700" main="true">
+      <View nm="mm5" view="mini" strand="USB2_13"/>
+    </View>
+    <View nm="m6" offset="-475,0,-700" main="true">
+      <View nm="mm6" view="mini" strand="USB2_9"/>
+    </View>
+    <View nm="m7" offset="-625,0,-700" main="true">
+      <View nm="mm7" view="mini" strand="USB2_8"/>
+    </View>
+
+    <View nm="pole1" offset="125,-60,-700" main="true">
+      <View nm="pl1" view="pole" strand="USB2_13"/>
+    </View>
+
+    <View nm="pole2" offset="575,-60,-700" main="true">
+      <View nm="pl2" view="pole" strand="USB2_13"/>
+    </View>
+
+    <View nm="pole3" offset="-550,-60,-700" main="true">
+      <View nm="pl3" view="pole" strand="USB2_13"/>
+    </View>
+
+    <View nm="arch1" offset="150,-60,-500" main="true">
+      <View nm="ar1" view="arch" strand="USB2_12"/>
+    </View>
+
+    <!--<View nm="arch2" x="1050" y="650" main="true"
+      xbase="300 + Single(150 * Math.Cos(Math.PI * Circle / 49))"
+      ybase="150 - Single(150 * Math.Sin(Math.PI * Circle / 49))">
+      <View nm="ar2" view="arch" rowoff="0" coloff="0" strand="USB2_12"/>
+    </View>-->
+
+
+    <!--<View nm="m1" view="mini" rowoff="99" coloff="0" strand="USB2_7"/>-->
+    <!--<Groups>
+        <Group nm="$all"/>
+        <Group nm="$r#" row="0-8"/>
+        <Group nm="$c#" row="0-62"/>
+      </Groups>
+      <GrpSeqs>
+        <GrpSeq nm="$topdown">
+          <Group grp="$r#" ndx="8-0"/>
+        </GrpSeq>
+        <GrpSeq nm="$bottomup">
+          <Group grp="$r#" ndx="0-8"/>
+        </GrpSeq>
+        <GrpSeq nm="$leftright">
+          <Group grp="$c#" ndx="62-0"/>
+        </GrpSeq>
+        <GrpSeq nm="$rightleft">
+          <Group grp="$c#" ndx="0-62"/>
+        </GrpSeq>
+      </GrpSeqs>
+    </View>-->
+
+    <View nm="additionleft">
+      <!-- addition left -->
+      <line pt1="2,12,-.5" pt2="2,234,-.5" color="#000040" />
+      <line pt1="-10,234,-12.5" pt2="22,234,-12.5" color="#000040" /> <!-- return -->
+      <line pt1="-11.3483, 234.8535,-12.5" pt2="132.5,326,-12.5" color="#000040" /> <!-- roof-->
+
+      <rgb row="0" col="2" repeat="28" rowinc="1" pt="2,12,-2" ptoffset="0,8,0" class="corner"/>
+      <rgb row="28" col="0" repeat="5" colinc="1" pt="-10,234,-14" ptoffset="8,0,0" class="facia"/>
+      <rgb row="29" col="1" repeat="9" rowinc="1" colinc="1" pt="-4.6,239.15,-14" ptoffset="6.7483,4.2965,0" class="facia"/>
+    </View>
+
+    <View nm="additionright">
+      <!-- addition right -->
+      <line pt1="263.5,138,-.5" pt2="263.5,234,-.5" color="#000040" /> <!-- upper front corner -->
+      <line pt1="275,234,-12.5" pt2="243,234,-12.5" color="#000040" /> <!-- return -->
+      <line pt1="276.3483,234.8535,-12.5" pt2="132.5,326,-12.5" color="#000040" /> <!-- roof-->
+
+      <rgb row="16" col="40" repeat="12" rowinc="1" pt="263.5,138,-2" ptoffset="0,8,0" class="corner"/>
+      <rgb row="28" col="42" repeat="5" colinc="-1" pt="275,234,-14" ptoffset="-8,0,0" class="facia"/>
+      <rgb row="29" col="41" repeat="20" colinc="-1" rowinc="1" pt="269.6,239.15,-14" ptoffset="-6.7483,4.2965,0"  class="facia"/>
+      <rgb row="49" col="21" repeat="12" colinc="-1" rowinc="-1" pt="132.5,326,-14" ptoffset="-6.7483,-4.2965,0"  class="facia"/>
+    </View>
+
+    <View nm="garage">
+      <!-- garage -->
+
+      <!--  vertical lines on driveway  -->
+      <line pt1="228,10,0" pt2="228,-60,-724.5" pt3="248,-70,-828" color="#000040"/>
+      <line pt1="132,10,0" pt2="132,-70,-828" color="#000040"/>
+      <line pt1="36,10,0" pt2="36,-60,-724.5" pt3="-8,-70,-828" color="#000040"/>
+      <line pt1="-60,0,-103.5" pt2="-60,-50,-628.5" pt3="36,-60,-724.5" color="#000040"/>
+
+      <!--  horizontal lines on driveway  -->
+      <line pt1="228,10,0" pt2="36,10,0" color="#000040"/>
+      <line pt1="228,0,-103.5" pt2="-60,0,-103.5" repeat="6" ptoffset="0,-10,-103.5" color="#000040"/>
+      <line pt1="228,-60,-724.5" pt2="36,-60,-724.5" color="#000040"/>
+      <line pt1="1036,-70,-828" pt2="-464,-70,-828" color="#000040"/>
+
+      <!--  lites around garage door -->
+      <line pt1="234,10,-.5" pt2="234,82,-.5" pt3="217.5,98.5,-.5" pt4="49.5,98.5,-.5" pt5="33,82,-.5" pt6="33,10,-.5" color="#000040" />
+
+      <rgb row="0" col="34" repeat="10" rowinc="1" pt="234,10,-2" ptoffset="0,8,0" class="garage"/>
+      <rgb row="10" col="33" repeat="2" rowinc="1" colinc="-1" pt="228.5,87.5,-2" ptoffset="-5.5,5.5,0" class="garage" />
+      <rgb row="12" col="31" repeat="22" colinc="-1" pt="217.5,98.5,-2" ptoffset="-8,0,0" class="garage"/>
+      <rgb row="11" col="9" repeat="2" rowinc="-1" colinc="-1" pt="44,93,-2" ptoffset="-5.5,-5.5,0" class="garage" />
+      <rgb row="9" col="7" repeat="10" rowinc="-1" pt="33,82,-2" ptoffset="0,-8,0" class="garage"/>
+    </View>
+
+    <View nm="candlesleft" offset="0,0,0">
+      <!--  candles left along driveway  -->
+      <line pt1="-84, 0, -104" pt2="-84, 24,-104" repeat="15" ptoffset="0,-3.47826,-36" color="darkgray" />
+      <rgb row="0" col="0" repeat="15" colinc="1" pt="-84, 24,-104" ptoffset="0,-3.47826,-36" class="candle"/>
+      <line pt1="-71.23,-52.2,-644" pt2="-71.23, -28.2,-644" repeat="3" ptoffset="36,-3.47826, -36" color="darkgray" />
+      <rgb row="0" col="0" repeat="3" colinc="1" pt="-71.23, -28.2,-644" ptoffset="36,-3.47826, -36" class="candle"/>
+
+      <!--  candles left of driveway along road -->
+      <line pt1="-14,-62.7,-756" pt2="-14,-38.7,-756" repeat="10" ptoffset="-36,0,0" color="darkgray" />
+      <rgb row="0" col="0" repeat="10" colinc="1" pt="-14,-39.2,-756" ptoffset="-36,0,0" class="candle"/>
+    </View>
+
+    <View nm="candlesright" offset="0,0,0">
+      <!--  candles right along driveway  -->
+      <line pt1="252, -3.5, -140" pt2="252, 21.5,-140" repeat="17" ptoffset="0,-3.47826,-36" color="darkgray"/>
+      <rgb row="0" col="0" repeat="17" colinc="1" pt="252, 21.5, -140.5" ptoffset="0,-3.47826,-36" class="candle"/>
+
+      <!--  candles right of driveway along road -->
+      <line pt1="278,-62.7,-756" pt2="278, -38.7,-756" repeat="20" ptoffset="36,0,0" color="darkgray" />
+      <rgb row="0" col="0" repeat="20" colinc="1" pt="278, -38.7,-756" ptoffset="36,0,0" class="candle"/>
+    </View>
+    
+    <View nm="porchroof" offset="0,0,0">
+      <!-- garage gable-->
+      <triangle pt1="-12,236,-12" pt2="132.5,328,-12" pt3="-12,232,-12" pt4="132.5,324,-12" color="black" /> <!-- left facia -->
+      <triangle pt1="132.5,328,-12" pt2="277,236,-12" pt3="132.5,324,-12" pt4="277,232,-12" color="black" /> <!-- right facia -->
+      <triangle pt1="-12,232,0" pt2="-12,232,-12" pt3="132.5,324,0" pt4="132.5,324,-12" color="black" /> <!-- left soffet -->
+      <triangle pt1="132.5,324,0" pt2="132.5,324,-12" pt3="277,232,0" pt4="277,232,-12" color="black" /> <!-- right soffet -->
+      <triangle pt1="-12,236,0" pt2="132.5,324,0" pt3="132.5,236,0" pt4="277,236,0" color="black" /> <!-- gable -->
+      
+      <!-- garage front-->
+      <triangle pt1="0,236,0" pt2="265,236,0" pt3="0,10,0" pt4="265,10,0" color="black" />
+
+      <!-- garage side-->
+      <triangle pt1="-.1,236,36" pt2="0,236,0" pt3="-.1,10,36" pt4="0,10,0" color="black" />
+
+      <!-- garage roof -->
+      <triangle pt1="-12,236,-12" pt2="-12,236,217" pt3="132.5,328,-12" pt4="132.5,328,217" color="black" />
+      <triangle pt1="132.5,328,-12" pt2="132.5,328,217" pt3="277,236,-12" pt4="277,236,217" color="black" />
+      
+      <!-- upper roof -->
+      <triangle pt1="132.5,328,217" pt2="615,328,217" pt3="240,236,36" pt4="615,236,36" color="black" />  <!-- upper roof -->
+      <triangle pt1="615,236,36" pt2="615,232,36" pt3="265,236,36" pt4="265,232,36" color="black" />  <!-- upper facia -->
+      <triangle pt1="615,232,50" pt2="265,232,50" pt3="615,232,36" pt4="265,232,36" color="black" />  <!-- upper soffet -->
+      
+      <!-- right side -->
+      <triangle pt1="603,232,36" pt2="603,324,217" pt3="603,232,398" color="black"/>  <!--gable-->
+      <triangle pt1="615,236,36" pt2="615,328,217" pt3="615,232,36" pt4="615,324,217" color="black"/> <!-- facia front-->
+      <triangle pt1="615,328,217" pt2="615,236,398" pt3="615,324,217" pt4="615,232,398" color="black"/> <!-- facia back-->
+      <triangle pt1="615,232,36" pt2="615,324,217" pt3="603,232,36" pt4="603,324,217" color="black"/> <!-- soffet front-->
+      <triangle pt1="615,324,217" pt2="615,236,398" pt3="603,324,217" pt4="603,232,398" color="black"/> <!-- soffet back-->
+      <triangle pt1="603,232,48" pt2="603,232,386" pt3="603,128,48" pt4="603,128,386" color="black"/> <!-- upper-->
+      <triangle pt1="603,128,60" pt2="603,128,374" pt3="603,0,60" pt4="603,0,374" color="black"/> <!-- lower-->
+
+      <dmx class="dmx rightside">
+        <triangle pt1="604,64,60"   pt2="604,196,60" pt3="604,128,114" pt4="604,196,168" color="black"/>
+        <triangle pt1="604,196,168" pt2="604,64,168" pt3="604,128,114" pt4="604,64,60"   color="black"/>
+      </dmx>
+
+      <dmx class="dmx rightside">
+        <triangle pt1="604,64,168"  pt2="604,196,168" pt3="604,128,222" pt4="604,196,276" color="black"/>
+        <triangle pt1="604,196,276" pt2="604,64,276"  pt3="604,128,222" pt4="604,64,168"  color="black"/>
+      </dmx>
+
+      <dmx class="dmx rightside">
+        <triangle pt1="604,64,276"  pt2="604,196,276" pt3="604,128,330" pt4="604,196,384" color="black"/>
+        <triangle pt1="604,196,384" pt2="604,64,384"  pt3="604,128,330" pt4="604,64,276"  color="black"/>
+      </dmx>
+
+      <dmx class="dmx rightside">
+        <triangle pt1="604,196,48"  pt2="604,238,48"  pt3="604,238,135" pt4="604,324,222" color="black"/>
+        <triangle pt1="604,324,222" pt2="604,196,222" pt3="604,238,135" pt4="604,196,48"  color="black"/>
+      </dmx>
+
+      <dmx class="dmx rightside">
+        <triangle pt1="604,196,222" pt2="604,324,222" pt3="604,238,304" pt4="604,238,386" color="black"/>
+        <triangle pt1="604,238,386" pt2="604,196,386" pt3="604,238,304" pt4="604,196,222" color="black"/>
+      </dmx>
+
+
+      <!-- left side -->
+      <triangle pt1="0,236,217" pt2="0,236,0" pt3="0,0,217" pt4="0,0,0" color="black"/> <!-- side-->
+
+      <dmx class="dmx leftside">
+        <triangle pt1="-1,0,0"     pt2="-1,0,108" pt3="-1,59,54" pt4="-1,118,108" color="black"/>
+        <triangle pt1="-1,118,108" pt2="-1,118,0" pt3="-1,59,54" pt4="-1,0,0"     color="black"/>
+      </dmx>
+
+      <dmx class="dmx leftside">
+        <triangle pt1="-1,118,0"   pt2="-1,118,108" pt3="-1,177,54" pt4="-1,236,108" color="black"/>
+        <triangle pt1="-1,236,108" pt2="-1,236,0"   pt3="-1,177,54" pt4="-1,118,0"  color="black"/>
+      </dmx>
+
+      <dmx class="dmx leftside">
+        <triangle pt1="-1,0,108"   pt2="-1,0,217"   pt3="-1,59,162" pt4="-1,118,217" color="black"/>
+        <triangle pt1="-1,118,217" pt2="-1,118,108" pt3="-1,59,162" pt4="-1,0,108"   color="black"/>
+      </dmx>
+
+      <dmx class="dmx leftside">
+        <triangle pt1="-1,118,108" pt2="-1,118,217" pt3="-1,177,162" pt4="-1,236,217" color="black"/>
+        <triangle pt1="-1,236,217" pt2="-1,236,108" pt3="-1,177,162" pt4="-1,118,108" color="black"/>
+      </dmx>
+
+      <!-- door -->
+      <line pt1="330.5,32,60" pt2="387.5,32,60" pt3="387.5,110,60" pt4="372.5,110,60" pt5="372.5,32,60" color="#000040"/>
+      <line pt1="372.5,110,60" pt2="315.5,110,60" pt3="315.5,32,60" pt4="330.5,32,60" pt5="330.5,110,60" color="#000040" />
+      
+      <!-- porch roof-->
+      <triangle pt1="253,160,48" pt2="615,160,48" pt3="253,132,-12" pt4="615,132,-12" color="black" />   <!-- porch roof -->
+      <triangle pt1="265,128,60" pt2="265,128,-12" pt3="615,128,60" pt4="615,128,-12" color="black" />   <!-- porch ceiling/soffet -->
+      <triangle pt1="253,132,-12" pt2="615,132,-12" pt3="253,128,-12" pt4="615,128,-12" color="black" />  <!-- porch facia -->
+      <triangle pt1="615,160,48" pt2="615,128,60" pt3="615,132,-12" pt4="615,128,-12" color="black" />  <!-- porch gable -->
+      <triangle pt1="265,26,64" pt2="265,26,0" pt3="603,26,64" pt4="603,26,0" color="black" />          <!-- porch floor -->
+      
+      <!-- lower walls -->
+      <triangle pt1="264.5,26,0" pt2="264.5,130,0" pt3="264.5,26,60.5" pt4="264.5,130,60.5" color="black"/> <!-- side-->
+      <triangle pt1="264.5,130,60.5" pt2="603,130,60.5" pt3="264.5,26,60.5" pt4="603,26,60.5" color="black"/> <!-- front-->
+      
+      <!-- upper walls -->
+      <triangle pt1="264.5,132,0" pt2="264.5,236,0" pt3="264.5,160,48.5" pt4="264.5,236,48.5" color="black"/> <!-- side-->
+      <triangle pt1="264.5,160,48.5" pt2="264.5,236,48.5" pt3="603,160,48.5" pt4="603,236,48.5" color="black"/> <!-- front-->
+
+
+      <!-- porch - left corner -->
+      <dmx class="dmx porch">
+        <triangle pt1="265,26,0" pt2="265,128,0" pt3="265,26,60" pt4="265,128,60" clr4="darkred" color="darkred"/>
+        <triangle pt1="265,128,60" pt2="315,128,60" pt3="265,26,60" pt4="315,26,60" clr4="darkred" color="darkred"/>
+      </dmx>
+
+      <!-- porch - center -->
+      <dmx class="dmx porch">      
+        <triangle pt1="388,26,60" pt2="388,128,60" pt3="432,26,60" pt4="432,128,60" clr4="darkred" color="darkred"/>
+        <triangle pt1="432,128,60" pt2="476,128,60" pt3="432,26,60" pt4="476,26,60" clr4="darkred" color="darkred"/>
+      </dmx>
+
+      <!-- porch - right -->
+      <dmx class="dmx porch">      
+        <triangle pt1="555,26,60" pt2="555,128,60" pt3="579,26,60" pt4="579,128,60" clr4="darkred" color="darkred"/>
+        <triangle pt1="579,128,60" pt2="603,128,60" pt3="579,26,60" pt4="603,26,60" clr4="darkred" color="darkred"/>
+      </dmx>
+      
+      <!-- porch column - left -->
+      <triangle pt1="313.5,26,0" pt2="313.5,128,0" pt3="317.5,26,0" pt4="317.5,128,0" color="black" />
+      <triangle pt1="313.5,26,4" pt2="313.5,128,4" pt3="313.5,26,0" pt4="313.5,128,0" color="black" />
+      <triangle pt1="317.5,26,0" pt2="317.5,128,0" pt3="317.5,26,4" pt4="317.5,128,4" color="black" />
+
+      <!-- porch column - center left -->
+      <triangle pt1="385.5,26,0" pt2="385.5,128,0" pt3="389.5,26,0" pt4="389.5,128,0" color="black" />
+      <triangle pt1="385.5,26,4" pt2="385.5,128,4" pt3="385.5,26,0" pt4="385.5,128,0" color="black" />
+      <triangle pt1="389.5,26,0" pt2="389.5,128,0" pt3="389.5,26,4" pt4="389.5,128,4" color="black" />
+
+      <!-- porch column - center right -->
+      <triangle pt1="491,26,0" pt2="491,128,0" pt3="495,26,0" pt4="495,128,0" color="black" />
+      <triangle pt1="491,26,4" pt2="491,128,4" pt3="491,26,0" pt4="491,128,0" color="black" />
+      <triangle pt1="495,26,0" pt2="495,128,0" pt3="495,26,4" pt4="495,128,4" color="black" />
+
+      <!-- porch column - right -->
+      <triangle pt1="599,26,0" pt2="599,128,0" pt3="603,26,0" pt4="603,128,0" color="black" />
+      <triangle pt1="599,26,4" pt2="599,128,4" pt3="599,26,0" pt4="599,128,0" color="black" />
+      <triangle pt1="603,26,0" pt2="603,128,0" pt3="603,26,4" pt4="603,128,4" color="black" />
+
+        <!-- porch rail - left -->
+      <triangle pt1="265,60,0" pt2="313.5,60,0" pt3="265,56,0" pt4="313.5,56,0" color="black" />
+      <triangle pt1="265,60,4" pt2="313.5,60,4" pt3="265,60,0" pt4="313.5,60,0" color="black" />
+
+        <!-- porch rail - right -->
+      <triangle pt1="389.5,60,0" pt2="599,60,0" pt3="389.5,56,0" pt4="599,56,0" color="black" />
+      <triangle pt1="389.5,60,4" pt2="599,60,4" pt3="389.5,60,0" pt4="599,60,0" color="black" />
+
+      <line pt1="613,160.5,46" pt2="613,136.5,-6.8" color="#000040" />
+      <line pt1="613,130,-12.5" pt2="285,130,-12.5" color="#000040" />
+
+      <rgb row="17" col="84" repeat="9" rowinc="1" pt="613,162,46" ptoffset="0,-3.0,-6.6" class="edge porch"/>
+      <rgb row="15" col="84" repeat="42" colinc="-1" pt="613,130,-14" ptoffset="-8,0,0" class="edge porch"/>
+
+      <!-- roof -->
+      <line pt1="132.5,328.5,-4" pt2="132.5,328.5,212" color="#000040" />
+      <line pt1="613,330,218.5" pt2="133,330,218.5" color="#000040" />
+      <line pt1="275,238,38" pt2="136.275,331,211.6" color="#000040" />
+      <line pt1="-12.5,234,-8" pt2="-12.5,234,224" color="#000040" />
+      <line pt1="611.5,237.5,37" pt2="611.5,327.5,212" color="#000040" />
+
+      <rgb row="0" col="0" repeat="28" rowinc="1" pt="132.5,330,-4" ptoffset="0,0,8" class="ridge roof"/> <!-- addition -->
+      <rgb row="0" col="0" repeat="61" rowinc="1" pt="613,330,217" ptoffset="-8,0,0" class="ridge roof"/> <!-- main -->
+      <rgb row="0" col="0" repeat="32" rowinc="1" pt="275,238,38" ptoffset="-4.475,3,5.6" class="valley roof"/> <!-- valley -->
+      <rgb row="0" col="0" repeat="30" rowinc="1" pt="-14,234,-8" ptoffset="0,0,8" class="facia leftside"/> <!-- addition - left side -->
+      <rgb row="0" col="0" repeat="26" rowinc="1" pt="613,237.5,37" ptoffset="0,3.6,7" class="facia rightside"/> <!-- main roof - right edge -->
+    </View>
+
+    <View nm="upperroof" offset="0,0,0">
+      <!-- upper roof -->
+      <line pt1="601,162,47.5" pt2="601,226,47.5" color="#000040" />
+      <line pt1="613,234,35.5" pt2="285,234,35.5" color="#000040" />
+
+      <!-- porch roof - left corner -->
+      <dmx class="dmx ">
+        <triangle pt1="265,132,0" pt2="265,230,0" pt3="265,160,48" pt4="265,230,48" color="darkred"/>
+        <triangle pt1="265,230,48" pt2="316,230,48" pt3="265,160,48" pt4="316,160,48" color="darkred"/>
+      </dmx>
+
+      <!-- porch roof - center -->
+      <dmx class="dmx ">
+        <triangle pt1="400,160,48" pt2="400,230,48" pt3="434,160,48" pt4="434,230,48" color="darkred"/>
+        <triangle pt1="434,230,48" pt2="468,230,48" pt3="434,160,48" pt4="468,160,48" color="darkred"/>
+      </dmx>
+
+      <!-- porch roof - right end -->
+      <dmx class="dmx ">
+        <triangle pt1="552,160,48" pt2="552,230,48" pt3="577,160,48" pt4="577,230,48" color="darkgreen"/>
+        <triangle pt1="577,230,48" pt2="603,230,48" pt3="577,160,48" pt4="603,160,48" color="darkgreen"/>
+      </dmx>
+
+      <rgb row="19" col="83" repeat="9" rowinc="1" pt="601,162,46" ptoffset="0,8,0" class="corner rightside"/>
+      <rgb row="28" col="84" repeat="42" colinc="-1" pt="613,234,34" ptoffset="-8,0,0" class="facia roof "/>
+    </View>
+
+    <View nm="porchleft">
+      <!-- porch left -->
+      <line pt1="264,26,-.5" pt2="264,114,-.5" color="#000040" />
+      <line pt1="264,58,-.5" pt2="315.5,58,-.5" color="#000040" />
+      <line pt1="315.5,26,-.5" pt2="315.5,114,-.5" color="#000040" />
+      <line pt1="387.5,114,-.5" pt2="387.5,26,-.5" color="#000040" />
+
+      <rgb row="2" col="40" repeat="12" rowinc="1" pt="264,26,-2" ptoffset="0,8,0" class="railing"/>
+      <rgb row="6" col="41" repeat="5" colinc="1" pt="272,58,-2" ptoffset="8.6,0,0" class="railing"/>
+      <rgb row="2" col="46" repeat="12" rowinc="1" pt="315.5,26,-2" ptoffset="0,8,0" class="railing"/>
+      <!--<rgb row="14" col="47" repeat="8" colinc="1" pt="296,122,-2" ptoffset="8,0,0"/>-->
+      <rgb row="14" col="55" repeat="12" rowinc="-1" pt="387.5,114,-2" ptoffset="0,-8,0" class="railing"/>
+    </View>
+
+    <View nm="porchright">
+      <!-- porch right -->
+      <line pt1="601,26,-.5" pt2="601,114,-.5" color="#000040" />
+      <line pt1="601,58,-.5" pt2="493,58,-.5" color="#000040" />
+      <line pt1="493,26,-.5" pt2="493,114,-.5" color="#000040" />
+      <line pt1="493,58,-.5" pt2="387.5,58,-.5" color="#000040" />
+
+      <rgb row="2" col="83" repeat="12" rowinc="1" pt="601,26,-2" ptoffset="0,8,0" class="railing"/>
+      <rgb row="6" col="82" repeat="12" colinc="-1" pt="593,58,-2" ptoffset="-8,0,0" class="railing"/>
+      <rgb row="2" col="70" repeat="12" rowinc="1" pt="493,26,-2" ptoffset="0,8,0" class="railing"/>
+      <rgb row="6" col="69" repeat="12" colinc="-1" pt="485,58,-2" ptoffset="-8,0,0" class="railing"/>
+    </View>
+
+    <View nm="win">
+      <rgb strandndx="0" row="0" col="10" repeat="9" rowinc="1" cir="25" pt="80,0,0" ptoffset="0,8,0" class="window"/>
+      <rgb strandndx="0" row="8" col="9" repeat="9" rowinc="-1" cir="25" pt="72,64,0" ptoffset="0,-8,0" class="window"/>
+      <rgb strandndx="0" row="0" col="8" repeat="9" rowinc="1" cir="25"  pt="64,0,0" ptoffset="0,8,0" class="window"/>
+      <rgb strandndx="0" row="8" col="7" repeat="9" rowinc="-1" cir="25" pt="56,64,0" ptoffset="0,-8,0" class="window"/>
+      <rgb strandndx="0" row="0" col="6" repeat="9" rowinc="1" cir="25"  pt="48,0,0" ptoffset="0,8,0" class="window"/>
+      <rgb strandndx="0" row="8" col="5" repeat="5" rowinc="-1" cir="25" pt="40,64,0" ptoffset="0,-8,0" class="window"/>
+      <rgb strandndx="1" row="3" col="5" repeat="4" rowinc="-1" cir="25" pt="40,24,0" ptoffset="0,-8,0" class="window"/>
+      <rgb strandndx="1" row="0" col="4" repeat="9" rowinc="1" cir="25" pt="32,0,0" ptoffset="0,8,0" class="window"/>
+      <rgb strandndx="1" row="8" col="3" repeat="9" rowinc="-1" cir="25" pt="24,64,0" ptoffset="0,-8,0" class="window"/>
+      <rgb strandndx="1" row="0" col="2" repeat="9" rowinc="1" cir="25" pt="16,0,0" ptoffset="0,8,0" class="window"/>
+      <rgb strandndx="1" row="8" col="1" repeat="9" rowinc="-1" cir="25" pt="8,64,0" ptoffset="0,-8,0" class="window"/>
+      <rgb strandndx="1" row="0" col="0" repeat="9" rowinc="1" cir="25" pt="0,0,0" ptoffset="0,8,0" class="window"/>
+
+      <Groups>
+        <Group nm="$all"/>
+        <Group nm="$r#" row="0-7"/>
+        <Group nm="$c#" col="0-10"/>
+        <Group nm="$x#" cir="0-33"/>
+      </Groups>
+      <GrpSeqs>
+        <GrpSeq nm="$topdown">
+          <Group grp="$r#" ndx="7-0"/>
+        </GrpSeq>
+        <GrpSeq nm="$bottomup">
+          <Group grp="$r#" ndx="0-7"/>
+        </GrpSeq>
+        <GrpSeq nm="$leftright">
+          <Group grp="$c#" ndx="0-10"/>
+        </GrpSeq>
+        <GrpSeq nm="$rightleft">
+          <Group grp="$c#" ndx="10-0"/>
+        </GrpSeq>
+        <GrpSeq nm="$cw">
+          <Group grp="$x#" ndx="0-33"/>
+        </GrpSeq>
+        <GrpSeq nm="$ccw">
+          <Group grp="$x#" ndx="33-0"/>
+        </GrpSeq>
+      </GrpSeqs>
+    </View>
+
+
+    <View nm="mini" 
+          xexp="Single(Math.Sin(Math.PI * (Column - 4) / 35) * 8 * (8 - Row))"
+          yexp="Single(Math.Cos(Math.PI * (Column - 4) / 35) * -8 * (8 - Row))"
+          zexp="0">
+      <rgb row="7" col="0" cir="0" repeat="8" rowinc="-1"/>
+      <rgb row="0" col="1" cir="0" repeat="3" rowinc="1"/>
+      <rgb row="2" col="3" cir="0" repeat="3" rowinc="-1"/>
+      <rgb row="0" col="2" cir="0" repeat="6" rowinc="1"/>
+      <rgb row="5" col="6" cir="0" repeat="6" rowinc="-1"/>
+      <rgb row="0" col="5" cir="0" repeat="3" rowinc="1"/>
+      <rgb row="2" col="7" cir="0" repeat="3" rowinc="-1"/>
+      <rgb row="0" col="8" cir="0" repeat="8" rowinc="1"/>
+      <rgb row="8" col="4" cir="0" repeat="9" rowinc="-1"/>
+      <Groups>
+        <Group nm="$all"/>
+        <Group nm="$r#" row="0-8"/>
+        <Group nm="$c#" col="0-8"/>
+      </Groups>
+      <GrpSeqs>
+        <GrpSeq nm="$topdown">
+          <Group grp="$r#" ndx="8-0"/>
+        </GrpSeq>
+        <GrpSeq nm="$bottomup">
+          <Group grp="$r#" ndx="0-8"/>
+        </GrpSeq>
+        <GrpSeq nm="$leftright">
+          <Group grp="$c#" ndx="0-8"/>
+        </GrpSeq>
+        <GrpSeq nm="$rightleft">
+          <Group grp="$c#" ndx="8-0"/>
+        </GrpSeq>
+      </GrpSeqs>
+    </View>
+
+    <View nm="pole">
+      <rgb row="0" col="0" repeat="50" rowinc="1" colinc="0" pt="0,0,0" ptoffset="0,3,0"/>
+      <Groups>
+        <Group nm="$all"/>
+        <Group nm="$r#" row="0-49"/>
+      </Groups>
+      <GrpSeqs>
+        <GrpSeq nm="$topdown">
+          <Group grp="$r#" ndx="49-0"/>
+        </GrpSeq>
+        <GrpSeq nm="$bottomup">
+          <Group grp="$r#" ndx="0-49"/>
+        </GrpSeq>
+      </GrpSeqs>
+    </View>
+
+
+    <View nm="arch"
+        xexp="Single(61 * Math.Cos(Math.PI * Circle / 49))"
+        yexp="Single(61 * Math.Sin(Math.PI * Circle / 49))"
+        zexp="0">
+      <rgb row="0" col="0" cir="0" repeat="50" rowinc="1" colinc="0" cirinc="1"/>
+      <Groups>
+        <Group nm="$all"/>
+        <Group nm="$r#" row="0-49"/>
+      </Groups>
+      <GrpSeqs>
+        <GrpSeq nm="$topdown">
+          <Group grp="$r#" ndx="49-0"/>
+        </GrpSeq>
+        <GrpSeq nm="$bottomup">
+          <Group grp="$r#" ndx="0-49"/>
+        </GrpSeq>
+      </GrpSeqs>
+    </View>-->
+
+    <View nm="tree" strand="USB1_15" main="true" xexp="1.25f * Circle" yexp="-2.165f * Row" offset="100,56,-300">
+      <CMS>
+        <Item name="cmsEditTreeFont" />
+        <Item name="cmsEditTreeDisplay" /> 
+      </CMS>
+      <line pt1="-23.2, -73.25,.5" pt2="23.2, -73.25,.5" pt3="0, 6.2,.5" close="true" color="Red"/>
+      <triangle pt1="23.2,-73.25,2" pt2="-23.2,-73.25,2"  pt3="0, 6.2,2" color="Black"/>
+      <triangle pt2="23.2,-73.25,2.1" pt1="-23.2,-73.25,2.1"  pt3="0, 6.2,2.1" color="Red"/>
+      <!--<triangle pt1="23.2,-73.25,3" pt2="-0,-73.25,15"  pt3="0, 6.2,3" color="Black"/>
+      <triangle pt1="0,-73.25,15" pt2="-23.2,-73.25,3"  pt3="0, 6.2,3" color="Black"/>-->
+      <triangle pt1="-23.2,-73.25,3" pt2="-23.2,-73.25,0" pt3="0,6.2,3" pt4="0,6.2,0" color="Red"/>
+      <triangle pt1="23.2,-73.25,3" pt2="23.2,-73.25,0" pt3="0,6.2,3" pt4="0,6.2,0" color="Red"/>
+      <mono ndx="306" row="0" col="0" cir="0" color="Red" />
+      <mono ndx="305" row="1" col="0" cir="-1" color="Green" />
+      <mono ndx="304" row="1" col="1" cir="1" color="Blue" />
+      <mono ndx="303" row="2" col="0" cir="0" color="Yellow" />
+      <mono ndx="302" row="3" col="0" cir="-1" color="Blue" />
+      <mono ndx="301" row="3" col="1" cir="1" color="Green" />
+      <mono ndx="300" row="4" col="0" cir="-2" color="Yellow" />
+      <mono ndx="299" row="4" col="1" cir="0" color="Red" />
+      <mono ndx="298" row="4" col="2" cir="2" color="Yellow" />
+      <mono ndx="297" row="5" col="0" cir="-3" color="Blue" />
+      <mono ndx="296" row="5" col="1" cir="-1" color="Green" />
+      <mono ndx="295" row="5" col="2" cir="1" color="Blue" />
+      <mono ndx="294" row="5" col="3" cir="3" color="Green" />
+      <mono ndx="293" row="6" col="0" cir="-2" color="Red" />
+      <mono ndx="292" row="6" col="1" cir="0" color="Yellow" />
+      <mono ndx="291" row="6" col="2" cir="2" color="Red" />
+      <mono ndx="290" row="7" col="0" cir="-3" color="Green" />
+      <mono ndx="289" row="7" col="1" cir="-1" color="Blue" />
+      <mono ndx="288" row="7" col="2" cir="1" color="Green" />
+      <mono ndx="287" row="7" col="3" cir="3" color="Blue" />
+      <mono ndx="286" row="8" col="0" cir="-4" color="Red" />
+      <mono ndx="285" row="8" col="1" cir="-2" color="Yellow" />
+      <mono ndx="284" row="8" col="2" cir="0" color="Red" />
+      <mono ndx="283" row="8" col="3" cir="2" color="Yellow" />
+      <mono ndx="282" row="8" col="4" cir="4" color="Red" />
+      <mono ndx="281" row="9" col="0" cir="-5" color="Green" />
+      <mono ndx="280" row="9" col="1" cir="-3" color="Blue" />
+      <mono ndx="279" row="9" col="2" cir="-1" color="Green" />
+      <mono ndx="278" row="9" col="3" cir="1" color="Blue" />
+      <mono ndx="277" row="9" col="4" cir="3" color="Green" />
+      <mono ndx="276" row="9" col="5" cir="5" color="Blue" />
+      <mono ndx="275" row="10" col="0" cir="-4" color="Yellow" />
+      <mono ndx="274" row="10" col="1" cir="-2" color="Red" />
+      <mono ndx="273" row="10" col="2" cir="0" color="Yellow" />
+      <mono ndx="272" row="10" col="3" cir="2" color="Red" />
+      <mono ndx="271" row="10" col="4" cir="4" color="Yellow" />
+      <mono ndx="270" row="11" col="0" cir="-5" color="Blue" />
+      <mono ndx="269" row="11" col="1" cir="-3" color="Green" />
+      <mono ndx="268" row="11" col="2" cir="-1" color="Blue" />
+      <mono ndx="267" row="11" col="3" cir="1" color="Green" />
+      <mono ndx="266" row="11" col="4" cir="3" color="Blue" />
+      <mono ndx="265" row="11" col="5" cir="5" color="Green" />
+      <mono ndx="264" row="12" col="0" cir="-6" color="Yellow" />
+      <mono ndx="263" row="12" col="1" cir="-4" color="Red" />
+      <mono ndx="262" row="12" col="2" cir="-2" color="Yellow" />
+      <mono ndx="261" row="12" col="3" cir="0" color="Red" />
+      <mono ndx="260" row="12" col="4" cir="2" color="Yellow" />
+      <mono ndx="259" row="12" col="5" cir="4" color="Red" />
+      <mono ndx="258" row="12" col="6" cir="6" color="Yellow" />
+      <mono ndx="257" row="13" col="0" cir="-7" color="Blue" />
+      <mono ndx="256" row="13" col="1" cir="-5" color="Green" />
+      <mono ndx="255" row="13" col="2" cir="-3" color="Blue" />
+      <mono ndx="254" row="13" col="3" cir="-1" color="Green" />
+      <mono ndx="253" row="13" col="4" cir="1" color="Blue" />
+      <mono ndx="252" row="13" col="5" cir="3" color="Green" />
+      <mono ndx="251" row="13" col="6" cir="5" color="Blue" />
+      <mono ndx="250" row="13" col="7" cir="7" color="Green" />
+      <mono ndx="249" row="14" col="0" cir="-6" color="Red" />
+      <mono ndx="248" row="14" col="1" cir="-4" color="Yellow" />
+      <mono ndx="247" row="14" col="2" cir="-2" color="Red" />
+      <mono ndx="246" row="14" col="3" cir="0" color="Yellow" />
+      <mono ndx="245" row="14" col="4" cir="2" color="Red" />
+      <mono ndx="244" row="14" col="5" cir="4" color="Yellow" />
+      <mono ndx="243" row="14" col="6" cir="6" color="Red" />
+      <mono ndx="242" row="15" col="0" cir="-7" color="Green" />
+      <mono ndx="241" row="15" col="1" cir="-5" color="Blue" />
+      <mono ndx="240" row="15" col="2" cir="-3" color="Green" />
+      <mono ndx="239" row="15" col="3" cir="-1" color="Blue" />
+      <mono ndx="238" row="15" col="4" cir="1" color="Green" />
+      <mono ndx="237" row="15" col="5" cir="3" color="Blue" />
+      <mono ndx="236" row="15" col="6" cir="5" color="Green" />
+      <mono ndx="235" row="15" col="7" cir="7" color="Blue" />
+      <mono ndx="234" row="16" col="0" cir="-8" color="Red" />
+      <mono ndx="233" row="16" col="1" cir="-6" color="Yellow" />
+      <mono ndx="232" row="16" col="2" cir="-4" color="Red" />
+      <mono ndx="231" row="16" col="3" cir="-2" color="Yellow" />
+      <mono ndx="230" row="16" col="4" cir="0" color="Red" />
+      <mono ndx="229" row="16" col="5" cir="2" color="Yellow" />
+      <mono ndx="228" row="16" col="6" cir="4" color="Red" />
+      <mono ndx="227" row="16" col="7" cir="6" color="Yellow" />
+      <mono ndx="226" row="16" col="8" cir="8" color="Red" />
+      <mono ndx="225" row="17" col="0" cir="-9" color="Green" />
+      <mono ndx="224" row="17" col="1" cir="-7" color="Blue" />
+      <mono ndx="223" row="17" col="2" cir="-5" color="Green" />
+      <mono ndx="222" row="17" col="3" cir="-3" color="Blue" />
+      <mono ndx="221" row="17" col="4" cir="-1" color="Green" />
+      <mono ndx="220" row="17" col="5" cir="1" color="Blue" />
+      <mono ndx="219" row="17" col="6" cir="3" color="Green" />
+      <mono ndx="218" row="17" col="7" cir="5" color="Blue" />
+      <mono ndx="217" row="17" col="8" cir="7" color="Green" />
+      <mono ndx="216" row="17" col="9" cir="9" color="Blue" />
+
+      <!-- Marquee - row 0 0x0e1 -->
+      <mono ndx="215" row="18" col="0" cir="-8" color="Yellow" mrqrow="0" mrqcol="20" />
+      <mono ndx="214" row="18" col="1" cir="-6" color="Red" mrqrow="0" mrqcol="19" />
+      <mono ndx="213" row="18" col="2" cir="-4" color="Yellow" mrqrow="0" mrqcol="18" />
+      <mono ndx="212" row="18" col="3" cir="-2" color="Red" mrqrow="0" mrqcol="17" />
+      <mono ndx="211" row="18" col="4" cir="0" color="Yellow" mrqrow="0" mrqcol="16" />
+      <mono ndx="210" row="18" col="5" cir="2" color="Red" mrqrow="0" mrqcol="15" />
+      <mono ndx="209" row="18" col="6" cir="4" color="Yellow" mrqrow="0" mrqcol="14" />
+      <mono ndx="208" row="18" col="7" cir="6" color="Red" mrqrow="0" mrqcol="13" />
+      <mono ndx="207" row="18" col="8" cir="8" color="Yellow" mrqrow="0" mrqcol="12" />
+
+      <!-- Marquee - row 1 0x0e2 -->
+      <mono ndx="206" row="19" col="0" cir="-9" color="Blue" mrqrow="1" mrqcol="20" />
+      <mono ndx="205" row="19" col="1" cir="-7" color="Green" mrqrow="1" mrqcol="19" />
+      <mono ndx="204" row="19" col="2" cir="-5" color="Blue" mrqrow="1" mrqcol="18" />
+      <mono ndx="203" row="19" col="3" cir="-3" color="Green" mrqrow="1" mrqcol="17" />
+      <mono ndx="202" row="19" col="4" cir="-1" color="Blue" mrqrow="1" mrqcol="16" />
+      <mono ndx="201" row="19" col="5" cir="1" color="Green" mrqrow="1" mrqcol="15" />
+      <mono ndx="200" row="19" col="6" cir="3" color="Blue" mrqrow="1" mrqcol="14" />
+      <mono ndx="199" row="19" col="7" cir="5" color="Green" mrqrow="1" mrqcol="13" />
+      <mono ndx="198" row="19" col="8" cir="7" color="Blue" mrqrow="1" mrqcol="12" />
+      <mono ndx="197" row="19" col="9" cir="9" color="Green" mrqrow="1" mrqcol="11" />
+
+      <!-- Marquee - row 2 0x0e3 -->
+      <mono ndx="196" row="20" col="0" cir="-10" color="Yellow" mrqrow="2" mrqcol="21" />
+      <mono ndx="195" row="20" col="1" cir="-8" color="Red" mrqrow="2" mrqcol="20" />
+      <mono ndx="194" row="20" col="2" cir="-6" color="Yellow" mrqrow="2" mrqcol="19" />
+      <mono ndx="193" row="20" col="3" cir="-4" color="Red" mrqrow="2" mrqcol="18" />
+      <mono ndx="192" row="20" col="4" cir="-2" color="Yellow" mrqrow="2" mrqcol="17" />
+      <mono ndx="191" row="20" col="5" cir="0" color="Red" mrqrow="2" mrqcol="16" />
+      <mono ndx="190" row="20" col="6" cir="2" color="Yellow" mrqrow="2" mrqcol="15" />
+      <mono ndx="189" row="20" col="7" cir="4" color="Red" mrqrow="2" mrqcol="14" />
+      <mono ndx="188" row="20" col="8" cir="6" color="Yellow" mrqrow="2" mrqcol="13" />
+      <mono ndx="187" row="20" col="9" cir="8" color="Red" mrqrow="2" mrqcol="12" />
+      <mono ndx="186" row="20" col="10" cir="10" color="Yellow" mrqrow="2" mrqcol="11" />
+
+      <!-- Marquee - row 4 0x0e4 -->
+      <mono ndx="185" row="21" col="0" cir="-11" color="Blue" mrqrow="3" mrqcol="21" />
+      <mono ndx="184" row="21" col="1" cir="-9" color="Green" mrqrow="3" mrqcol="20" />
+      <mono ndx="087" row="21" col="2" cir="-7" color="Blue" mrqrow="3" mrqcol="19" />
+      <mono ndx="086" row="21" col="3" cir="-5" color="Green" mrqrow="3" mrqcol="18" />
+      <mono ndx="085" row="21" col="4" cir="-3" color="Blue" mrqrow="3" mrqcol="17" />
+      <mono ndx="084" row="21" col="5" cir="-1" color="Green" mrqrow="3" mrqcol="16" />
+      <mono ndx="083" row="21" col="6" cir="1" color="Blue" mrqrow="3" mrqcol="15" />
+      <mono ndx="082" row="21" col="7" cir="3" color="Green" mrqrow="3" mrqcol="14" />
+      <mono ndx="081" row="21" col="8" cir="5" color="Blue" mrqrow="3" mrqcol="13" />
+      <mono ndx="080" row="21" col="9" cir="7" color="Green" mrqrow="3" mrqcol="12" />
+      <mono ndx="183" row="21" col="10" cir="9" color="Blue" mrqrow="3" mrqcol="11" />
+      <mono ndx="182" row="21" col="11" cir="11" color="Green" mrqrow="3" mrqcol="10" />
+
+      <!-- Marquee - row 5 0x0e5 -->
+      <mono ndx="181" row="22" col="0" cir="-10" color="Red" mrqrow="4" mrqcol="21" />
+      <mono ndx="079" row="22" col="1" cir="-8" color="Yellow" mrqrow="4" mrqcol="20" />
+      <mono ndx="078" row="22" col="2" cir="-6" color="Red" mrqrow="4" mrqcol="19" />
+      <mono ndx="077" row="22" col="3" cir="-4" color="Yellow" mrqrow="4" mrqcol="18" />
+      <mono ndx="076" row="22" col="4" cir="-2" color="Red" mrqrow="4" mrqcol="17" />
+      <mono ndx="075" row="22" col="5" cir="0" color="Yellow" mrqrow="4" mrqcol="16" />
+      <mono ndx="074" row="22" col="6" cir="2" color="Red" mrqrow="4" mrqcol="15" />
+      <mono ndx="073" row="22" col="7" cir="4" color="Yellow" mrqrow="4" mrqcol="14" />
+      <mono ndx="072" row="22" col="8" cir="6" color="Red" mrqrow="4" mrqcol="13" />
+      <mono ndx="180" row="22" col="9" cir="8" color="Yellow" mrqrow="4" mrqcol="12" />
+      <mono ndx="179" row="22" col="10" cir="10" color="Red" mrqrow="4" mrqcol="11" />
+
+      <!-- Marquee - row 6 0x0e6 -->
+      <mono ndx="178" row="23" col="0" cir="-11" color="Green" mrqrow="5" mrqcol="21" />
+      <mono ndx="177" row="23" col="1" cir="-9" color="Blue" mrqrow="5" mrqcol="20" />
+      <mono ndx="071" row="23" col="2" cir="-7" color="Green" mrqrow="5" mrqcol="19" />
+      <mono ndx="070" row="23" col="3" cir="-5" color="Blue" mrqrow="5" mrqcol="18" />
+      <mono ndx="069" row="23" col="4" cir="-3" color="Green" mrqrow="5" mrqcol="17" />
+      <mono ndx="068" row="23" col="5" cir="-1" color="Blue" mrqrow="5" mrqcol="16" />
+      <mono ndx="067" row="23" col="6" cir="1" color="Green" mrqrow="5" mrqcol="15" />
+      <mono ndx="066" row="23" col="7" cir="3" color="Blue" mrqrow="5" mrqcol="14" />
+      <mono ndx="065" row="23" col="8" cir="5" color="Green" mrqrow="5" mrqcol="13" />
+      <mono ndx="064" row="23" col="9" cir="7" color="Blue" mrqrow="5" mrqcol="12" />
+      <mono ndx="176" row="23" col="10" cir="9" color="Green" mrqrow="5" mrqcol="11" />
+      <mono ndx="175" row="23" col="11" cir="11" color="Blue" mrqrow="5" mrqcol="10" />
+
+      <!-- Marquee - row 7 0x0e7 -->
+      <mono ndx="174" row="24" col="0" cir="-12" color="Red" mrqrow="6" mrqcol="22" />
+      <mono ndx="173" row="24" col="1" cir="-10" color="Yellow" mrqrow="6" mrqcol="21" />
+      <mono ndx="063" row="24" col="2" cir="-8" color="Red" mrqrow="6" mrqcol="20" />
+      <mono ndx="062" row="24" col="3" cir="-6" color="Yellow" mrqrow="6" mrqcol="19" />
+      <mono ndx="061" row="24" col="4" cir="-4" color="Red" mrqrow="6" mrqcol="18" />
+      <mono ndx="060" row="24" col="5" cir="-2" color="Yellow" mrqrow="6" mrqcol="17" />
+      <mono ndx="059" row="24" col="6" cir="0" color="Red" mrqrow="6" mrqcol="16" />
+      <mono ndx="058" row="24" col="7" cir="2" color="Yellow" mrqrow="6" mrqcol="15" />
+      <mono ndx="057" row="24" col="8" cir="4" color="Red" mrqrow="6" mrqcol="14" />
+      <mono ndx="056" row="24" col="9" cir="6" color="Yellow" mrqrow="6" mrqcol="13" />
+      <mono ndx="172" row="24" col="10" cir="8" color="Red" mrqrow="6" mrqcol="12" />
+      <mono ndx="171" row="24" col="11" cir="10" color="Yellow" mrqrow="6" mrqcol="11" />
+      <mono ndx="170" row="24" col="12" cir="12" color="Red" mrqrow="6" mrqcol="10" />
+
+      <!-- Marquee - row 8 0x0e8 -->
+      <mono ndx="169" row="25" col="0" cir="-13" color="Green" mrqrow="7" mrqcol="22" />
+      <mono ndx="168" row="25" col="1" cir="-11" color="Blue" mrqrow="7" mrqcol="21" />
+      <mono ndx="167" row="25" col="2" cir="-9" color="Green" mrqrow="7" mrqcol="20" />
+      <mono ndx="055" row="25" col="3" cir="-7" color="Blue" mrqrow="7" mrqcol="19" />
+      <mono ndx="054" row="25" col="4" cir="-5" color="Green" mrqrow="7" mrqcol="18" />
+      <mono ndx="053" row="25" col="5" cir="-3" color="Blue" mrqrow="7" mrqcol="17" />
+      <mono ndx="052" row="25" col="6" cir="-1" color="Green" mrqrow="7" mrqcol="16" />
+      <mono ndx="051" row="25" col="7" cir="1" color="Blue" mrqrow="7" mrqcol="15" />
+      <mono ndx="050" row="25" col="8" cir="3" color="Green" mrqrow="7" mrqcol="14" />
+      <mono ndx="049" row="25" col="9" cir="5" color="Blue" mrqrow="7" mrqcol="13" />
+      <mono ndx="048" row="25" col="10" cir="7" color="Green" mrqrow="7" mrqcol="12" />
+      <mono ndx="166" row="25" col="11" cir="9" color="Blue" mrqrow="7" mrqcol="11" />
+      <mono ndx="165" row="25" col="12" cir="11" color="Green" mrqrow="7" mrqcol="10" />
+      <mono ndx="164" row="25" col="13" cir="13" color="Blue" mrqrow="7" mrqcol="9" />
+
+      <!-- Marquee - row 9 0x0e9 -->
+      <mono ndx="163" row="26" col="0" cir="-12" color="Yellow" mrqrow="8" mrqcol="22" />
+      <mono ndx="162" row="26" col="1" cir="-10" color="Red" mrqrow="8" mrqcol="21" />
+      <mono ndx="047" row="26" col="2" cir="-8" color="Yellow" mrqrow="8" mrqcol="20" />
+      <mono ndx="046" row="26" col="3" cir="-6" color="Red" mrqrow="8" mrqcol="19" />
+      <mono ndx="045" row="26" col="4" cir="-4" color="Yellow" mrqrow="8" mrqcol="18" />
+      <mono ndx="044" row="26" col="5" cir="-2" color="Red" mrqrow="8" mrqcol="17" />
+      <mono ndx="043" row="26" col="6" cir="0" color="Yellow" mrqrow="8" mrqcol="16" />
+      <mono ndx="042" row="26" col="7" cir="2" color="Red" mrqrow="8" mrqcol="15" />
+      <mono ndx="041" row="26" col="8" cir="4" color="Yellow" mrqrow="8" mrqcol="14" />
+      <mono ndx="040" row="26" col="9" cir="6" color="Red" mrqrow="8" mrqcol="13" />
+      <mono ndx="161" row="26" col="10" cir="8" color="Yellow" mrqrow="8" mrqcol="12" />
+      <mono ndx="160" row="26" col="11" cir="10" color="Red" mrqrow="8" mrqcol="11" />
+      <mono ndx="159" row="26" col="12" cir="12" color="Yellow" mrqrow="8" mrqcol="10" />
+
+      <!-- Marquee - row 10 0x0ea -->
+      <mono ndx="158" row="27" col="0" cir="-13" color="Blue" mrqrow="9" mrqcol="22" />
+      <mono ndx="157" row="27" col="1" cir="-11" color="Green" mrqrow="9" mrqcol="21" />
+      <mono ndx="156" row="27" col="2" cir="-9" color="Blue" mrqrow="9" mrqcol="20" />
+      <mono ndx="039" row="27" col="3" cir="-7" color="Green" mrqrow="9" mrqcol="19" />
+      <mono ndx="038" row="27" col="4" cir="-5" color="Blue" mrqrow="9" mrqcol="18" />
+      <mono ndx="037" row="27" col="5" cir="-3" color="Green" mrqrow="9" mrqcol="17" />
+      <mono ndx="036" row="27" col="6" cir="-1" color="Blue" mrqrow="9" mrqcol="16" />
+      <mono ndx="035" row="27" col="7" cir="1" color="Green" mrqrow="9" mrqcol="15" />
+      <mono ndx="034" row="27" col="8" cir="3" color="Blue" mrqrow="9" mrqcol="14" />
+      <mono ndx="033" row="27" col="9" cir="5" color="Green" mrqrow="9" mrqcol="13" />
+      <mono ndx="032" row="27" col="10" cir="7" color="Blue" mrqrow="9" mrqcol="12" />
+      <mono ndx="155" row="27" col="11" cir="9" color="Green" mrqrow="9" mrqcol="11" />
+      <mono ndx="154" row="27" col="12" cir="11" color="Blue" mrqrow="9" mrqcol="10" />
+      <mono ndx="153" row="27" col="13" cir="13" color="Green" mrqrow="9" mrqcol="9" />
+
+      <!-- Marquee - row 11 0x0eb -->
+      <mono ndx="152" row="28" col="0" cir="-14" color="Yellow" mrqrow="10" mrqcol="23" />
+      <mono ndx="151" row="28" col="1" cir="-12" color="Red" mrqrow="10" mrqcol="22" />
+      <mono ndx="150" row="28" col="2" cir="-10" color="Yellow" mrqrow="10" mrqcol="21" />
+      <mono ndx="031" row="28" col="3" cir="-8" color="Red" mrqrow="10" mrqcol="20" />
+      <mono ndx="030" row="28" col="4" cir="-6" color="Yellow" mrqrow="10" mrqcol="19" />
+      <mono ndx="029" row="28" col="5" cir="-4" color="Red" mrqrow="10" mrqcol="18" />
+      <mono ndx="028" row="28" col="6" cir="-2" color="Yellow" mrqrow="10" mrqcol="17" />
+      <mono ndx="027" row="28" col="7" cir="0" color="Red" mrqrow="10" mrqcol="16" />
+      <mono ndx="026" row="28" col="8" cir="2" color="Yellow" mrqrow="10" mrqcol="15" />
+      <mono ndx="025" row="28" col="9" cir="4" color="Red" mrqrow="10" mrqcol="14" />
+      <mono ndx="024" row="28" col="10" cir="6" color="Yellow" mrqrow="10" mrqcol="13" />
+      <mono ndx="149" row="28" col="11" cir="8" color="Red" mrqrow="10" mrqcol="12" />
+      <mono ndx="148" row="28" col="12" cir="10" color="Yellow" mrqrow="10" mrqcol="11" />
+      <mono ndx="147" row="28" col="13" cir="12" color="Red" mrqrow="10" mrqcol="10" />
+      <mono ndx="146" row="28" col="14" cir="14" color="Yellow" mrqrow="10" mrqcol="9" />
+
+      <!-- Marquee - row 12 0x0ec -->
+      <mono ndx="145" row="29" col="0" cir="-15" color="Blue" mrqrow="11" mrqcol="23" />
+      <mono ndx="144" row="29" col="1" cir="-13" color="Green" mrqrow="11" mrqcol="22" />
+      <mono ndx="143" row="29" col="2" cir="-11" color="Blue" mrqrow="11" mrqcol="21" />
+      <mono ndx="142" row="29" col="3" cir="-9" color="Green" mrqrow="11" mrqcol="20" />
+      <mono ndx="023" row="29" col="4" cir="-7" color="Blue" mrqrow="11" mrqcol="19" />
+      <mono ndx="022" row="29" col="5" cir="-5" color="Green" mrqrow="11" mrqcol="18" />
+      <mono ndx="021" row="29" col="6" cir="-3" color="Blue" mrqrow="11" mrqcol="17" />
+      <mono ndx="020" row="29" col="7" cir="-1" color="Green" mrqrow="11" mrqcol="16" />
+      <mono ndx="019" row="29" col="8" cir="1" color="Blue" mrqrow="11" mrqcol="15" />
+      <mono ndx="018" row="29" col="9" cir="3" color="Green" mrqrow="11" mrqcol="14" />
+      <mono ndx="017" row="29" col="10" cir="5" color="Blue" mrqrow="11" mrqcol="13" />
+      <mono ndx="016" row="29" col="11" cir="7" color="Green" mrqrow="11" mrqcol="12" />
+      <mono ndx="141" row="29" col="12" cir="9" color="Blue" mrqrow="11" mrqcol="11" />
+      <mono ndx="140" row="29" col="13" cir="11" color="Green" mrqrow="11" mrqcol="10" />
+      <mono ndx="139" row="29" col="14" cir="13" color="Blue" mrqrow="11" mrqcol="9" />
+      <mono ndx="138" row="29" col="15" cir="15" color="Green" mrqrow="11" mrqcol="8" />
+
+      <!-- Marquee - row 13 0x0ed-->
+      <mono ndx="137" row="30" col="0" cir="-14" color="Red" mrqrow="12" mrqcol="23" />
+      <mono ndx="136" row="30" col="1" cir="-12" color="Yellow" mrqrow="12" mrqcol="22" />
+      <mono ndx="135" row="30" col="2" cir="-10" color="Red" mrqrow="12" mrqcol="21" />
+      <mono ndx="015" row="30" col="3" cir="-8" color="Yellow" mrqrow="12" mrqcol="20" />
+      <mono ndx="014" row="30" col="4" cir="-6" color="Red" mrqrow="12" mrqcol="19" />
+      <mono ndx="013" row="30" col="5" cir="-4" color="Yellow" mrqrow="12" mrqcol="18" />
+      <mono ndx="012" row="30" col="6" cir="-2" color="Red" mrqrow="12" mrqcol="17" />
+      <mono ndx="011" row="30" col="7" cir="0" color="Yellow" mrqrow="12" mrqcol="16" />
+      <mono ndx="010" row="30" col="8" cir="2" color="Red" mrqrow="12" mrqcol="15" />
+      <mono ndx="009" row="30" col="9" cir="4" color="Yellow" mrqrow="12" mrqcol="14" />
+      <mono ndx="008" row="30" col="10" cir="6" color="Red" mrqrow="12" mrqcol="13" />
+      <mono ndx="134" row="30" col="11" cir="8" color="Yellow" mrqrow="12" mrqcol="12" />
+      <mono ndx="133" row="30" col="12" cir="10" color="Red" mrqrow="12" mrqcol="11" />
+      <mono ndx="132" row="30" col="13" cir="12" color="Yellow" mrqrow="12" mrqcol="10" />
+      <mono ndx="131" row="30" col="14" cir="14" color="Red" mrqrow="12" mrqcol="9" />
+
+      <!-- Marquee - row 14 0x0ee -->
+      <mono ndx="130" row="31" col="0" cir="-15" color="Green" mrqrow="13" mrqcol="23" />
+      <mono ndx="129" row="31" col="1" cir="-13" color="Blue" mrqrow="13" mrqcol="22" />
+      <mono ndx="128" row="31" col="2" cir="-11" color="Green" mrqrow="13" mrqcol="21" />
+      <mono ndx="127" row="31" col="3" cir="-9" color="Blue" mrqrow="13" mrqcol="20" />
+      <mono ndx="007" row="31" col="4" cir="-7" color="Green" mrqrow="13" mrqcol="19" />
+      <mono ndx="006" row="31" col="5" cir="-5" color="Blue" mrqrow="13" mrqcol="18" />
+      <mono ndx="005" row="31" col="6" cir="-3" color="Green" mrqrow="13" mrqcol="17" />
+      <mono ndx="004" row="31" col="7" cir="-1" color="Blue" mrqrow="13" mrqcol="16" />
+      <mono ndx="003" row="31" col="8" cir="1" color="Green" mrqrow="13" mrqcol="15" />
+      <mono ndx="002" row="31" col="9" cir="3" color="Blue" mrqrow="13" mrqcol="14" />
+      <mono ndx="001" row="31" col="10" cir="5" color="Green" mrqrow="13" mrqcol="13" />
+      <mono ndx="000" row="31" col="11" cir="7" color="Blue" mrqrow="13" mrqcol="12" />
+      <mono ndx="126" row="31" col="12" cir="9" color="Green" mrqrow="13" mrqcol="11" />
+      <mono ndx="125" row="31" col="13" cir="11" color="Blue" mrqrow="13" mrqcol="10" />
+      <mono ndx="124" row="31" col="14" cir="13" color="Green" mrqrow="13" mrqcol="9" />
+      <mono ndx="123" row="31" col="15" cir="15" color="Blue" mrqrow="13" mrqcol="8" />
+
+      <!-- Marquee - row 15 0x0ef -->
+      <mono ndx="122" row="32" col="0" cir="-16" color="Red" mrqrow="14" mrqcol="24" />
+      <mono ndx="121" row="32" col="1" cir="-14" color="Yellow" mrqrow="14" mrqcol="23" />
+      <mono ndx="120" row="32" col="2" cir="-12" color="Red" mrqrow="14" mrqcol="22" />
+      <mono ndx="119" row="32" col="3" cir="-10" color="Yellow" mrqrow="14" mrqcol="21" />
+      <mono ndx="118" row="32" col="4" cir="-8" color="Red" mrqrow="14" mrqcol="20" />
+      <mono ndx="117" row="32" col="5" cir="-6" color="Yellow" mrqrow="14" mrqcol="19" />
+      <mono ndx="116" row="32" col="6" cir="-4" color="Red" mrqrow="14" mrqcol="18" />
+      <mono ndx="115" row="32" col="7" cir="-2" color="Yellow" mrqrow="14" mrqcol="17" />
+      <mono ndx="114" row="32" col="8" cir="0" color="Red" mrqrow="14" mrqcol="16" />
+      <mono ndx="113" row="32" col="9" cir="2" color="Yellow" mrqrow="14" mrqcol="15" />
+      <mono ndx="112" row="32" col="10" cir="4" color="Red" mrqrow="14" mrqcol="14" />
+      <mono ndx="111" row="32" col="11" cir="6" color="Yellow" mrqrow="14" mrqcol="13" />
+      <mono ndx="110" row="32" col="12" cir="8" color="Red" mrqrow="14" mrqcol="12" />
+      <mono ndx="109" row="32" col="13" cir="10" color="Yellow" mrqrow="14" mrqcol="11" />
+      <mono ndx="108" row="32" col="14" cir="12" color="Red" mrqrow="14" mrqcol="10" />
+      <mono ndx="107" row="32" col="15" cir="14" color="Yellow" mrqrow="14" mrqcol="9" />
+      <mono ndx="106" row="32" col="16" cir="16" color="Red" mrqrow="14" mrqcol="8" />
+
+      <mono ndx="105" row="33" col="0" cir="-17" color="Green" />
+      <mono ndx="104" row="33" col="1" cir="-15" color="Blue" />
+      <mono ndx="103" row="33" col="2" cir="-13" color="Green" />
+      <mono ndx="102" row="33" col="3" cir="-11" color="Blue" />
+      <mono ndx="101" row="33" col="4" cir="-9" color="Green" />
+      <mono ndx="100" row="33" col="5" cir="-7" color="Blue" />
+      <mono ndx="099" row="33" col="6" cir="-5" color="Green" />
+      <mono ndx="098" row="33" col="7" cir="-3" color="Blue" />
+      <mono ndx="097" row="33" col="8" cir="-1" color="Green" />
+      <mono ndx="096" row="33" col="9" cir="1" color="Blue" />
+      <mono ndx="095" row="33" col="10" cir="3" color="Green" />
+      <mono ndx="094" row="33" col="11" cir="5" color="Blue" />
+      <mono ndx="093" row="33" col="12" cir="7" color="Green" />
+      <mono ndx="092" row="33" col="13" cir="9" color="Blue" />
+      <mono ndx="091" row="33" col="14" cir="11" color="Green" />
+      <mono ndx="090" row="33" col="15" cir="13" color="Blue" />
+      <mono ndx="089" row="33" col="16" cir="15" color="Green" />
+      <mono ndx="088" row="33" col="17" cir="17" color="Blue" />
+      
+
+      <Groups>
+        <Group nm="$r#" row="0-33"/>
+      </Groups>
+      <GrpSeqs>
+        <GrpSeq nm="$topdown">
+          <Group grp="$r#" ndx="0-33"/>
+        </GrpSeq>
+        <GrpSeq nm="$bottomup">
+          <Group grp="$r#" ndx="33-0"/>
+        </GrpSeq>
+      </GrpSeqs>
+    </View>
+  </Views>
+  <fonts>
+    <font char=" " value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,240" />
+    <font char="!" value="0,0,128,128,128,128,128,0,128,0,0,0,0,0,0,0" />
+    <font char="&quot;" value="0,0,160,160,0,0,0,0,0,0,0,0,0,0,0,0" />
+    <font char="#" value="0,0,0,80,248,80,248,80,0,0,0,0,0,0,0,0" />
+    <font char="$" value="0,0,32,112,168,96,48,168,112,32,0,0,0,0,0,0" />
+    <font char="%" value=" 0,0,192,200,16,32,64,152,24,0,0,0,0,0,0,0" />
+    <font char="&amp;" value="0,0,96,144,96,96,160,144,104,0,0,0,0,0,0,0" />
+    <font char="'" value="0,0,128,128,0,0,0,0,0,0,0,0,0,0,0,0" />
+    <font char="(" value="0,0,0,64,128,128,128,64,0,0,0,0,0,0,0,0" />
+    <font char=")" value="0,0,0,128,64,64,64,128,0,0,0,0,0,0,0,0" />
+    <font char="*" value="0,0,0,80,32,248,32,80,0,0,0,0,0,0,0,0" />
+    <font char="+" value="0,0,0,0,64,224,64,0,0,0,0,0,0,0,0,0" />
+    <font char="," value="0,0,0,0,0,0,0,0,192,64,0,0,0,0,0,0" />
+    <font char="-" value="0,0,0,0,0,0,224,0,0,0,0,0,0,0,0,0" />
+    <font char="." value="0,0,0,0,0,0,0,0,64,0,0,0,0,0,0,0" />
+    <font char="/" value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" />
+    <font char="0" value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" />
+    <font char="1" value="0,0,0,64,192,64,64,224,0,0,0,0,0,0,0,0" />
+    <font char="2" value="0,0,0,224,16,96,128,240,0,0,0,0,0,0,0,0" />
+    <font char="3" value="0,0,0,224,16,96,16,224,0,0,0,0,0,0,0,0" />
+    <font char="4" value="0,0,0,144,144,240,16,16,0,0,0,0,0,0,0,0" />
+    <font char="5" value="0,0,0,240,128,224,16,224,0,0,0,0,0,0,0,0" />
+    <font char="6" value="0,0,0,96,128,224,144,96,0,0,0,0,0,0,0,0" />
+    <font char="7" value="0,0,0,224,160,224,160,224,0,0,0,0,0,0,0,0" />
+    <font char="8" value="0,0,0,224,160,224,160,224,0,0,0,0,0,0,0,0" />
+    <font char="9" value="0,0,0,224,32,32,32,32,0,0,0,0,0,0,0,0" />
+    <font char=":" value="0,0,0,0,0,64,0,0,64,0,0,0,0,0,0,0" />
+    <font char=";" value="0,0,0,0,0,64,0,0,64,128,0,0,0,0,0,0" />
+    <font char="&lt;" value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" />
+    <font char="=" value=" 0,0,0,0,240,0,240,0,0,0,0,0,0,0,0,0" />
+    <font char="&gt;" value="0,0,32,64,128,64,32,0,0,0,0,0,0,0,0,0" />
+    <font char="?" value="0,0,96,144,16,32,32,0,32,0,0,0,0,0,0,0" />
+    <font char="@" value="0,0,0,112,136,184,176,128,112,0,0,0,0,0,0,0" />
+    <font char="A" value="0,0,32,80,136,248,136,136,136,0,0,0,0,0,0,0" />
+    <font char="B" value="0,0,240,136,136,240,136,136,240,0,0,0,0,0,0,0" />
+    <font char="C" value="0,0,112,136,128,128,128,136,112,0,0,0,0,0,0,0" />
+    <font char="D" value="0,0,240,136,136,136,136,136,240,0,0,0,0,0,0,0" />
+    <font char="E" value="0,0,248,128,128,240,128,128,248,0,0,0,0,0,0,0" />
+    <font char="F" value="0,0,248,128,128,240,128,128,128,0,0,0,0,0,0,0" />
+    <font char="G" value="0,0,112,136,128,128,184,136,120,0,0,0,0,0,0,0" />
+    <font char="H" value="0,0,136,136,136,248,136,136,136,0,0,0,0,0,0,0" />
+    <font char="I" value="0,0,248,32,32,32,32,32,248,0,0,0,0,0,0,0" />
+    <font char="J" value="0,0,248,16,16,16,16,144,96,0,0,0,0,0,0,0" />
+    <font char="K" value="0,0,136,144,160,192,160,144,136,0,0,0,0,0,0,0" />
+    <font char="L" value="0,0,128,128,128,128,128,128,248,0,0,0,0,0,0,0" />
+    <font char="M" value="0,0,136,216,168,168,136,136,136,0,0,0,0,0,0,0" />
+    <font char="N" value="0,0,136,200,168,168,152,136,136,0,0,0,0,0,0,0" />
+    <font char="O" value="0,0,112,136,136,136,136,136,112,0,0,0,0,0,0,0" />
+    <font char="P" value="0,0,240,136,136,240,128,128,128,0,0,0,0,0,0,0" />
+    <font char="Q" value="0,0,112,136,136,136,168,152,120,0,0,0,0,0,0,0" />
+    <font char="R" value="0,0,240,136,136,240,160,144,144,0,0,0,0,0,0,0" />
+    <font char="S" value="0,0,112,136,128,112,8,136,112,0,0,0,0,0,0,0" />
+    <font char="T" value="0,0,248,32,32,32,32,32,32,0,0,0,0,0,0,0" />
+    <font char="U" value="0,0,136,136,136,136,136,136,112,0,0,0,0,0,0,0" />
+    <font char="V" value="0,0,136,136,136,136,136,80,32,0,0,0,0,0,0,0" />
+    <font char="W" value="0,0,136,136,136,136,168,216,136,0,0,0,0,0,0,0" />
+    <font char="X" value="0,0,136,80,80,32,80,80,136,0,0,0,0,0,0,0" />
+    <font char="Y" value="0,0,136,80,80,32,32,32,32,0,0,0,0,0,0,0" />
+    <font char="Z" value="0,0,248,8,16,32,64,128,248,0,0,0,0,0,0,0" />
+    <font char="[" value="0,0,192,128,128,128,128,128,192,0,0,0,0,0,0,0" />
+    <font char="\" value="0,0,128,64,64,32,16,16,8,0,0,0,0,0,0,0" />
+    <font char="]" value="0,0,192,64,64,64,64,64,192,0,0,0,0,0,0,0" />
+    <font char="^" value="0,0,32,80,136,0,0,0,0,0,0,0,0,0,0,0" />
+    <font char="_" value="0,0,0,0,0,0,0,0,248,0,0,0,0,0,0,0" />
+    <font char="`" value="0,0,128,64,0,0,0,0,0,0,0,0,0,0,0,0" />
+    <font char="a" value="0,0,0,112,8,120,136,136,120,0,0,0,0,0,0,0" />
+    <font char="b" value="0,0,128,128,128,240,136,136,240,0,0,0,0,0,0,0" />
+    <font char="c" value="0,0,0,0,0,112,128,128,112,0,0,0,0,0,0,0" />
+    <font char="d" value="0,0,8,8,8,120,136,136,120,0,0,0,0,0,0,0" />
+    <font char="e" value="0,0,0,0,112,136,240,128,112,0,0,0,0,0,0,0" />
+    <font char="f" value="0,0,0,32,80,64,224,64,64,0,0,0,0,0,0,0" />
+    <font char="g" value="0,0,0,0,0,112,136,136,120,8,112,0,0,0,0,0" />
+    <font char="h" value="0,0,128,128,128,224,144,144,144,0,0,0,0,0,0,0" />
+    <font char="i" value="0,0,0,128,0,128,128,128,128,0,0,0,0,0,0,0" />
+    <font char="j" value="0,0,0,16,0,16,16,16,144,144,96,0,0,0,0,0" />
+    <font char="k" value="0,0,128,144,160,192,160,144,144,0,0,0,0,0,0,0" />
+    <font char="l" value="0,0,128,128,128,128,128,128,128,0,0,0,0,0,0,0" />
+    <font char="m" value="0,0,0,0,0,208,168,168,168,0,0,0,0,0,0,0" />
+    <font char="n" value="0,0,0,0,0,224,144,144,144,0,0,0,0,0,0,0" />
+    <font char="o" value="0,0,0,0,0,96,144,144,96,0,0,0,0,0,0,0" />
+    <font char="p" value="0,0,0,0,0,224,144,144,224,128,128,0,0,0,0,0" />
+    <font char="q" value="0,0,0,0,0,96,144,144,112,16,24,0,0,0,0,0" />
+    <font char="r" value="0,0,0,0,0,224,144,128,128,0,0,0,0,0,0,0" />
+    <font char="s" value="0,0,0,0,96,128,96,16,96,0,0,0,0,0,0,0" />
+    <font char="t" value="0,0,0,64,224,64,64,64,64,0,0,0,0,0,0,0" />
+    <font char="u" value="0,0,0,0,0,144,144,144,112,0,0,0,0,0,0,0" />
+    <font char="v" value="0,0,0,0,0,136,80,80,32,0,0,0,0,0,0,0" />
+    <font char="w" value="0,0,0,0,0,136,168,168,112,0,0,0,0,0,0,0" />
+    <font char="x" value="0,0,0,0,136,80,32,80,136,0,0,0,0,0,0,0" />
+    <font char="y" value="0,0,0,0,144,144,144,112,16,96,0,0,0,0,0,0" />
+    <font char="z" value="0,0,0,0,96,144,144,144,96,0,0,0,0,0,0,0" />
+    <font char="{" value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" />
+    <font char="|" value="0,0,0,128,128,128,128,128,0,0,0,0,0,0,0,0" />
+    <font char="}" value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" />
+    <font char="~" value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" />
+    <font char="" value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" />
+
+  </fonts>
+  <pixmaps>
+    <bitpixmap name="alloff"    value="00000000000000000000000000000000000000000000000000000000000000000000000000000000"/>
+    <bitpixmap name="allon"     value="ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff00"/>
+    <bitpixmap name="allred"    value="00aa005500aa005500aa0000002aaaa015401500a02a14155000aa002aa015401500a02a14102000"/>
+    <bitpixmap name="allgreen"  value="5500aa005500aa005500aa555540000aa02a80540540a28005540055400aa02a80540540a2844000"/>
+    <bitpixmap name="allblue"   value="aa005500aa005500aa0055aaaa8000154015402a0a81414002aa00aa80154015402a0a8141428000"/>
+    <bitpixmap name="allyellow" value="005500aa005500aa00550000001555400a802a815014082aa801550015400a802a81501408290000"/>
+    <bitpixmap name="red"       value="00aa005500aa005500aa0000002aaaa015401500a02a14155000aa002aa015401500a02a14100000"/>
+    <bitpixmap name="green"     value="5500aa005500aa005500aa555540000aa00a80140540a08001540055400aa00a80140540a0800000"/>
+    <bitpixmap name="blue"      value="aa005500aa005500aa0055aaaa800015401500280a81410002a800aa8015401500280a8141000000"/>
+    <bitpixmap name="yellow"    value="005500aa005500aa00550000001555400a802a815014082aa801550015400a802a81501408290000"/>
+    <bitpixmap name="border"    value="0000000000000000000000ffffe00030306060c3186336600c0301806030306060c31863366f0000"/>
+  </pixmaps>
+  <treetransitions>
+<!--      <transition name="name" value="
+00  01  02  03  04  05  06  07  08  09  10  11  12  13  14  15  16  17
+                                  01
+                                02  02
+                                  03
+                                04  04
+                              05  05  05
+                            06  06  06  06
+                              07  07  07
+                            08  08  08  08
+                          09  09  09  09  09
+                        10  10  10  10  10  10
+                          11  11  11  11  11
+                        12  12  12  12  12  12
+                      13  13  13  13  13  13  13
+                    14  14  14  14  14  14  14  14
+                      15  15  15  15  15  15  15
+                    16  16  16  16  16  16  16  16
+                  17  17  17  17  17  17  17  17  17
+                18  18  18  18  18  18  18  18  18  18
+                  19  19  19  19  19  19  19  19  19
+                20  20  20  20  20  20  20  20  20  20
+              21  21  21  21  21  21  21  21  21  21  21
+            22  22  22  22  22  22  22  22  22  22  22  22
+              23  23  23  23  23  23  23  23  23  23  23
+            24  24  24  24  24  24  24  24  24  24  24  24
+          25  25  25  25  25  25  25  25  25  25  25  25  25
+        26  26  26  26  26  26  26  26  26  26  26  26  26  26
+          27  27  27  27  27  27  27  27  27  27  27  27  27
+        28  28  28  28  28  28  28  28  28  28  28  28  28  28
+      29  29  29  29  29  29  29  29  29  29  29  29  29  29  29
+    30  30  30  30  30  30  30  30  30  30  30  30  30  30  30  30
+      31  31  31  31  31  31  31  31  31  31  31  31  31  31  31
+    32  32  32  32  32  32  32  32  32  32  32  32  32  32  32  32
+  33  33  33  33  33  33  33  33  33  33  33  33  33  33  33  33  33
+34  34  34  34  34  34  34  34  34  34  34  34  34  34  34  34  34  34">
+      </transition>-->
+      <transition name="topdown" value="
+                                  01
+                                02  02
+                                  03
+                                04  04
+                              05  05  05
+                            06  06  06  06
+                              07  07  07
+                            08  08  08  08
+                          09  09  09  09  09
+                        10  10  10  10  10  10
+                          11  11  11  11  11
+                        12  12  12  12  12  12
+                      13  13  13  13  13  13  13
+                    14  14  14  14  14  14  14  14
+                      15  15  15  15  15  15  15
+                    16  16  16  16  16  16  16  16
+                  17  17  17  17  17  17  17  17  17
+                18  18  18  18  18  18  18  18  18  18
+                  19  19  19  19  19  19  19  19  19
+                20  20  20  20  20  20  20  20  20  20
+              21  21  21  21  21  21  21  21  21  21  21
+            22  22  22  22  22  22  22  22  22  22  22  22
+              23  23  23  23  23  23  23  23  23  23  23
+            24  24  24  24  24  24  24  24  24  24  24  24
+          25  25  25  25  25  25  25  25  25  25  25  25  25
+        26  26  26  26  26  26  26  26  26  26  26  26  26  26
+          27  27  27  27  27  27  27  27  27  27  27  27  27
+        28  28  28  28  28  28  28  28  28  28  28  28  28  28
+      29  29  29  29  29  29  29  29  29  29  29  29  29  29  29
+    30  30  30  30  30  30  30  30  30  30  30  30  30  30  30  30
+      31  31  31  31  31  31  31  31  31  31  31  31  31  31  31
+    32  32  32  32  32  32  32  32  32  32  32  32  32  32  32  32
+  33  33  33  33  33  33  33  33  33  33  33  33  33  33  33  33  33
+34  34  34  34  34  34  34  34  34  34  34  34  34  34  34  34  34  34"
+                  exp="Row + 1"/>
+
+      <transition name="middleupdown" value="
+                                  18
+                                17  17
+                                  16
+                                15  15
+                              14  14  14
+                            13  13  13  13
+                              12  12  12
+                            11  11  11  11
+                          10  10  10  10  10
+                        09  09  09  09  09  09
+                          08  08  08  08  08
+                        07  07  07  07  07  07
+                      06  06  06  06  06  06  06
+                    05  05  05  05  05  05  05  05
+                      04  04  04  04  04  04  04
+                    03  03  03  03  03  03  03  03
+                  02  02  02  02  02  02  02  02  02
+                01  01  01  01  01  01  01  01  01  01
+                  02  02  02  02  02  02  02  02  02
+                03  03  03  03  03  03  03  03  03  03
+              04  04  04  04  04  04  04  04  04  04  04
+            05  05  05  05  05  05  05  05  05  05  05  05
+              06  06  06  06  06  06  06  06  06  06  06
+            07  07  07  07  07  07  07  07  07  07  07  07
+          08  08  08  08  08  08  08  08  08  08  08  08  08
+        09  09  09  09  09  09  09  09  09  09  09  09  09  09
+          10  10  10  10  10  10  10  10  10  10  10  10  10
+        11  11  11  11  11  11  11  11  11  11  11  11  11  11
+      12  12  12  12  12  12  12  12  12  12  12  12  12  12  12
+    13  13  13  13  13  13  13  13  13  13  13  13  13  13  13  13
+      14  14  14  14  14  14  14  14  14  14  14  14  14  14  14
+    15  15  15  15  15  15  15  15  15  15  15  15  15  15  15  15
+  16  16  16  16  16  16  16  16  16  16  16  16  16  16  16  16  16
+17  17  17  17  17  17  17  17  17  17  17  17  17  17  17  17  17  17"
+                  exp="Math.Abs(Row - 17) + 1"/>
+<!--opening curtain-->
+      <transition name="middleleftright" value="
+                                  01
+                                02  02
+                                  01
+                                02  02
+                              03  01  03
+                            04  02  02  04
+                              03  01  03
+                            04  02  02  04
+                          05  03  01  03  05
+                        06  04  02  02  04  06
+                          05  03  01  03  05
+                        06  04  02  02  04  06
+                      07  05  03  01  03  05  07
+                    08  06  04  02  02  04  06  08
+                      07  05  03  01  03  05  07
+                    08  06  04  02  02  04  06  08
+                  09  07  05  03  01  03  05  07  09
+                10  08  06  04  02  02  04  06  08  10
+                  09  07  05  03  01  03  05  07  09
+                10  08  06  04  02  02  04  06  08  10
+              11  09  07  05  03  01  03  05  07  09  11
+            12  10  08  06  04  02  02  04  06  08  10  12
+              11  09  07  05  03  01  03  05  07  09  11
+            12  10  08  06  04  02  02  04  06  08  10  12
+          13  11  09  07  05  03  01  03  05  07  09  11  13
+        14  12  10  08  06  04  02  02  04  06  08  10  12  14
+          13  11  09  07  05  03  01  03  05  07  09  11  13
+        14  12  10  08  06  04  02  02  04  06  08  10  12  14
+      15  13  11  09  07  05  03  01  03  05  07  09  11  13  15
+    16  14  12  10  08  06  04  02  02  04  06  08  10  12  14  16
+      15  13  11  09  07  05  03  01  03  05  07  09  11  13  15
+    16  14  12  10  08  06  04  02  02  04  06  08  10  12  14  16
+  17  15  13  11  09  07  05  03  01  03  05  07  09  11  13  15  17
+18  16  14  12  10  08  06  04  02  02  04  06  08  10  12  14  16  18"
+                  exp="Math.Abs(Circle) + 1"/>
+      
+      <transition name="centerout" value="
+                                  19
+                                18  18
+                                  17
+                                16  16
+                              15  15  15
+                            14  14  14  14
+                              13  13  13
+                            12  12  12  12
+                          11  11  11  11  11
+                        10  10  10  10  10  10
+                          09  09  09  09  09
+                        08  08  08  08  08  08
+                      07  07  07  07  07  07  07
+                    07  06  06  06  06  06  06  07
+                      06  05  05  05  05  05  06
+                    06  05  04  04  04  04  05  06
+                  06  05  04  03  03  03  04  05  06
+                06  05  04  03  02  02  03  04  05  06
+                  05  04  03  02  01  02  03  04  05
+                06  05  04  03  02  02  03  04  05  06
+              07  06  05  04  03  03  03  04  05  06  07
+            08  07  06  05  04  04  04  04  05  06  07  08
+              08  07  06  05  05  05  05  05  06  07  08
+            09  08  07  06  06  06  06  06  06  07  08  09
+          10  09  08  07  07  07  07  07  07  07  08  09  10
+        11  10  09  08  08  08  08  08  08  08  08  09  10  11
+          11  10  09  09  09  09  09  09  09  09  09  10  11
+        12  11  10  10  10  10  10  10  10  10  10  10  11  12
+      13  12  11  11  11  11  11  11  11  11  11  11  11  12  13
+    14  13  12  12  12  12  12  12  12  12  12  12  12  12  13  14
+      14  13  13  13  13  13  13  13  13  13  13  13  13  13  14
+    15  14  14  14  14  14  14  14  14  14  14  14  14  14  14  15
+  16  15  15  15  15  15  15  15  15  15  15  15  15  15  15  15  16
+17  16  16  16  16  16  16  16  16  16  16  16  16  16  16  16  16  17"
+              exp="Math.Abs(Row - 18) + Math.Max(Math.Abs(Circle) - Math.Abs(Row - 18), 0) / 2 + 1" />
+      
+      <transition name="left2right" value="
+                                  18
+                                17  19
+                                  18
+                                17  19
+                              16  18  20
+                            15  17  19  21
+                              16  18  20
+                            15  17  19  21
+                          14  16  18  20  22
+                        13  15  17  19  21  23
+                          14  16  18  20  22
+                        13  15  17  19  21  23
+                      12  14  16  18  20  22  24
+                    11  13  15  17  19  21  23  25
+                      12  14  16  18  20  22  24
+                    11  13  15  17  19  21  23  25
+                  10  12  14  16  18  20  22  24  26
+                09  11  13  15  17  19  21  23  25  27
+                  10  12  14  16  18  20  22  24  26
+                09  11  13  15  17  19  21  23  25  27
+              08  10  12  14  16  18  20  22  24  26  28
+            07  09  11  13  15  17  19  21  23  25  27  29
+              08  10  12  14  16  18  20  22  24  26  28
+            07  09  11  13  15  17  19  21  23  25  27  29
+          06  08  10  12  14  16  18  20  22  24  26  28  30
+        05  07  09  11  13  15  17  19  21  23  25  27  29  31
+          06  08  10  12  14  16  18  20  22  24  26  28  30
+        05  07  09  11  13  15  17  19  21  23  25  27  29  31
+      04  06  08  10  12  14  16  18  20  22  24  26  28  30  32
+    03  05  07  09  11  13  15  17  19  21  23  25  27  29  31  33
+      04  06  08  10  12  14  16  18  20  22  24  26  28  30  32
+    03  05  07  09  11  13  15  17  19  21  23  25  27  29  31  33
+  02  04  06  08  10  12  14  16  18  20  22  24  26  28  30  32  34
+01  03  05  07  09  11  13  15  17  19  21  23  25  27  29  31  33  35"
+        exp="Circle + 18" />
+            
+    </treetransitions>
+    <steps>
+        <font />
+        <!--<for varname="ndx" init="0" final="0x001">
+            <if cond="ndx &lt; 1">
+                <then>
+                    <for varname="ndx" init="1" final="0x1009" >
+                        <msg >hello {ndx}</msg>
+                        <if cond="ndx = 4">
+                            <then>
+                                <break />
+                            </then>
+                        </if>
+                    </for>
+                    <msg>broke!</msg>
+                </then>
+                <else>
+                    <msg >not this time</msg>
+                </else>
+            </if>
+        </for>-->
+      <jump display="allon" exit="" enter="" step="1"></jump>
+      <anime display="alloff" transition="topdown" start="+2" stop="+1" />
+      <anime display="allon" transition="topdown" start="+2" stop="+10" />
+      <anime display="allon" transition="topdown" gap="1" start="+2" stop="+1" />
+      <anime display="allon" transition="topdown" gap="1" reverse="true" start="+2" stop="+1" />
+      <anime display="allon" transition="topdown" gap="2" start="+2" stop="+1" />
+      <anime display="alloff" transition="leftright"  start="+2" stop="+1" />
+      <anime display="allon" transition="leftright" start="+2" stop="+1" />
+      <anime display="allon" transition="leftright" gap="2" start="+2" stop="+1" />
+      <anime display="allon" transition="topdown" gap="4" start="+2" stop="+1" />
+      <anime display="alloff" transition="centerout" start="+2" stop="+1" />
+      <anime display="allon" transition="centerout" start="+2" stop="+2" />
+      <anime display="alloff" transition="centerout" start="+2" stop="+1" />
+      <anime display="red" transition="centerout" start="+2" stop="+1" />
+      <anime display="allon" transition="centerout" start="+2" stop="+1" />
+      <anime display="yellow" transition="centerout" gap="2" start="+2" stop="+1" />
+      <anime display="allon" transition="centerout" reverse="true" start="+2" stop="+1" />
+      <anime display="allon" transition="centerout" gap="1" reverse="true" start="+2" stop="+1" />
+      <anime display="allon" transition="centerout" gap="2" reverse="true" start="+2" stop="+1" />
+      <anime display="yellow" transition="centerout" reverse="true" gap="2" start="+2" stop="+1" />
+      <anime display="border|yellow" transition="leftright" start="+2" stop="+1" />
+      <anime display="border" transition="leftright" reverse="true" start="+0" stop="+1" />
+      <anime display="alloff" transition="middleupdown" start="+2" stop="+1" />
+      <anime display="allon" transition="middleupdown" start="+2" stop="+2" />
+      <anime display="alloff" transition="middleupdown"  reverse="true" gap="2" start="+2" stop="+1" />
+      <anime display="allon" transition="middleupdown"  reverse="true" gap="2" start="+2" stop="+2" />
+      <anime display="alloff" transition="middleleftright" start="+2" stop="+1" />
+      <anime display="allon" transition="middleleftright" start="+2" stop="+2" />
+      <anime display="alloff" transition="middleleftright"  reverse="true" gap="2" start="+2" stop="+1" />
+      <anime display="allon" transition="middleleftright"  reverse="true" gap="2" start="+2" stop="+2" />
+      <msg start="+2" stop="+2">Merry New Year</msg>
+      <!--<anime display="green" transition="topdown:gap=2" start="+2" stop="+2" />
+      <anime display="allon" transition="bottomup" start="+2" stop="+2" />
+      <anime display="yellow" transition="topdown:gap=2" start="+2" stop="+2" />
+      <anime display="allon" transition="bottomup:gap=1" start="+2" stop="+2" />
+      <anime display="blue" transition="topdown:gap=2" start="+2" stop="+2" />
+      <anime display="allon" transition="bottomup" start="+2" stop="+2" />-->
+      <!--<jump display="blue"></jump>
+      <jump display="allon &amp; !allblue" ></jump>
+      <jump display="green" ></jump>
+      <jump display="allon &amp; !allgreen"></jump>
+      <jump display="allgreen | allblue | allred | allyellow"></jump>
+      <topdown display="alloff" exit="" enter="" step="1"></topdown>
+      <bottomup display="allon" exit="" enter="" step="1"></bottomup>
+      <topdown display="alloff" exit="" enter="" step="1"></topdown>-->
+      <!--<topdown display="red" exit="" enter="" step="1"></topdown>
+        <topdown display="yellow" exit="" enter="slide" step="4"></topdown>
+        <topdown display="green" exit="slide" enter="" step="4"></topdown>
+        <topdown display="blue" exit="slide" enter="slide" step="4"></topdown>
+        <topdown display="allon" exit="" enter="" step="1"></topdown>
+      <topdown display="alloff" exit="" enter="" step="1"></topdown>-->
+      <!--<leftright display="allon" exit="" enter="" step="1"></leftright>
+      <leftright display="allon &amp; !allblue" exit="" enter="" step="1"></leftright>
+      <leftright display="curr &amp; !allgreen" exit="" enter="" step="1"></leftright>
+      <leftright display="red" exit="" enter="" step="2"></leftright>
+      <leftright display="yellow" exit="" enter="slide" step="4"></leftright>
+      <leftright display="allgreen" exit="slide" enter="" step="4"></leftright>
+      <leftright display="allblue" exit="slide" enter="slide" step="4"></leftright>
+      <leftright display="allon" exit="" enter="" step="2"></leftright>
+      <topdown display="alloff" exit="" enter="" step="1"></topdown>
+        <bottomup display="allred" exit="" enter="" step="2"></bottomup>
+        <bottomup display="allred | allyellow" exit="" enter="" step="2"></bottomup>
+        <bottomup display="allred | allyellow | allgreen" exit="" enter="" step="2"></bottomup>
+        <bottomup display="allon" exit="" enter="" step="1"></bottomup>-->
+    </steps>
+    <steptransitions>
+      <transition name="enterfromright">
+        <position x="10" xstep="-1" y="0" steps="10" />
+      </transition>
+      <transition name="exittoleft">
+        <position x="-1" xstep="-1" y="0" steps="10"/>
+      </transition>
+      <transition name="passthru">
+        <position x="10" xstep="-1" y="0" steps="21"/>
+      </transition>
+      <transition name="bounce">
+        <position x="10" xstep="-1" y="-10" ystep="1" steps="10" />
+        <position x="0" xstep="-1"  y="-1" ystep="-1" steps="10" />
+      </transition>
+      <transition name="crossfade">
+        <fade steps="10" fade="10" />
+      </transition>
+      <transition name="immediate">
+        <fade steps="0" fade="0" />
+      </transition>
+      <transition name="flash">
+        <fade steps="1" fade="1" />
+      </transition>
+    </steptransitions>
+  </root>

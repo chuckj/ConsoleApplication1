@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<song filename="@@path@@\SoundVisualationLibrary\Sample_NAudio\timing\03 Rudolph the Red-Nosed Reindeer.mp3"
+      displayFile="@@path@@\SoundVisualationLibrary\Sample_NAudio\timing\03 Rudolph the Red-Nosed Reindeer.dsp">
+  <keyframes>
+    <keyframe measure="0" beatspermeasure="1" time="0"/>
+    <keyframe measure="1" beatspermeasure="4" time=".375"/>
+    <keyframe measure="77" time="183.0"/>
+  </keyframes>
+  <lyrics>
+    <lyric text="Ru" time="1m1" />
+    <lyric text="-dolph" time="1m1+2/2" />
+    <lyric text="the" time="1m2+2/2+.04" />
+    <lyric text="red" time="1m3" />
+    <lyric text="nosed" time="1m4" />
+    <lyric text="rein" time="2m1" />
+    <lyric text="-deer" time="2m2" />
+
+    <lyric text="Ru" time="13m1" />
+    <lyric text="-dolph" time="13m1+2/2" />
+    <lyric text="the" time="13m2+2/2" />
+    <lyric text="red" time="13m3" />
+    <lyric text="nosed" time="13m4" />
+    <lyric text="rein" time="14m1" />
+    <lyric text="-deer" time="14m2" />
+
+    <lyric text="Had" time="17m1" />
+    <lyric text="a" time="17m1+2/2" />
+    <lyric text="ver" time="17m2" />
+    <lyric text="-y" time="17m2+2/2" />
+    <lyric text="shine" time="17m3" />
+    <lyric text="-y" time="17m4" />
+    <lyric text="nose" time="18m1" />
+
+    <lyric text="And" time="21m1" />
+    <lyric text="if" time="21m1+2/2" />
+    <lyric text="you" time="21m2+2/2" />
+    <lyric text="ev" time="21m3" />
+    <lyric text="-er" time="21m4" />
+    <lyric text="saw" time="22m1" />
+    <lyric text="it" time="22m2" />
+
+    <lyric text="You" time="25m1" />
+    <lyric text="would" time="25m1+2/2" />
+    <lyric text="ev" time="25m2" />
+    <lyric text="-en" time="25m2+2/2" />
+    <lyric text="say" time="25m3" />
+    <lyric text="it" time="25m4" />
+    <lyric text="glows" time="26m1" />
+
+    <lyric text="Then" time="34m1" />
+    <lyric text="one" time="34m2" />
+    <lyric text="fog" time="34m3" />
+    <lyric text="-gy" time="34m4" />
+    <lyric text="Christ" time="35m1" />
+    <lyric text="-mas" time="35m2" />
+    <lyric text="Eve" time="35m3" />
+
+    <lyric text="San" time="36m1" />
+    <lyric text="-ta" time="36m2" />
+    <lyric text="came" time="36m3" />
+    <lyric text="to" time="36m4" />
+    <lyric text="say" time="36m4+2/2" />
+
+    <lyric text="Ru" time="38m1" />
+    <lyric text="-dolph" time="38m2" />
+    <lyric text="with" time="38m3" />
+    <lyric text="your" time="38m4" />
+    <lyric text="nose" time="39m1" />
+    <lyric text="so" time="39m1+3/3" />
+    <lyric text="bright" time="39m2+2/3" />
+
+    <lyric text="Won't" time="40m1" />
+    <lyric text="you" time="40m2" />
+    <lyric text="guide" time="40m3" />
+    <lyric text="my" time="40m4" />
+    <lyric text="sleigh" time="41m1" />
+    <lyric text="to-" time="41m1+3/3" />
+    <lyric text="-night" time="41m2+2/3" />
+
+
+    <lyric text="Then" time="50m1" />
+    <lyric text="one" time="50m1+2/2" />
+    <lyric text="foggy" time="50m2+2/2" />
+    <lyric text="Chris" time="50m3" />
+    <lyric text="-mas" time="50m4" />
+    <lyric text="Eve" time="51m1" />
+
+  </lyrics>
+ 
+  <steps>
+    <stepi begin="0m1" end="0m1" color="blue" text="" regex=":dmx:" mode="0" transition="immediate"/>
+    <stepi begin="0m1" end="0m1" color="yellow" text="" regex="^(?!.*(dmx|tree|cdl))" mode="0" transition="immediate"/>
+    <stepi begin="0m1" end="0m1" color="white" text="" regex="tree" mode="0" transition="immediate"/>
+    <stepi begin="0m1" end="0m1" color="orange" text="" regex="cdl" mode="0" transition="immediate"/>
+    <!--<stepi begin="0m1" end="0m1" color="white" text="" regex="^(?!.*dmx)" mode="0" transition="immediate"/>-->
+    <repeat tm1="0" tm2="2" tm3="4" tm4="6" tm5="8" tm6="10">
+
+      <stepi begin="1m1" end="1m1" color="white" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="1m1+2/4" end="1m1+2/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="1m1+3/4" end="1m1+3/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="1m1+4/4" end="1m1+4/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+
+      <stepi begin="1m2" end="1m2" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="1m2+3/4" end="1m2+3/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="1m2+4/4" end="1m2+4/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+    
+      <stepi begin="1m3+2/4" end="1m3+2/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="1m3+3/4" end="1m3+3/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="1m3+4/4" end="1m3+4/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+
+      <stepi begin="1m4" end="1m4" color="grween" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="1m4+2/4" end="1m4+2/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="1m4+3/4" end="1m4+3/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="1m4+4/4" end="1m4+4/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+
+      <stepi begin="2m1" end="2m1" color="white" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="2m1+2/4" end="2m1+2/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="2m1+3/4" end="2m1+3/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="2m1+4/4" end="2m1+4/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+
+      <stepi begin="2m2" end="2m2" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="2m2+3/4" end="2m2+3/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="2m2+4/4" end="2m2+4/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+
+      <stepi begin="2m3+2/4" end="2m3+2/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="2m3+3/4" end="2m3+3/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="2m3+4/4" end="2m3+4/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+
+      <stepi begin="2m4" end="2m4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
+    </repeat>
+
+    <stepmsg begin="1m1" end="8m3" msg="RUDOLPH, THE RED NOSED REINEER " />
+    
+    <!--<stepi begin="1m1" end="1m3" text="" regex="^hm:w1" mode="1"/>
+    <stepi begin="1m1" end="2m3" text="" regex="^hm:w2" mode="1" />
+    <stepi begin="2m1" end="2m3" text="" regex="^hm:w3" mode="1" />
+    <stepi begin="2m1" end="4m3" text="" regex="^hm:w4" mode="1" />
+    <stepi begin="3m1" end="3m3" text="" regex="^hm:w1" mode="1" />-->
+    <stepi begin="1m1" end="1m3" text="" regex="^hm:w4" mode="2" img="greenball1.bmp" transition="bounce"/>
+    <stepi begin="1m1+0.600" end="2m3" text="" regex="^hm:w3" mode="2" img="greenball1.bmp" transition="bounce"/>
+    <stepi begin="1m1+1.200" end="3m3" text="" regex="^hm:w2" mode="2" img="greenball1.bmp" transition="bounce"/>
+    <stepi begin="1m1+1.800" end="4m3" text="" regex="^hm:w1" mode="4" img="greenball1.bmp" transition="enterfromright"/>
+    <!--<stepi begin="1m1+2.400" end="4m3" text="" regex="^hm:w1" mode="1" img="greenball1.bmp"/>
+    <stepi begin="1m1+3.000" end="4m3" text="" regex="^hm:w1" mode="1" img="greenball1.bmp"/>-->
+
+    <stepi begin="2m1" end="1m3" text="" regex="^hm:w4" mode="2" img="redball1.bmp" transition="passthru"/>
+    <stepi begin="2m1+0.600" end="2m3" text="" regex="^hm:w3" mode="2" img="redball1.bmp" transition="passthru"/>
+    <stepi begin="2m1+1.200" end="3m3" text="" regex="^hm:w2" mode="4" img="redball1.bmp" transition="enterfromright"/>
+
+    <stepi begin="3m1" end="1m3" text="" regex="^hm:w4" mode="2" img="blueball1.bmp" transition="passthru"/>
+    <stepi begin="3m1+0.700" end="2m3" text="" regex="^hm:w3" mode="4" img="blueball1.bmp" transition="enterfromright"/>
+    
+    <stepi begin="4m1" end="8m3" text="" regex="^hm:w4" mode="4"  img="tree.bmp" transition="enterfromright"/>
+  </steps>
+  <loop begin="100" end="300" />
+</song>

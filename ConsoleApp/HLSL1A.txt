@@ -1,0 +1,76 @@
+cbuffer data :register(b0)
+{
+    float4x4 worldViewProj;
+};
+
+struct VS_IN
+{
+    float4 position : POSITION;
+	float4 color: COLOR;
+};
+
+struct GS_IN
+{
+    float4 position : POSITION;
+	float4 color: COLOR;
+};
+
+struct PS_IN
+{
+    float4 position : SV_POSITION;
+	float4 color: COLOR;
+};
+
+//texture
+//Texture1D textureMap;
+//SamplerState textureSampler;
+
+
+GS_IN VS(VS_IN input)
+{
+    GS_IN output = (GS_IN)0;
+    output.position = input.position;
+    output.color = input.color;
+    return output;
+}
+
+[maxvertexcount(10)]
+void GS(point GS_IN input[1], inout TriangleStream<PS_IN> TriStream )
+{
+
+    float size = 1.1f;
+
+    //create a cube from every vertex
+    PS_IN vertices[6];
+
+    float4 P = float4(input[0].position.xyz, 1);
+    float4 coord = input[0].color;
+    vertices[0].position = mul(worldViewProj, float4(0, size, 0, 1) + P);
+    vertices[0].color = coord;
+    vertices[1].position = mul(worldViewProj, float4(size * .8, size * .4, 0, 1) + P);
+    vertices[1].color = coord;
+    vertices[2].position = mul(worldViewProj, float4(-size * .8, size * .4, 0, 1) + P);
+    vertices[2].color = coord;
+    vertices[3].position = mul(worldViewProj, float4(size * .8, -size * .4, 0, 1) + P);
+    vertices[3].color = coord;
+    vertices[4].position = mul(worldViewProj, float4(-size * .8, -size * .4, 0, 1) + P);
+    vertices[4].color = coord;
+    vertices[5].position = mul(worldViewProj, float4(0, -size, 0, 1) + P);
+    vertices[5].color = coord;
+
+    TriStream.Append(vertices[0]);
+    TriStream.Append(vertices[1]);
+    TriStream.Append(vertices[2]);
+
+    TriStream.Append(vertices[3]);
+    TriStream.Append(vertices[4]);
+    TriStream.Append(vertices[5]);
+
+    TriStream.RestartStrip();
+
+}
+
+float4 PS(PS_IN input) : SV_Target
+{
+	return input.color;
+}

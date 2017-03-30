@@ -1,0 +1,111 @@
+cbuffer data :register(b0)
+{
+    float4x4 w;
+	float4x4 r;
+};
+
+cbuffer colorindex :register(b1)
+{
+    float4 clrndx[1200];
+};
+
+
+struct VS_IN
+{
+    float3 position : POSITION;
+	uint texcoord: TEXCOORD;
+};
+
+struct GS_IN
+{
+    float3 position : POSITION;
+	uint texcoord: TEXCOORD;
+};
+
+struct PS_IN
+{
+    float4 position : SV_POSITION;
+	float4 color: COLOR;
+};
+
+GS_IN VS(VS_IN input)
+{
+    GS_IN output = (GS_IN)0;
+    output.position = input.position;
+    output.texcoord = input.texcoord;
+    return output;
+}
+
+[maxvertexcount(6)]
+void GS(point GS_IN input[1], inout TriangleStream<PS_IN> TriStream )
+{
+	float s = 100.0f;
+    float size = 1.2f / s;
+
+    //create a hexagon from every vertex
+    PS_IN vertex;
+
+	uint ndx = input[0].texcoord;
+	
+    vertex.color = clrndx[ndx];
+
+    float4 P = float4(input[0].position.xyz, 1);
+    vertex.position = mul(w, mul(r, float4(0, size, 0, 0)) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, mul(r, float4(size * .8, size * .4, 0, 0)) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, mul(r, float4(-size * .8, size * .4, 0, 0)) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, mul(r, float4(size * .8, -size * .4, 0, 0)) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, mul(r, float4(-size * .8, -size * .4, 0, 0)) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, mul(r, float4(0, -size, 0, 0)) + P);
+    TriStream.Append(vertex);
+
+    TriStream.RestartStrip();
+}
+
+//	pixel shader for bulbs
+float4 PS(PS_IN input) : SV_Target
+{
+	return input.color;
+}
+
+
+
+//	lines/areas
+
+struct VSL_IN
+{
+    float4 position : POSITION;
+	float4 color: COLOR;
+};
+
+struct PSL_IN
+{
+    float4 position : SV_POSITION;
+	float4 color: COLOR;
+};
+
+
+PSL_IN VSL(VSL_IN input)
+{
+    PS_IN output = (PS_IN)0;
+	output.position = mul(w, input.position);
+	output.color = input.color;
+    return output;
+}
+
+//	pixel shader for lines
+float4 PSL(PSL_IN input) : SV_Target
+{
+	return input.color;
+}
+
+
+//	pixel shader for black-out surfaces
+float4 PSA(PSL_IN input) : SV_Target
+{
+	return input.color;
+}

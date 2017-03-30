@@ -1,0 +1,98 @@
+cbuffer data :register(b0)
+{
+    float4x4 w;
+};
+
+cbuffer colorindex :register(b1)
+{
+    uint4 clrndx[3];
+};
+
+struct VS_IN
+{
+	float4 color: COLOR;
+    float3 position : POSITION;
+	uint texcoord: BLENDINDICES;
+};
+
+struct GS_IN
+{
+	float4 color: COLOR;
+    float3 position : POSITION;
+	uint texcoord: BLENDINDICES;
+};
+
+struct PS_IN
+{
+    float4 position : SV_POSITION;
+	float4 color: COLOR;
+};
+
+GS_IN VS(VS_IN input)
+{
+    GS_IN output = (GS_IN)0;
+	output.color = input.color;
+    output.position = input.position;
+    output.texcoord = input.texcoord;
+    return output;
+}
+
+[maxvertexcount(6)]
+void GS(point GS_IN input[1], inout TriangleStream<PS_IN> TriStream )
+{
+
+    float size = .7f;
+
+    //create a hexagon from every vertex
+    PS_IN vertex;
+
+	uint ndx = input[0].texcoord;
+	uint onoff = (clrndx[(ndx >> 7) & 3][(ndx >> 5) & 3] & (0x80000000 >> (ndx & 0x1f)));
+	float4 C = float4(.15, .15, .15, 1); 
+	if (onoff != 0) C = input[0].color;
+    vertex.color = C;
+
+    float4 P = float4(input[0].position.xyz, 1);
+    vertex.position = mul(w, float4(0, size, 0, 0) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, float4(size * .8, size * .4, 0, 0) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, float4(-size * .8, size * .4, 0, 0) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, float4(size * .8, -size * .4, 0, 0) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, float4(-size * .8, -size * .4, 0, 0) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, float4(0, -size, 0, 0) + P);
+    TriStream.Append(vertex);
+
+    TriStream.RestartStrip();
+}
+
+float4 PS(PS_IN input) : SV_Target
+{
+	return input.color;
+}
+
+struct VSL_IN
+{
+    float3 position : POSITION;
+};
+
+struct PSL_IN
+{
+    float4 position : SV_POSITION;
+	float4 color: COLOR;
+};
+
+PSL_IN VSL(VSL_IN input)
+{
+    PS_IN output = (PS_IN)0;
+	output.position = mul(w, float4(input.position.xyz, 1));
+    return output;
+}
+
+float4 PSL(PSL_IN input) : SV_Target
+{
+	return float4(.5, .5, .5, 1);
+}

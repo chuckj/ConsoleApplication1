@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<song mp3file="@@path@@\SoundVisualationLibrary\Sample_NAudio\timing\03 Rudolph the Red-Nosed Reindeer.mp3">
+  <keyframes>
+    <keyframe measure="0" beatspermeasure="1" time="0"/>
+    <keyframe measure="1" beatspermeasure="4" time=".375"/>
+    <keyframe measure="77" time="183.0"/>
+  </keyframes>
+  <lyrics>
+    <lyric text="Ru" time="1m1" />
+    <lyric text="-dolph" time="1m1+2/2" />
+    <lyric text="the" time="1m2+2/2+.04" />
+    <lyric text="red" time="1m3" />
+    <lyric text="nosed" time="1m4" />
+    <lyric text="rein" time="2m1" />
+    <lyric text="-deer" time="2m2" />
+    <lyric text="Ru" time="13m1" />
+    <lyric text="-dolph" time="13m1+2/2" />
+    <lyric text="the" time="13m2+2/2" />
+    <lyric text="red" time="13m3" />
+    <lyric text="nosed" time="13m4" />
+    <lyric text="rein" time="14m1" />
+    <lyric text="-deer" time="14m2" />
+    <lyric text="Had" time="17m1" />
+    <lyric text="a" time="17m1+2/2" />
+    <lyric text="ver" time="17m2" />
+    <lyric text="-y" time="17m2+2/2" />
+    <lyric text="shine" time="17m3" />
+    <lyric text="-y" time="17m4" />
+    <lyric text="nose" time="18m1" />
+  </lyrics>
+  <steps>
+    <step begin="1m1" end="1m3" text="asdsa das dsa das" />
+    <step begin="1m1" end="2m3" text="asdsa das dsa das" />
+    <step begin="2m1" end="2m3" text="asdsa das dsa das" />
+    <step begin="2m1" end="4m3" text="asdsa das dsa das" />
+    <step begin="3m1" end="3m3" text="asdsa das dsa das" />
+    <step begin="3m1" end="8m3" text="asdsa das dsa das" />
+  </steps>
+</song>
