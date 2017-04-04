@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpHelper", "SharpHelper\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsControlLibrary1", "WindowsFormsControlLibrary1\WindowsFormsControlLibrary1.csproj", "{F654E2BF-F036-4AD1-923D-DAF0FC4CDD98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USB_DMX_Test", "USB_DMX_Test\USB_DMX_Test.csproj", "{9292BF8A-32F2-490E-8246-A536FE21F5AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{F654E2BF-F036-4AD1-923D-DAF0FC4CDD98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F654E2BF-F036-4AD1-923D-DAF0FC4CDD98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F654E2BF-F036-4AD1-923D-DAF0FC4CDD98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9292BF8A-32F2-490E-8246-A536FE21F5AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9292BF8A-32F2-490E-8246-A536FE21F5AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9292BF8A-32F2-490E-8246-A536FE21F5AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9292BF8A-32F2-490E-8246-A536FE21F5AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

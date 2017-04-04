@@ -6,15 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
+using System.Drawing;
 
-namespace ConsoleApplication1
+namespace USB_DMX_Test
 {
-    public class USBCntrl : Cntrl
+    public class USBCntrl 
     {
-        public List<GECEStrand> strands = new List<GECEStrand>();
-
         public string Serial { get; set; }
+        public string Name { get; set; }
 
         // Create new instance of the FTDI device class
         private FTDI myFtdiDevice = new FTDI();
@@ -32,25 +31,12 @@ namespace ConsoleApplication1
         private Task rxTsk = null;
         private Task txTsk = null;
 
-        //private FileStream rdrfs = null;
-        //private BinaryReader rdrbr = null;
-        //private CancellationTokenSource rdrcts = null;
-        //private CancellationToken rdrtkn;
-        //private Task rdrtsk = null;
-        //private int rdrState = 0;
-
-        //private FileStream wtrfs = null;
-        //private BinaryWriter wtrbw = null;
-        //private int wtrState = 0;
-
         private int state = -1;
         private static log4net.ILog logger = log4net.LogManager.GetLogger(nameof(USBCntrl));
 
-        public USBCntrl(XElement el)
+        public USBCntrl(string name, string serial)
         {
-            Name = (string)el.Attribute("nm");
-            Serial = (string)el.Attribute("serial");
-            strands.AddRange(from strnd in el.Elements("Strand") select new GECEStrand(strnd, this));
+            this.Name = name;
 
             do
             {
@@ -63,7 +49,7 @@ namespace ConsoleApplication1
                     break;
                 }
 
-                ftStatus = myFtdiDevice.Purge(FTDI.FT_PURGE.FT_PURGE_RX + FTDI.FT_PURGE.FT_PURGE_TX);
+                ftStatus = myFtdiDevice.Purge(FTDI.FT_PURGE.FT_PURGE_RX | FTDI.FT_PURGE.FT_PURGE_TX);
                 if (ftStatus != FTDI.FT_STATUS.FT_OK)
                 {
                     // Wait for a key press
@@ -153,21 +139,23 @@ namespace ConsoleApplication1
         }
 
 
-        public override void Close()
+        public void Close()
         {
             if (cts != null)
             {
                 cts.Cancel();
                 try
                 {
-                    txTsk.Wait();
+                    if (txTsk != null)
+                        txTsk.Wait();
                 }
                 catch (Exception)
                 {
                 }
                 try
                 {
-                    rxTsk.Wait();
+                    if (rxTsk != null)
+                        rxTsk.Wait();
                 }
                 catch (Exception)
                 {
@@ -180,7 +168,7 @@ namespace ConsoleApplication1
         }
 
 
-        public override void Send(int tim)
+        public void Send(int tim)
         {
             //if (state < 0)
             //    throw new InvalidOperationException("Open failed: " + Name);
@@ -344,207 +332,6 @@ namespace ConsoleApplication1
             {
             }
         }
-
-        //public void Flush()
-        //{
-        //    if (state < 0)
-        //        return;
-
-        //    USBMsg msg;
-        //    while (pendMsgs.TryTake(out msg))
-        //        bufrPool.Add(msg);
-        //}
-
-        //public override void WriteToFile(string flnm, Snapshot snap)
-        //{
-        //    USBMsg msg = new USBMsg();
-        //    msg.msg[1] = (byte)(0);
-        //    msg.msg[2] = (byte)(0);
-        //    msg.msg[3] = (byte)(0xff);
-
-        //    using (FileStream fs = new FileStream(flnm + "." + Serial, FileMode.Create))
-        //    using (BinaryWriter bw = new BinaryWriter(fs))
-        //    {
-        //        for (int timndx = 0; timndx < snap.bufr.GetUpperBound(1); timndx++)
-        //        {
-        //            msg.time = timndx * snap.step;
-
-        //            foreach (Strand strand in strands)
-        //            {
-        //                if (strand.gather(snap, msg, timndx))
-        //                {
-        //                    msg.port = strand.Port;
-        //                    bw.Write(msg.msg, 0, msg.size);
-        //                }
-        //            }
-        //        }
-        //        bw.Close();
-        //    }
-        //}
-
-        //public override void PrepareToRecord(string flnm)
-        //{
-        //    if (rdrState != 0)
-        //        throw new InvalidOperationException("Reader is busy");
-        //    if (wtrState != 0)
-        //        throw new InvalidOperationException("Writer is already busy");
-
-        //    wtrfs = new FileStream(flnm + "." + Serial, FileMode.Create);
-        //    wtrbw = new BinaryWriter(wtrfs);
-        //    wtrState = 1;
-        //}
-
-        //public override void Record(int tim)
-        //{
-        //    if (wtrState != 1)
-        //        throw new InvalidOperationException("Nor prepared");
-
-        //    USBMsg msg = new USBMsg();
-        //    msg.msg[1] = 0x00;
-        //    msg.msg[3] = 0xff;
-        //    msg.time = tim;
-
-        //    foreach (Strand strand in strands)
-        //    {
-        //        if (strand.gather(msg, tim))
-        //        {
-        //            msg.port = strand.Port;
-        //            wtrbw.Write(msg.msg, 0, msg.size);
-        //        }
-        //    }
-        //}
-
-        //public override void PrepareToPlay(string flnm)
-        //{
-        //    if (state < 0) return;
-
-        //    if (wtrState != 0)
-        //        throw new InvalidOperationException("Writer busy: " + wtrState.ToString());
-
-        //    if (rdrState != 0)
-        //        throw new InvalidOperationException("Wrong state for Prepare: " + rdrState.ToString());
-
-        //    rdrfs = new FileStream(flnm + "." + Serial, FileMode.Open);
-        //    rdrbr = new BinaryReader(rdrfs);
-        //    rdrState = 2;
-        //}
-
-        //public override void Seek(int tim)
-        //{
-        //    if (state < 0) return;
-
-        //    if (rdrState != 2)
-        //        throw new InvalidOperationException("Wrong state for Seek: " + rdrState.ToString());
-
-        //    rdrfs.Seek(0, SeekOrigin.Begin);
-
-        //    USBMsg msg = new USBMsg();
-        //    long siz = 0;
-
-        //    do
-        //    {
-        //        rdrfs.Seek(siz, SeekOrigin.Current);
-
-        //        if (rdrbr.Read(msg.msg, 0, 8) == 0)
-        //            throw new ArgumentOutOfRangeException("EOF");
-
-        //        siz = msg.size - 8;
-        //    } while (msg.time < tim);
-
-        //    rdrfs.Seek(-8, SeekOrigin.Current);
-
-        //    rdrState = 2;
-        //}
-
-
-        //public override void Play()
-        //{
-        //    if (state < 0) return;
-
-        //    if (rdrState != 2)
-        //        throw new InvalidOperationException("Wrong state for Play: " + rdrState.ToString());
-
-        //    CancellationTokenSource rdrcts = new CancellationTokenSource();
-        //    rdrtkn = cts.Token;
-        //    rdrtsk = Task.Factory.StartNew(() => play(tkn), tkn);
-        //}
-
-        //private void play(CancellationToken tkn)
-        //{
-        //    while (!tkn.IsCancellationRequested)
-        //    {
-        //        USBMsg msg = bufrPool.Take();
-        //        if (rdrbr.Read(msg.msg, 0, 8) == 0) break;
-        //        int siz = msg.size - 8;
-        //        if (rdrbr.Read(msg.msg, 8, siz) != siz) break;
-        //        pendMsgs.Add(msg);
-        //    }
-        //    rdrState = 3;
-        //}
-
-        //public override void Stop()
-        //{
-        //    if (state < 0) return;
-
-        //    if (rdrState == 2)
-        //    {
-        //        rdrcts.Cancel();
-        //        rdrtsk.Wait(500);
-        //        Flush();
-        //    }
-        //    rdrfs.Seek(0, SeekOrigin.Begin);
-        //    rdrState = 1;
-
-        //    rdrtsk = null;
-        //    rdrcts = null;
-        //}
-
-        //public override void Finis()
-        //{
-        //    if (state < 0) return;
-
-        //    if (rdrState == 2)
-        //        Stop();
-
-        //    Flush();
-
-        //    if (rdrbr != null)
-        //    {
-        //        rdrbr.Close();
-        //        rdrbr.Dispose();
-        //    }
-        //    if (rdrfs != null)
-        //    {
-        //        rdrfs.Close();
-        //        rdrfs.Dispose();
-        //    }
-
-        //    rdrState = 0;
-
-        //    if (wtrbw != null)
-        //    {
-        //        wtrbw.Close();
-        //        wtrbw.Dispose();
-        //    }
-        //    if (wtrfs != null)
-        //    {
-        //        wtrfs.Close();
-        //        wtrfs.Dispose();
-        //    }
-
-        //    wtrState = 0;
-        //}
-
-        //public override void gather(int time)
-        //{
-        //    Console.WriteLine();
-        //    Console.WriteLine("Time:" + time.ToString());
-
-        //    strands.ForEach(s => s.gather());
-
-        //    Console.WriteLine(".");
-        //}
-
     }
 
     public class USBMsg
@@ -617,14 +404,6 @@ namespace ConsoleApplication1
             {
                 msg[3] = value;
             }
-        }
-
-        public void bld(int ptr, RGBLit lit, Clr clr)
-        {
-            msg[ptr + 0] = (byte)((clr.G & 0xf0) | (clr.B >> 4));
-            msg[ptr + 1] = (byte)(clr.R >> 4);
-            msg[ptr + 2] = (byte)(0xcc);
-            msg[ptr + 3] = (byte)lit.Index;
         }
     }
 }
