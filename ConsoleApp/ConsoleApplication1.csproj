@@ -158,6 +158,8 @@
     <Compile Include="SampleAggregator.cs" />
     <Compile Include="Steps\StepAttribute.cs" />
     <Compile Include="TimeMark.cs" />
+    <Compile Include="Views\Feature.cs" />
+    <Compile Include="Views\FeatureLit.cs" />
     <Compile Include="Views\DMXLit.cs" />
     <Compile Include="Views\DMXStrand.cs" />
     <Compile Include="Views\GECELit.cs" />

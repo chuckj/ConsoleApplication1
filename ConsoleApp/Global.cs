@@ -49,6 +49,7 @@ namespace ConsoleApplication1
 
         public Dictionary<string, Lit> LitDict = new Dictionary<string, Lit>(1500);
 
+        public Dictionary<string, FeatureLit> FeatureLitDict = new Dictionary<string, FeatureLit>();
 
         public List<ColorPoint3D> LineVertices = new List<ColorPoint3D>(100);
         public List<short> LineIndices = new List<short>(100);

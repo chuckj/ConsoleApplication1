@@ -58,6 +58,8 @@ namespace ConsoleApplication1
 
             XElement root = Global.Instance.Model = XDocument.Load(@".\\..\\..\\Model.xml").Element("root");
 
+            Feature.Load(root);
+
             Cntrl.Load(root);
 
             View.Load(root);

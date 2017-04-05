@@ -79,6 +79,9 @@ namespace ConsoleApplication1
             foreach (var lit in Global.Instance.LitDict.Values.OfType<DMXLit>())
                 lit.GlobalIndex = ndx++;
 
+            //foreach (var lit in Global.Instance.LitDict.Values.OfType<FeatureLit>())
+            //    lit.GlobalIndex = ndx++;
+
 
             IndexVertex[] monoGeceVertices =
                 Global.Instance.VuDict["tree"].LitArray.Select((x) => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)x.Index))
@@ -103,7 +106,10 @@ namespace ConsoleApplication1
             //    Global.Instance.LitDict.Values.OfType<DMXLit>().Select(x => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)(x.GlobalIndex))).ToArray();
 
             Colors[] clrtbl = new[] { Colors.Red, Colors.Blue, Colors.Yellow, Colors.Green };
-            int colorCnt = Global.Instance.LitDict.Values.OfType<GECELit>().Count() + Global.Instance.LitDict.Values.OfType<DMXLit>().Count();
+            int colorCnt = Global.Instance.LitDict.Values.OfType<GECELit>().Count() 
+                + Global.Instance.LitDict.Values.OfType<DMXLit>().Count()
+            //    + Global.Instance.FeatureLitDict.Count()
+            ;
             colorTable =
                  Global.Instance.dta.Select((x) => new Vector4(x.Clr.R / 255.0f, x.Clr.G / 255.0f, x.Clr.B / 255.0f, 0))
                  .Concat(Enumerable.Range(0, colorCnt).Select((x, n) => (Vector4)(Clr)clrtbl[n % 4])).ToArray();
@@ -150,12 +156,12 @@ namespace ConsoleApplication1
 
             if (lineVertices.Length > 0)
             {
-                linvertbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.VertexBuffer, lineVertices);
+                //linvertbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.VertexBuffer, lineVertices);
                 linndxbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.IndexBuffer, lineIndices);
             }
             if (triVertices.Length > 0)
             {
-                //trivertbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.VertexBuffer, triVertices);
+                trivertbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.VertexBuffer, triVertices);
                 trindxbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.IndexBuffer, triIndices);
             }
 
@@ -344,6 +350,12 @@ namespace ConsoleApplication1
                     }
                 }
 
+                //if (lineVertices.Length > 0)
+                //{
+                //    dispose(linvertbuff);
+
+                //    linvertbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.VertexBuffer, lineVertices);
+                //}
 
                 ////draw mesh
                 ////mesh.DrawPoints(vertices.Length);

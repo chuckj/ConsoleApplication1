@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <root>
+  <Features>
+    <Feature nm="feature" color="red"/>
+  </Features>
   <Controllers>
     <USBController nm="USB1" serial="A6FOL1K7">
       <!--
@@ -145,11 +148,9 @@
     <View nm="pole1" offset="125,-60,-700" main="true">
       <View nm="pl1" view="pole" strand="USB2_13"/>
     </View>
-
     <View nm="pole2" offset="575,-60,-700" main="true">
       <View nm="pl2" view="pole" strand="USB2_13"/>
     </View>
-
     <View nm="pole3" offset="-550,-60,-700" main="true">
       <View nm="pl3" view="pole" strand="USB2_13"/>
     </View>
@@ -186,7 +187,27 @@
         </GrpSeq>
       </GrpSeqs>
     </View>-->
+    <View nm="manger" offset="250,-30,-250" main="true" strand="USB2_13">
+      <dmx>
+        <triangle pt1="0,0,0" pt2="0,36,0" pt3="24,0,0" pt4="24,48,0" color="darkgray"/> <!--back lt inside-->
+        <triangle pt1="24,48,0" pt2="48,36,0" pt3="24,0,0" pt4="48,0,0" color="darkgray"/> <!--back rt inside-->
+      </dmx>
+      <triangle pt2="0,0,0" pt1="0,36,0" pt4="24,0,0" pt3="24,48,0" color="#000040"/> <!--back lt outside-->
+      <triangle pt2="24,48,0" pt1="48,36,0" pt4="24,0,0" pt3="48,0,0" color="#000040"/> <!--back rt outside-->
 
+      <triangle pt1="-12,26,-18" pt2="-12,30,-18" pt3="24,44,-18" pt4="24,48,-18" color="darkgray"/> <!--roof lt facia front-->
+      <triangle pt1="24,44,-18" pt2="24,48,-18" pt3="60,26,-18" pt4="60,30,-18" color="darkgray"/> <!--roof rt facia front-->
+      
+      <triangle pt1="-12,26,0" pt2="-12,30,0" pt3="-12,26,-18" pt4="-12,30,-18" color="darkgray"/> <!--roof left facia lt-->
+      <triangle pt1="60,26,-18" pt2="60,30,-18" pt3="60,26,0" pt4="60,30,0" color="darkgray"/> <!--roof rt facia rt-->
+
+      <triangle pt1="-12,30,-18" pt2="-12,30,0" pt3="24,48,-18" pt4="24,48,0" color="darkgray"/> <!--roof lt top-->
+      <triangle pt1="24,48,-18" pt2="24,48,0" pt3="60,30,-18" pt4="60,30,0" color="darkgray"/> <!--roof rt top-->
+      <triangle pt2="-12,30,-18" pt1="-12,30,0" pt4="24,48,-18" pt3="24,48,0" color="#000040"/> <!--roof lt btm-->
+      <triangle pt2="24,48,-18" pt1="24,48,0" pt4="60,30,-18" pt3="60,30,0" color="#000040"/> <!--roof rt btm-->
+    </View>
+    
+    
     <View nm="additionleft">
       <!-- addition left -->
       <line pt1="2,12,-.5" pt2="2,234,-.5" color="#000040" />
@@ -214,19 +235,19 @@
       <!-- garage -->
 
       <!--  vertical lines on driveway  -->
-      <line pt1="228,10,0" pt2="228,-60,-724.5" pt3="248,-70,-828" color="#000040"/>
-      <line pt1="132,10,0" pt2="132,-70,-828" color="#000040"/>
-      <line pt1="36,10,0" pt2="36,-60,-724.5" pt3="-8,-70,-828" color="#000040"/>
-      <line pt1="-60,0,-103.5" pt2="-60,-50,-628.5" pt3="36,-60,-724.5" color="#000040"/>
+      <line pt1="228,10,0" pt2="228,-60,-724.5" pt3="248,-70,-828" color="#00000040"/>
+      <line pt1="132,10,0" pt2="132,-70,-828" color="#00000040"/>
+      <line pt1="36,10,0" pt2="36,-60,-724.5" pt3="-8,-70,-828" color="#00000040"/>
+      <line pt1="-60,0,-103.5" pt2="-60,-50,-628.5" pt3="36,-60,-724.5" color="#00000040"/>
 
       <!--  horizontal lines on driveway  -->
-      <line pt1="228,10,0" pt2="36,10,0" color="#000040"/>
-      <line pt1="228,0,-103.5" pt2="-60,0,-103.5" repeat="6" ptoffset="0,-10,-103.5" color="#000040"/>
-      <line pt1="228,-60,-724.5" pt2="36,-60,-724.5" color="#000040"/>
-      <line pt1="1036,-70,-828" pt2="-464,-70,-828" color="#000040"/>
+      <line pt1="228,10,0" pt2="36,10,0" color="#00000040"/>
+      <line pt1="228,0,-103.5" pt2="-60,0,-103.5" repeat="6" ptoffset="0,-10,-103.5" color="#00000040"/>
+      <line pt1="228,-60,-724.5" pt2="36,-60,-724.5" color="#00000040"/>
+      <line pt1="1036,-70,-828" pt2="-464,-70,-828" color="#00000040"/>
 
       <!--  lites around garage door -->
-      <line pt1="234,10,-.5" pt2="234,82,-.5" pt3="217.5,98.5,-.5" pt4="49.5,98.5,-.5" pt5="33,82,-.5" pt6="33,10,-.5" color="#000040" />
+      <line pt1="234,10,-.5" pt2="234,82,-.5" pt3="217.5,98.5,-.5" pt4="49.5,98.5,-.5" pt5="33,82,-.5" pt6="33,10,-.5" color="#00000040" />
 
       <rgb row="0" col="34" repeat="10" rowinc="1" pt="234,10,-2" ptoffset="0,8,0" class="garage"/>
       <rgb row="10" col="33" repeat="2" rowinc="1" colinc="-1" pt="228.5,87.5,-2" ptoffset="-5.5,5.5,0" class="garage" />
