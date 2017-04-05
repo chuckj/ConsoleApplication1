@@ -78,8 +78,8 @@ float4 PS(PS_IN input) : SV_Target
 
 struct VSL_IN
 {
-    float4 position : POSITION;
-	float4 color: COLOR;
+    float3 position : POSITION;
+	uint texcoord: TEXCOORD;
 };
 
 struct PSL_IN
@@ -93,7 +93,12 @@ PSL_IN VSL(VSL_IN input)
 {
     PS_IN output = (PS_IN)0;
 	output.position = mul(w, input.position);
-	output.color = input.color;
+	int ndx = input.texcoord;
+	output.color = clrndx[ndx & 0x0000ffff];
+	if (ndx & 0x00010000 != 0)
+	{
+		output.color.a = .5;
+	}
     return output;
 }
 

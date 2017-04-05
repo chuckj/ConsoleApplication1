@@ -337,9 +337,7 @@ namespace ConsoleApplication1
 
                             XAttribute attrb;
                             attrb = lit.Attribute("color");
-                            Clr clr = Colors.Navy;
-                            if (!string.IsNullOrEmpty((string)attrb))
-                                clr = Clr.FromName((string)attrb);
+                            var clr = FeatureLit.FromName(string.IsNullOrEmpty((string)attrb) ? "Red" : (string)attrb);
 
                             int repeat = 1;
                             Point3D ptoffset = new Point3D();
@@ -353,15 +351,12 @@ namespace ConsoleApplication1
                                 ptoffset = (Point3D)attrb;
                             }
 
-                            List<Tuple<Point3D,Clr>> pts = new List<Tuple<Point3D, Clr>>();
+                            List<Point3D> pts = new List<Point3D>();
                             for (int ndx = 1; ; ndx++)
                             {
-                                attrb = lit.Attribute("clr" + ndx.ToString());
-                                if (!string.IsNullOrEmpty((string)attrb))
-                                    clr = Clr.FromName((string)attrb);
                                 attrb = lit.Attribute("pt" + ndx.ToString());
                                 if (string.IsNullOrEmpty((string)attrb)) break;
-                                pts.Add(Tuple.Create((Point3D)attrb, clr));
+                                pts.Add((Point3D)attrb);
                             }
 
                             attrb = lit.Attribute("close");
@@ -374,7 +369,7 @@ namespace ConsoleApplication1
                                 foreach (var pt in pts)
                                 {
                                     Global.Instance.LineIndices.Add((short)Global.Instance.LineVertices.Count);
-                                    Global.Instance.LineVertices.Add(new ColorPoint3D(pt.Item1 + offset + repoffset, pt.Item2));
+                                    Global.Instance.LineVertices.Add(new IndexPoint3D(pt + offset + repoffset, clr.GlobalIndex));
                                 }
                                 if (close)
                                     Global.Instance.LineIndices.Add(startNdx);
@@ -390,20 +385,15 @@ namespace ConsoleApplication1
                         {
                             XAttribute attrb;
                             attrb = lit.Attribute("color");
-                            Clr clr = Colors.Blue;
-                            if (!string.IsNullOrEmpty((string)attrb))
-                                clr = Clr.FromName((string)attrb);
+                            var clr = FeatureLit.FromName(string.IsNullOrEmpty((string)attrb) ? "Red" : (string)attrb);
 
                             for (int ndx = 1; ; ndx++)
                             {
-                                attrb = lit.Attribute("clr" + ndx.ToString());
-                                if (!string.IsNullOrEmpty((string)attrb))
-                                    clr = Clr.FromName((string)attrb);
                                 attrb = lit.Attribute("pt" + ndx.ToString());
                                 if (string.IsNullOrEmpty((string)attrb)) break;
                                 Point3D pt = (Point3D)attrb + offset;
                                 Global.Instance.TriIndices.Add((short)Global.Instance.TriVertices.Count);
-                                Global.Instance.TriVertices.Add(new ColorPoint3D(pt, clr));
+                                Global.Instance.TriVertices.Add(new IndexPoint3D(pt, clr.GlobalIndex));
                             }
 
                             Global.Instance.TriIndices.Add(-1);
@@ -438,13 +428,13 @@ namespace ConsoleApplication1
                                                 if (string.IsNullOrEmpty((string)attrb)) break;
                                                 Point3D pt = (Point3D)attrb + offset;
 
-                                                if (ndx == 3)
-                                                    dmx.LiteNdx.Add(Global.Instance.TriVertices.Count);
-                                                else
-                                                    dmx.DimNdx.Add(Global.Instance.TriVertices.Count);
+                                                //if (ndx == 3)
+                                                //    dmx.LiteNdx.Add(Global.Instance.TriVertices.Count);
+                                                //else
+                                                //    dmx.DimNdx.Add(Global.Instance.TriVertices.Count);
 
                                                 Global.Instance.TriIndices.Add((short)Global.Instance.TriVertices.Count);
-                                                Global.Instance.TriVertices.Add(new ColorPoint3D(pt, dmx.Clr));
+                                                Global.Instance.TriVertices.Add(new IndexPoint3D(pt, (ndx == 3) ? dmx.GlobalIndex : -dmx.GlobalIndex));
                                             }
 
                                             Global.Instance.TriIndices.Add(-1);

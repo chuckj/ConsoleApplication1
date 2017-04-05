@@ -17,12 +17,9 @@ namespace ConsoleApplication1
                 var nm = (string)color.Attribute("nm");
                 if ((nm == null) || Global.Instance.FeatureLitDict.ContainsKey(nm))
                     throw new ArgumentException("nm");
-                Clr clr = Color.DarkGray;
                 if ((string)color.Attribute("color") == null)
                     throw new ArgumentException("color");
-                clr = Clr.FromName((string)color.Attribute("color"));
-
-                Global.Instance.FeatureLitDict.Add(nm, new FeatureLit(nm, clr));
+                FeatureLit.FromName((string)color.Attribute("color"));
             }
         }
     }

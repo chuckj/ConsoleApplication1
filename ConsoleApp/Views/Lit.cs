@@ -9,7 +9,7 @@ namespace ConsoleApplication1
 {
     public class Lit
     {
-
+        private static int globalIndex = 0;
         public static List<Lit> LitList
         {
             get { return Global.Instance.LitDict.Values.ToList(); }
@@ -59,11 +59,11 @@ namespace ConsoleApplication1
         public Point Loc { get; set; }
         public int Index { get { return index; } set { index = value; setIndex(value); } }
 
-        public int GlobalIndex { get; set; }
+        public int GlobalIndex { get; }
 
         protected Lit()
         {
-            //Program = null;
+            GlobalIndex = globalIndex++;
         }
 
         public Lit(string nm)
@@ -74,6 +74,12 @@ namespace ConsoleApplication1
 
             Name = nm;
             Global.Instance.LitDict.Add(nm, this);
+        }
+
+        public Lit(string nm, Clr clr)
+            : this(nm)
+        {
+            val = clr;
         }
 
         public virtual string Attributes() => string.Empty;

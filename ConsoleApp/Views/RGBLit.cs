@@ -17,19 +17,16 @@ namespace ConsoleApplication1
 
         protected RGBLit()
         {
-            GlobalIndex = staticIndex++;
         }
 
         public RGBLit(string nm)
             : base(nm)
         {
-            GlobalIndex = staticIndex++;
         }
 
         public RGBLit(XElement xpn)
             : base((string)xpn.Attribute("nm"))
         {
-            GlobalIndex = staticIndex++;
         }
 
 

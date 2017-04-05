@@ -72,4 +72,29 @@ namespace ConsoleApplication1
         public string DebuggerDisplay => $"({pt.X},{pt.Y},{pt.Z}):{clr.Name}";
 
     }
+
+    public struct IndexPoint3D
+    {
+        private Point3D pt;
+        private int ndx;
+
+        public IndexPoint3D(float x, float y, float z, int ndx)
+        {
+            this.pt = new Point3D(x, y, z);
+            this.ndx = ndx;
+        }
+
+        public IndexPoint3D(Point3D pt, int ndx)
+        {
+            this.pt = pt;
+            this.ndx = ndx;
+        }
+        public float X => pt.X;
+        public float Y => pt.Y;
+        public float Z => pt.Z;
+        public int Ndx => ndx;
+
+        public string DebuggerDisplay => $"({pt.X},{pt.Y},{pt.Z}):{ndx}";
+
+    }
 }

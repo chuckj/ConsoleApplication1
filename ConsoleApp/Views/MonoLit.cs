@@ -23,10 +23,8 @@ namespace ConsoleApplication1
         {
         }
 
-        public MonoLit(string nm, Clr clr) : base(nm)
+        public MonoLit(string nm, Clr clr) : base(nm, clr)
         {
-            Clr = clr;
-            GlobalIndex = staticIndex++;
         }
 
         public override string Attributes() => base.Attributes() + ";" + Clr.Name;

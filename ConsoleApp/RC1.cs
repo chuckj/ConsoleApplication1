@@ -41,8 +41,8 @@ namespace ConsoleApplication1
         private float scale = 100.0f;
         private Vector4[] colorTable = null;
         private int count = 0;
-        private ColoredVertex[] lineVertices = null;
-        private ColoredVertex[] triVertices = null;
+        private IndexVertex[] lineVertices = null;
+        private IndexVertex[] triVertices = null;
         private short[] lineIndices = null;
         private short[] triIndices = null;
         private IProgress<Tuple<string, string, string>> progress;
@@ -73,11 +73,11 @@ namespace ConsoleApplication1
                 new MinMax(-250, 0), new MinMax(-300, 300), new MinMax(-200, 200) };
 
             int ndx = Global.Instance.VuDict["tree"].LitArray.Count();
-            foreach (var lit in Global.Instance.LitDict.Values.OfType<GECELit>())
-                lit.GlobalIndex = ndx++;
+            //foreach (var lit in Global.Instance.LitDict.Values.OfType<GECELit>())
+            //    lit.GlobalIndex = ndx++;
 
-            foreach (var lit in Global.Instance.LitDict.Values.OfType<DMXLit>())
-                lit.GlobalIndex = ndx++;
+            //foreach (var lit in Global.Instance.LitDict.Values.OfType<DMXLit>())
+            //    lit.GlobalIndex = ndx++;
 
             //foreach (var lit in Global.Instance.LitDict.Values.OfType<FeatureLit>())
             //    lit.GlobalIndex = ndx++;
@@ -85,7 +85,7 @@ namespace ConsoleApplication1
 
             IndexVertex[] monoGeceVertices =
                 Global.Instance.VuDict["tree"].LitArray.Select((x) => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)x.Index))
-                .Concat(Global.Instance.LitDict.Values.OfType<GECELit>().Select(x => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)(x.GlobalIndex)))).ToArray();
+                .Concat(Global.Instance.LitDict.Values.OfType<GECELit>().Select(x => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)x.GlobalIndex))).ToArray();
             int[] monoGeceIndices = Enumerable.Range(0, monoGeceVertices.Length).ToArray();
 
 
@@ -117,10 +117,10 @@ namespace ConsoleApplication1
 
 
             //var cvclr = new Vector4(1f, 0f, 0f, 1);
-            lineVertices = Global.Instance.LineVertices.Select(pt => new ColoredVertex(new Vector3(pt.X / scale, pt.Y / scale, pt.Z / scale), pt.Clr)).ToArray();
+            lineVertices = Global.Instance.LineVertices.Select(pt => new IndexVertex(new Vector3(pt.X / scale, pt.Y / scale, pt.Z / scale), (uint)pt.Ndx)).ToArray();
             lineIndices = Global.Instance.LineIndices.ToArray();
 
-            triVertices = Global.Instance.TriVertices.Select(pt => new ColoredVertex(new Vector3(pt.X / scale, pt.Y / scale, pt.Z / scale), pt.Clr)).ToArray();
+            triVertices = Global.Instance.TriVertices.Select(pt => new IndexVertex(new Vector3(pt.X / scale, pt.Y / scale, pt.Z / scale), (uint)pt.Ndx)).ToArray();
             triIndices = Global.Instance.TriIndices.ToArray();
 
             device = new SharpDevice(this);
@@ -143,7 +143,7 @@ namespace ConsoleApplication1
                     new SharpShaderDescription() { VertexShaderFunction = "VSL", PixelShaderFunction = "PSL" },
                     new InputElement[] {
                         new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0),
-                        new InputElement("COLOR", 0, Format.R32G32B32A32_Float, 12, 0),
+                        new InputElement("TEXCOORD", 0, Format.R32_UInt, 12, 0),
                     });
 
             //create constant buffer
@@ -331,23 +331,23 @@ namespace ConsoleApplication1
 
 
 
-                    if (triVertices.Length > 0)
-                    {
-                        dispose(trivertbuff);
+                    //if (triVertices.Length > 0)
+                    //{
+                    //    dispose(trivertbuff);
 
-                        var dmxStrand = Global.Instance.DMXStrand;
-                        foreach (var lit in dmxStrand.lites.OfType<DMXLit>())
-                        {
-                            var clr = clrs[lit.GlobalIndex];
-                            foreach (var ndx in lit.LiteNdx)
-                                triVertices[ndx].Color = clr;
-                            //clr.W = clr.W / 2; 
-                            clr.X = clr.X / 2; clr.Y = clr.Y/ 2; clr.Z = clr.Z / 2;
-                            foreach (var ndx in lit.DimNdx)
-                                triVertices[ndx].Color = clr;
-                        }
-                        trivertbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.VertexBuffer, triVertices);
-                    }
+                    //    var dmxStrand = Global.Instance.DMXStrand;
+                    //    foreach (var lit in dmxStrand.lites.OfType<DMXLit>())
+                    //    {
+                    //        var clr = clrs[lit.GlobalIndex];
+                    //        foreach (var ndx in lit.LiteNdx)
+                    //            triVertices[ndx].Color = clr;
+                    //        //clr.W = clr.W / 2; 
+                    //        clr.X = clr.X / 2; clr.Y = clr.Y/ 2; clr.Z = clr.Z / 2;
+                    //        foreach (var ndx in lit.DimNdx)
+                    //            triVertices[ndx].Color = clr;
+                    //    }
+                    //    trivertbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.VertexBuffer, triVertices);
+                    //}
                 }
 
                 //if (lineVertices.Length > 0)
@@ -373,13 +373,15 @@ namespace ConsoleApplication1
                 //apply constant buffer to vertex shader
                 device.DeviceContext.VertexShader.SetConstantBuffer(0, buffer);
 
+                device.DeviceContext.VertexShader.SetConstantBuffer(1, clrTbl);
+
                 if (triVertices.Length > 0)
                 {
                     //  draw
                     device.DeviceContext.PixelShader.Set(areaShader);
 
                     device.DeviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
-                    device.DeviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(trivertbuff, SharpDX.Utilities.SizeOf<ColoredVertex>(), 0));
+                    device.DeviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(trivertbuff, SharpDX.Utilities.SizeOf<IndexVertex>(), 0));
                     device.DeviceContext.InputAssembler.SetIndexBuffer(trindxbuff, Format.R16_UInt, 0);
                     device.DeviceContext.DrawIndexed(triIndices.Length, 0, 0);
                 }
@@ -390,7 +392,7 @@ namespace ConsoleApplication1
                     device.DeviceContext.PixelShader.Set(shaderLines.PixelShader);
 
                     device.DeviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.LineStrip;
-                    device.DeviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(linvertbuff, SharpDX.Utilities.SizeOf<ColoredVertex>(), 0));
+                    device.DeviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(linvertbuff, SharpDX.Utilities.SizeOf<IndexVertex>(), 0));
                     device.DeviceContext.InputAssembler.SetIndexBuffer(linndxbuff, Format.R16_UInt, 0);
                     device.DeviceContext.DrawIndexed(lineIndices.Length, 0, 0);
                 }

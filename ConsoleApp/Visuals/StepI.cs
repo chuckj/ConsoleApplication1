@@ -279,7 +279,7 @@ namespace ConsoleApplication1
                             {
                                 bgnColor[] initClr = Global.Instance.LitDict.Values.OfType<Lit>()
                                     .Where(v => regex.IsMatch(v.Name))
-                                    .Select(l => new bgnColor() { clr = context[l.GlobalIndex], Ndx = l.GlobalIndex })
+                                    .Select(l => new bgnColor() { clr = context[(int)l.GlobalIndex], Ndx = (int)l.GlobalIndex })
                                     .ToArray();
 
                                 foreach (var bgn in initClr)

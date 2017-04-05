@@ -51,9 +51,9 @@ namespace ConsoleApplication1
 
         public Dictionary<string, FeatureLit> FeatureLitDict = new Dictionary<string, FeatureLit>();
 
-        public List<ColorPoint3D> LineVertices = new List<ColorPoint3D>(100);
+        public List<IndexPoint3D> LineVertices = new List<IndexPoint3D>(100);
         public List<short> LineIndices = new List<short>(100);
-        public List<ColorPoint3D> TriVertices = new List<ColorPoint3D>(100);
+        public List<IndexPoint3D> TriVertices = new List<IndexPoint3D>(100);
         public List<short> TriIndices = new List<short>(100);
 
         private Song song = null;
