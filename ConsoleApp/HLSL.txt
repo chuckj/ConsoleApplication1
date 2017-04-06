@@ -6,7 +6,7 @@ cbuffer data :register(b0)
 
 cbuffer colorindex :register(b1)
 {
-    float4 clrndx[1200];
+    float4 clrndx[2000];
 };
 
 
@@ -91,8 +91,8 @@ struct PSL_IN
 
 PSL_IN VSL(VSL_IN input)
 {
-    PS_IN output = (PS_IN)0;
-	output.position = mul(w, input.position);
+	PSL_IN output;
+	output.position = mul(w, float4(input.position.xyz, 1));
 	int ndx = input.texcoord;
 	output.color = clrndx[ndx & 0x0000ffff];
 	if (ndx & 0x00010000 != 0)

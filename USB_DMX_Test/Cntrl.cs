@@ -173,38 +173,38 @@ namespace USB_DMX_Test
             //if (state < 0)
             //    throw new InvalidOperationException("Open failed: " + Name);
 
-            USBMsg msg = null;
-            foreach (GECEStrand strand in strands)
-            {
-                if (msg == null)
-                {
-                    msg = bufrPool.Take();
+            //USBMsg msg = null;
+            //foreach (GECEStrand strand in strands)
+            //{
+            //    if (msg == null)
+            //    {
+            //        msg = bufrPool.Take();
 
-                    msg.seq = 0x00;
-                    msg.chksum = 0xff;
-                    msg.time = tim;
-                    msg.size = 8;
-                }
+            //        msg.seq = 0x00;
+            //        msg.chksum = 0xff;
+            //        msg.time = tim;
+            //        msg.size = 8;
+            //    }
 
-                if (strand.gather(msg, tim))
-                {
-                    msg.port = strand.Port;
-                    if (state < 0)
-                    {
-                        string hex = "Send: " + Name + ": ";
-                        int siz = msg.size;
-                        for (int ptr = 0; ptr < siz; ptr++)
-                            hex += " " + msg.msg[ptr].ToString("x2");
-                        logger.Info(hex);
-                    }
-                    else
-                    {
-                        pendMsgs.Add(msg);
-                        msg = null;
-                    }
-                }
-            }
-            if (msg != null) bufrPool.Add(msg);
+            //    if (strand.gather(msg, tim))
+            //    {
+            //        msg.port = strand.Port;
+            //        if (state < 0)
+            //        {
+            //            string hex = "Send: " + Name + ": ";
+            //            int siz = msg.size;
+            //            for (int ptr = 0; ptr < siz; ptr++)
+            //                hex += " " + msg.msg[ptr].ToString("x2");
+            //            logger.Info(hex);
+            //        }
+            //        else
+            //        {
+            //            pendMsgs.Add(msg);
+            //            msg = null;
+            //        }
+            //    }
+            //}
+            //if (msg != null) bufrPool.Add(msg);
         }
 
 

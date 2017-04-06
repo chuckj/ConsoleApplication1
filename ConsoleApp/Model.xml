@@ -189,20 +189,20 @@
     </View>-->
     <View nm="manger" offset="250,-30,-250" main="true" strand="USB2_13">
       <dmx>
-        <triangle pt1="0,0,0" pt2="0,36,0" pt3="24,0,0" pt4="24,48,0" color="darkgray"/> <!--back lt inside-->
-        <triangle pt1="24,48,0" pt2="48,36,0" pt3="24,0,0" pt4="48,0,0" color="darkgray"/> <!--back rt inside-->
+        <triangle pt1="0,0,0" pt2="0,36,0" pt3="24,0,0" pt4="24,48,0" color="DarkGray"/> <!--back lt inside-->
+        <triangle pt1="24,48,0" pt2="48,36,0" pt3="24,0,0" pt4="48,0,0" color="DarkGray"/> <!--back rt inside-->
       </dmx>
       <triangle pt2="0,0,0" pt1="0,36,0" pt4="24,0,0" pt3="24,48,0" color="#000040"/> <!--back lt outside-->
       <triangle pt2="24,48,0" pt1="48,36,0" pt4="24,0,0" pt3="48,0,0" color="#000040"/> <!--back rt outside-->
 
-      <triangle pt1="-12,26,-18" pt2="-12,30,-18" pt3="24,44,-18" pt4="24,48,-18" color="darkgray"/> <!--roof lt facia front-->
-      <triangle pt1="24,44,-18" pt2="24,48,-18" pt3="60,26,-18" pt4="60,30,-18" color="darkgray"/> <!--roof rt facia front-->
+      <triangle pt1="-12,26,-18" pt2="-12,30,-18" pt3="24,44,-18" pt4="24,48,-18" color="DarkGray"/> <!--roof lt facia front-->
+      <triangle pt1="24,44,-18" pt2="24,48,-18" pt3="60,26,-18" pt4="60,30,-18" color="DarkGray"/> <!--roof rt facia front-->
       
-      <triangle pt1="-12,26,0" pt2="-12,30,0" pt3="-12,26,-18" pt4="-12,30,-18" color="darkgray"/> <!--roof left facia lt-->
-      <triangle pt1="60,26,-18" pt2="60,30,-18" pt3="60,26,0" pt4="60,30,0" color="darkgray"/> <!--roof rt facia rt-->
+      <triangle pt1="-12,26,0" pt2="-12,30,0" pt3="-12,26,-18" pt4="-12,30,-18" color="DarkGray"/> <!--roof left facia lt-->
+      <triangle pt1="60,26,-18" pt2="60,30,-18" pt3="60,26,0" pt4="60,30,0" color="DarkGray"/> <!--roof rt facia rt-->
 
-      <triangle pt1="-12,30,-18" pt2="-12,30,0" pt3="24,48,-18" pt4="24,48,0" color="darkgray"/> <!--roof lt top-->
-      <triangle pt1="24,48,-18" pt2="24,48,0" pt3="60,30,-18" pt4="60,30,0" color="darkgray"/> <!--roof rt top-->
+      <triangle pt1="-12,30,-18" pt2="-12,30,0" pt3="24,48,-18" pt4="24,48,0" color="DarkGray"/> <!--roof lt top-->
+      <triangle pt1="24,48,-18" pt2="24,48,0" pt3="60,30,-18" pt4="60,30,0" color="DarkGray"/> <!--roof rt top-->
       <triangle pt2="-12,30,-18" pt1="-12,30,0" pt4="24,48,-18" pt3="24,48,0" color="#000040"/> <!--roof lt btm-->
       <triangle pt2="24,48,-18" pt1="24,48,0" pt4="60,30,-18" pt3="60,30,0" color="#000040"/> <!--roof rt btm-->
     </View>
@@ -258,23 +258,23 @@
 
     <View nm="candlesleft" offset="0,0,0">
       <!--  candles left along driveway  -->
-      <line pt1="-84, 0, -104" pt2="-84, 24,-104" repeat="15" ptoffset="0,-3.47826,-36" color="darkgray" />
+      <line pt1="-84, 0, -104" pt2="-84, 24,-104" repeat="15" ptoffset="0,-3.47826,-36" color="white" />
       <rgb row="0" col="0" repeat="15" colinc="1" pt="-84, 24,-104" ptoffset="0,-3.47826,-36" class="candle"/>
-      <line pt1="-71.23,-52.2,-644" pt2="-71.23, -28.2,-644" repeat="3" ptoffset="36,-3.47826, -36" color="darkgray" />
+      <line pt1="-71.23,-52.2,-644" pt2="-71.23, -28.2,-644" repeat="3" ptoffset="36,-3.47826, -36" color="white" />
       <rgb row="0" col="0" repeat="3" colinc="1" pt="-71.23, -28.2,-644" ptoffset="36,-3.47826, -36" class="candle"/>
 
       <!--  candles left of driveway along road -->
-      <line pt1="-14,-62.7,-756" pt2="-14,-38.7,-756" repeat="10" ptoffset="-36,0,0" color="darkgray" />
+      <line pt1="-14,-62.7,-756" pt2="-14,-38.7,-756" repeat="10" ptoffset="-36,0,0" color="white" />
       <rgb row="0" col="0" repeat="10" colinc="1" pt="-14,-39.2,-756" ptoffset="-36,0,0" class="candle"/>
     </View>
 
     <View nm="candlesright" offset="0,0,0">
       <!--  candles right along driveway  -->
-      <line pt1="252, -3.5, -140" pt2="252, 21.5,-140" repeat="17" ptoffset="0,-3.47826,-36" color="darkgray"/>
+      <line pt1="252, -3.5, -140" pt2="252, 21.5,-140" repeat="17" ptoffset="0,-3.47826,-36" color="white"/>
       <rgb row="0" col="0" repeat="17" colinc="1" pt="252, 21.5, -140.5" ptoffset="0,-3.47826,-36" class="candle"/>
 
       <!--  candles right of driveway along road -->
-      <line pt1="278,-62.7,-756" pt2="278, -38.7,-756" repeat="20" ptoffset="36,0,0" color="darkgray" />
+      <line pt1="278,-62.7,-756" pt2="278, -38.7,-756" repeat="20" ptoffset="36,0,0" color="white" />
       <rgb row="0" col="0" repeat="20" colinc="1" pt="278, -38.7,-756" ptoffset="36,0,0" class="candle"/>
     </View>
     

@@ -25,23 +25,19 @@ namespace ConsoleApplication1
         private FileStream newFile;
         private BinaryWriter accessor;
 
-        private Color[] colors;
+        private Clr[] colors;
         private volatile bool updated = false;
 
         public Color this[int ndx]
         {
             set
             {
-                if (ndx < Global.Instance.dta.Length)
+                if (Global.Instance.LitArray[ndx] is MonoLit)
                 {
-                    value = Global.Instance.dta[ndx].Coerse(value);
+                    value = ((MonoLit)Global.Instance.LitArray[ndx]).Coerse(value);
+                }
 
-                    colors[ndx] = value;
-                }
-                else
-                {
-                    colors[ndx] = value;
-                }
+                colors[ndx] = value;
                 updated = true;
             }
 
@@ -53,7 +49,7 @@ namespace ConsoleApplication1
 
         public bool Updated => updated;
 
-        public Color[] Colors
+        public Clr[] Colors
         {
             get
             {
@@ -118,11 +114,15 @@ namespace ConsoleApplication1
                         accessor.Write(0);
                     }
 
-                    var lits = Global.Instance.VuDict["tree"].LitArray.Count + Global.Instance.LitDict.Values.OfType<RGBLit>().Count();
+                    var lits = Global.Instance.LitArray.Length;
 
-                    colors = new Color[lits];
+                    colors = new Clr[lits];
                     for (int ndx = 0; ndx < lits; ndx++)
                         colors[ndx] = Color.Black;
+                    foreach (var lit in Global.Instance.LitArray.OfType<FeatureLit>())
+                    {
+                        colors[lit.GlobalIndex] = Color.Red;
+                    }
 
                     displayOffset = mapsize + 4;
 
@@ -237,8 +237,8 @@ namespace ConsoleApplication1
                 accessor.Seek(displayOffset, SeekOrigin.Begin);
                 for (int ndx = 0; ndx < colors.Length; ndx++)
                 {
-                    var color = colors[ndx];
-                    uint clr = (uint)((color.A << 24) | (color.R << 16) | (color.G << 8) | color.B);
+                    uint clr = colors[ndx].UInt;
+                    //uint clr = (uint)((color.A << 24) | (color.R << 16) | (color.G << 8) | color.B);
                     accessor.Write(clr);
                 }
 

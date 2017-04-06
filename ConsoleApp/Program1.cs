@@ -64,6 +64,8 @@ namespace ConsoleApplication1
 
             View.Load(root);
 
+            Global.Instance.LitArray = Global.Instance.LitDict.Values.OrderBy(lit => lit.GlobalIndex).ToArray();
+
             //  Displays
 
             var tree = Global.Instance.VuDict["tree"];
@@ -71,7 +73,7 @@ namespace ConsoleApplication1
 
             Global.Instance.tdOrder = tree.LitArray.Select(n => (short)n.Index).ToArray();
 
-            Global.Instance.dict = Global.Instance.dta.ToDictionary(d => Tuple.Create<int, int>(d.Row, d.Circle), d => d);
+            //Global.Instance.dict = Global.Instance.dta.ToDictionary(d => Tuple.Create<int, int>(d.Row, d.Circle), d => d);
 
             // Transitions
 

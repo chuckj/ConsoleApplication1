@@ -25,10 +25,11 @@ namespace ConsoleApplication1
             }
             else
             {
-                name = "@" + name;
-                if (Global.Instance.FeatureLitDict.TryGetValue(name, out lit))
+                
+                if (Global.Instance.FeatureLitDict.TryGetValue("@" + name, out lit))
                     return lit;
                 clr = Color.FromName(name);
+                name = "@" + name;
             }
             return new FeatureLit(name, clr);
         }

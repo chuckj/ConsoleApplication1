@@ -29,7 +29,7 @@ namespace ConsoleApplication1
         public volatile DisplayUpdate currDisplay;
         public volatile MarqueUpdate currMarque;
 
-        public Dictionary<Tuple<int, int>, MonoLit> dict = new Dictionary<Tuple<int, int>, MonoLit>();
+        //public Dictionary<Tuple<int, int>, MonoLit> dict = new Dictionary<Tuple<int, int>, MonoLit>();
 		public object conLock = new object();
         public Dictionary<string, TreeTransition> TreeTransitionDict = new Dictionary<string, TreeTransition>();
         public short[] tdOrder;
@@ -48,6 +48,7 @@ namespace ConsoleApplication1
         public List<Cntrl> Cntrlrs = new List<Cntrl>();
 
         public Dictionary<string, Lit> LitDict = new Dictionary<string, Lit>(1500);
+        public Lit[] LitArray = null;
 
         public Dictionary<string, FeatureLit> FeatureLitDict = new Dictionary<string, FeatureLit>();
 

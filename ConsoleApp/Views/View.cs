@@ -434,7 +434,7 @@ namespace ConsoleApplication1
                                                 //    dmx.DimNdx.Add(Global.Instance.TriVertices.Count);
 
                                                 Global.Instance.TriIndices.Add((short)Global.Instance.TriVertices.Count);
-                                                Global.Instance.TriVertices.Add(new IndexPoint3D(pt, (ndx == 3) ? dmx.GlobalIndex : -dmx.GlobalIndex));
+                                                Global.Instance.TriVertices.Add(new IndexPoint3D(pt, (ndx == 3) ? dmx.GlobalIndex : dmx.GlobalIndex | 0x00010000 ));
                                             }
 
                                             Global.Instance.TriIndices.Add(-1);

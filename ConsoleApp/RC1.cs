@@ -72,7 +72,7 @@ namespace ConsoleApplication1
             sb = new[] { new MinMax(-90, 5), new MinMax(-90, 90), new MinMax(40, 300),
                 new MinMax(-250, 0), new MinMax(-300, 300), new MinMax(-200, 200) };
 
-            int ndx = Global.Instance.VuDict["tree"].LitArray.Count();
+            //int ndx = Global.Instance.VuDict["tree"].LitArray.Count();
             //foreach (var lit in Global.Instance.LitDict.Values.OfType<GECELit>())
             //    lit.GlobalIndex = ndx++;
 
@@ -84,15 +84,13 @@ namespace ConsoleApplication1
 
 
             IndexVertex[] monoGeceVertices =
-                Global.Instance.VuDict["tree"].LitArray.Select((x) => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)x.Index))
-                .Concat(Global.Instance.LitDict.Values.OfType<GECELit>().Select(x => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)x.GlobalIndex))).ToArray();
+                Global.Instance.LitArray.Where(lit => lit is MonoLit || lit is GECELit)
+                    .Select((x) => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)x.GlobalIndex))
+                    .ToArray();
             int[] monoGeceIndices = Enumerable.Range(0, monoGeceVertices.Length).ToArray();
 
 
             ////var test = Global.Instance.LitDict.Values.OfType<RGBLit>().Select(x => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)(x.GlobalIndex)));
-
-
-
 
             //IndexVertex[] monoVertices =
             //    Global.Instance.VuDict["tree"].LitArray.Select((x) => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)x.Index)).ToArray();
@@ -106,13 +104,21 @@ namespace ConsoleApplication1
             //    Global.Instance.LitDict.Values.OfType<DMXLit>().Select(x => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)(x.GlobalIndex))).ToArray();
 
             Colors[] clrtbl = new[] { Colors.Red, Colors.Blue, Colors.Yellow, Colors.Green };
-            int colorCnt = Global.Instance.LitDict.Values.OfType<GECELit>().Count() 
-                + Global.Instance.LitDict.Values.OfType<DMXLit>().Count()
-            //    + Global.Instance.FeatureLitDict.Count()
-            ;
-            colorTable =
-                 Global.Instance.dta.Select((x) => new Vector4(x.Clr.R / 255.0f, x.Clr.G / 255.0f, x.Clr.B / 255.0f, 0))
-                 .Concat(Enumerable.Range(0, colorCnt).Select((x, n) => (Vector4)(Clr)clrtbl[n % 4])).ToArray();
+            int colorCnt = Global.Instance.LitDict.Count();
+            colorTable = new Vector4[colorCnt];
+            int n = 0;
+            foreach (var lit in Global.Instance.LitDict.Values)
+            {
+                if (lit is MonoLit || lit is FeatureLit)
+                {
+                    var clr = lit.Get();
+                    colorTable[lit.GlobalIndex] = new Vector4(clr.R / 255.0f, clr.G / 255.0f, clr.B / 255.0f, 0);
+                }
+                else
+                {
+                    colorTable[lit.GlobalIndex] = (Vector4)(Clr)clrtbl[n++ % 4];
+                }
+            }
 
 
 
@@ -156,7 +162,7 @@ namespace ConsoleApplication1
 
             if (lineVertices.Length > 0)
             {
-                //linvertbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.VertexBuffer, lineVertices);
+                linvertbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.VertexBuffer, lineVertices);
                 linndxbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.IndexBuffer, lineIndices);
             }
             if (triVertices.Length > 0)
@@ -319,8 +325,9 @@ namespace ConsoleApplication1
                                     dspInfo.FileStream.Position = dspInfo.Index[ndx];
                                     for (int lit = 0; lit < clrs.Length; lit++)
                                     {
-                                        var clr = dspInfo.BinaryReader.ReadUInt32();
-                                        clrs[lit] = new Vector4(((clr >> 16) & 0xff) / 256.0f, ((clr >> 8) & 0xff) / 256.0f, ((clr >> 0) & 0xff) / 256.0f, ((clr >> 24) & 0xff) / 256.0f);
+                                        var clr = new Clr(dspInfo.BinaryReader.ReadUInt32());
+                                        clrs[lit] = new Vector4(clr.R / 255.0f, clr.G / 255.0f, clr.B / 255.0f, 0);
+                                        //clrs[lit] = new Vector4(((clr >> 16) & 0xff) / 256.0f, ((clr >> 8) & 0xff) / 256.0f, ((clr >> 0) & 0xff) / 256.0f, ((clr >> 24) & 0xff) / 256.0f);
                                     }
                                 }
                             }

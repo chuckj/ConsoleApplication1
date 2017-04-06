@@ -134,7 +134,7 @@ namespace ConsoleApplication1
             {
                 if ((td.MarqueNdx >= 0))
                 {
-                    context[td.Index] = ((upd[td.MarqueNdx] & td.MarqueMask) != 0) ?
+                    context[td.GlobalIndex] = ((upd[td.MarqueNdx] & td.MarqueMask) != 0) ?
                         SD.Color.White : SD.Color.Black;
                 }
             }

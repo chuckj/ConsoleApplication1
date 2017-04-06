@@ -77,12 +77,12 @@ namespace ConsoleApplication1
         //    return Level.FromArgb(Clr.R * inten / 255, Clr.G * inten / 255, Clr.B * inten / 255);
         //}
 
-        public override Clr Get()
-        {
-            throw new NotImplementedException();
-            //Clr clr = LoopBack.Clr.FromArgb(Clr.R * last >> 8, Clr.G * last >> 8, Clr.B * last >> 8);
-            //return clr;
-        }
+        //public override Clr Get()
+        //{
+        //    throw new NotImplementedException();
+        //    //Clr clr = LoopBack.Clr.FromArgb(Clr.R * last >> 8, Clr.G * last >> 8, Clr.B * last >> 8);
+        //    //return clr;
+        //}
 
         public override void setIndex(int value)
         {

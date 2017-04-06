@@ -5,9 +5,12 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SD = System.Drawing;
+using System.Diagnostics;
 
 namespace ConsoleApplication1
 {
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public struct Clr
     {
         #region statics
@@ -21,7 +24,6 @@ namespace ConsoleApplication1
 
         public static Clr FromName(string name)
         {
-            Clr clr;
             if (name.StartsWith("#"))
             {
                 int val = Convert.ToInt32(name.Substring(1), 16);
@@ -96,17 +98,18 @@ namespace ConsoleApplication1
 
         public static implicit operator Clr(long val) => new Clr(val);
 
-        public static implicit operator Color(Clr clr)
+        public static implicit operator SD.Color(Clr clr)
         {
-            //return Color.FromRgba(clr.AsUint());
-            throw new NotImplementedException();
+            return SD.Color.FromArgb((byte)255, clr.R, clr.G, clr.B);
         }
 
         public static implicit operator Vector4(Clr clr) => new Vector4(clr.R / 255.0f, clr.G / 255.0f, clr.B / 255.0f, 1);
 
         public static implicit operator Clr(System.Drawing.Color color) => new Clr(color.ToArgb() | 0xff000000);
         #endregion
-        
+
+        public UInt32 UInt => Value;
+
         #region Overrides
 
         public override bool Equals(Object obj)
@@ -118,5 +121,6 @@ namespace ConsoleApplication1
         public override int GetHashCode() => (int)Value;
         #endregion
 
+        public string DebuggerDisplay => string.Format($"#{Value:X8}");
     }
 }
