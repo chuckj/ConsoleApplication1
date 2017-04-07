@@ -114,17 +114,12 @@ namespace ConsoleApplication1
                         accessor.Write(0);
                     }
 
-                    var lits = Global.Instance.LitArray.Length;
-
-                    colors = new Clr[lits];
-                    for (int ndx = 0; ndx < lits; ndx++)
-                        colors[ndx] = Color.Black;
-                    foreach (var lit in Global.Instance.LitArray.OfType<FeatureLit>())
-                    {
-                        colors[lit.GlobalIndex] = Color.Red;
-                    }
-
                     displayOffset = mapsize + 4;
+
+                    Clr[] clrz = new[] { (Clr)Color.Red, (Clr)Color.Blue, (Clr)Color.Yellow, (Clr)Color.Green, (Clr)Color.Orange, (Clr)Color.Cyan, (Clr)Color.Magenta };
+                    colors = Global.Instance.LitArray.Select((x, n) => (x is MonoLit || x is FeatureLit) ? x.InitVal : clrz[n % clrz.Length]).ToArray();
+
+                    saveUpdates(0);
 
                     steps = song.Vizs.Where(v => v is IRunTime).OrderBy(v => v.StartPoint.X)
                         .Select(v => new Helper() { time = v.StartPoint.X, iter = ((IRunTime)v).Xeq(this).GetEnumerator() }).ToArray();
@@ -151,7 +146,10 @@ namespace ConsoleApplication1
 
                         progress.Report((int)(CurTime * 100 / song.MusicEndPx));
 
-                        saveUpdates();
+                        if (updated)
+                        {
+                            saveUpdates(CurTime);
+                        }
 
                         CurTime = NxtTime;
                     };
@@ -225,25 +223,20 @@ namespace ConsoleApplication1
             });
         }
 
-   
-        private void saveUpdates()
+
+        private void saveUpdates(int curTime)
         {
-            if (updated)
+            int offset = (curTime * 30 / Global.pxpersec) * 4 /* l'int */ + 4 /* l'mapsize */;
+            accessor.Seek(offset, SeekOrigin.Begin);
+            accessor.Write(displayOffset);
+
+            accessor.Seek(displayOffset, SeekOrigin.Begin);
+            for (int ndx = 0; ndx < colors.Length; ndx++)
             {
-                int offset = (CurTime * 30 / Global.pxpersec) * 4 /* l'int */ + 4 /* l'mapsize */;
-                accessor.Seek(offset, SeekOrigin.Begin);
-                accessor.Write(displayOffset);
-
-                accessor.Seek(displayOffset, SeekOrigin.Begin);
-                for (int ndx = 0; ndx < colors.Length; ndx++)
-                {
-                    uint clr = colors[ndx].UInt;
-                    //uint clr = (uint)((color.A << 24) | (color.R << 16) | (color.G << 8) | color.B);
-                    accessor.Write(clr);
-                }
-
-                displayOffset += colors.Length * 4;
+                accessor.Write(colors[ndx].UInt);
             }
+
+            displayOffset += colors.Length * 4;
         }
 
         public class Helper

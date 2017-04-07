@@ -29,23 +29,16 @@ namespace ConsoleApplication1
 
         public override string Attributes() => base.Attributes() + ";" + Clr.Name;
 
-        private int last = 255;
-        private int lastPgmId;
-        private int lastIntenPgmId;
         private int bitndx;
         private uint bitmask;
 
         public int BitNdx => bitndx;
         public uint BitMask => bitmask;
 
-        //bitndx = value >> 5;
-        //bitmask = 0x80000000 >> (value & 0x1f);
-
-
         public SD.Color Coerse(SD.Color clr)
         {
             if ((clr.R | clr.G | clr.B) > 0)
-                return SD.Color.FromArgb(Clr.R, Clr.G, Clr.B);
+                return SD.Color.FromArgb(InitVal.R, InitVal.G, InitVal.B);
             else
                 return SD.Color.Black;
         }

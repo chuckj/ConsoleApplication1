@@ -95,9 +95,9 @@ PSL_IN VSL(VSL_IN input)
 	output.position = mul(w, float4(input.position.xyz, 1));
 	int ndx = input.texcoord;
 	output.color = clrndx[ndx & 0x0000ffff];
-	if (ndx & 0x00010000 != 0)
+	if ((ndx & 0x00010000) != 0)
 	{
-		output.color.a = .5;
+		output.color.rgb = output.color.rgb / 4.0;
 	}
     return output;
 }

@@ -422,19 +422,14 @@ namespace ConsoleApplication1
                                     case "triangle":
                                         {
                                             XAttribute attrb;
+                                            bool alldark = ((string)trig.Attribute("alldark")) != null;
                                             for (int ndx = 1; ; ndx++)
                                             {
                                                 attrb = trig.Attribute("pt" + ndx);
                                                 if (string.IsNullOrEmpty((string)attrb)) break;
                                                 Point3D pt = (Point3D)attrb + offset;
-
-                                                //if (ndx == 3)
-                                                //    dmx.LiteNdx.Add(Global.Instance.TriVertices.Count);
-                                                //else
-                                                //    dmx.DimNdx.Add(Global.Instance.TriVertices.Count);
-
                                                 Global.Instance.TriIndices.Add((short)Global.Instance.TriVertices.Count);
-                                                Global.Instance.TriVertices.Add(new IndexPoint3D(pt, (ndx == 3) ? dmx.GlobalIndex : dmx.GlobalIndex | 0x00010000 ));
+                                                Global.Instance.TriVertices.Add(new IndexPoint3D(pt, dmx.GlobalIndex | ((!alldark && ndx == 3) ? 0 : 0x00010000 )));
                                             }
 
                                             Global.Instance.TriIndices.Add(-1);

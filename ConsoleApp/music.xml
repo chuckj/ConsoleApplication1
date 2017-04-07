@@ -2,7 +2,7 @@
 <song filename="@@path@@\SoundVisualationLibrary\Sample_NAudio\timing\03 Rudolph the Red-Nosed Reindeer.mp3"
       displayFile="@@path@@\SoundVisualationLibrary\Sample_NAudio\timing\03 Rudolph the Red-Nosed Reindeer.dsp">
   <keyframes>
-    <keyframe measure="0" beatspermeasure="1" time="0"/>
+    <keyframe measure="0" beatspermeasure="4" time="0"/>
     <keyframe measure="1" beatspermeasure="4" time=".375"/>
     <keyframe measure="77" time="183.0"/>
   </keyframes>
@@ -88,10 +88,10 @@
   </lyrics>
  
   <steps>
-    <stepi begin="0m1" end="0m1" color="blue" text="" regex=":dmx:" mode="0" transition="immediate"/>
-    <stepi begin="0m1" end="0m1" color="yellow" text="" regex="^(?!.*(dmx|tree|cdl))" mode="0" transition="immediate"/>
-    <stepi begin="0m1" end="0m1" color="white" text="" regex="tree" mode="0" transition="immediate"/>
-    <stepi begin="0m1" end="0m1" color="orange" text="" regex="cdl" mode="0" transition="immediate"/>
+    <stepi begin="0m2" end="0m4" color="blue" text="" regex=":dmx:" mode="0" transition="crossfade"/>
+    <!--<stepi begin="0m1" end="0m1" color="yellow" text="" regex="^((?!(:dmx:|:tree:|:cdl)).)*$" mode="0" transition="immediate"/>-->
+    <!--<stepi begin="0m1" end="0m1" color="white" text="" regex="tree" mode="0" transition="immediate"/>-->
+    <stepi begin="0m2" end="0m4" color="orange" text="" regex="cdl" mode="0" transition="crossfade"/>
     <!--<stepi begin="0m1" end="0m1" color="white" text="" regex="^(?!.*dmx)" mode="0" transition="immediate"/>-->
     <repeat tm1="0" tm2="2" tm3="4" tm4="6" tm5="8" tm6="10">
 
@@ -108,7 +108,7 @@
       <stepi begin="1m3+3/4" end="1m3+3/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
       <stepi begin="1m3+4/4" end="1m3+4/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
 
-      <stepi begin="1m4" end="1m4" color="grween" text="" regex=":dmx:" mode="0" transition="flash"/>
+      <stepi begin="1m4" end="1m4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
       <stepi begin="1m4+2/4" end="1m4+2/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
       <stepi begin="1m4+3/4" end="1m4+3/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
       <stepi begin="1m4+4/4" end="1m4+4/4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>

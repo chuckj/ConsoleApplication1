@@ -161,7 +161,7 @@ namespace ConsoleApplication1
                         {
                             if (song.Position < song.TrackPx)
                             {
-                                song.Position= Math.Min(song.Position + 2, song.TrackPx - 1);
+                                song.Position = Math.Min(song.Position + 2, song.TrackPx - 1);
                             }
                             else
                             {
@@ -210,7 +210,7 @@ namespace ConsoleApplication1
 
                         foreach (var viz in song.Vizs)
                         {
-                            if (viz is Slider || (viz.StartPoint.X < prevRIT && viz.EndPoint.X > prevLFT))
+                            if (viz is Slider || viz is Rule || (viz.StartPoint.X < prevRIT && viz.EndPoint.X > prevLFT))
                                 viz.Draw(dd);
                         }
 

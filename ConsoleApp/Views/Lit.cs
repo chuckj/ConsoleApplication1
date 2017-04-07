@@ -10,43 +10,14 @@ namespace ConsoleApplication1
     public class Lit
     {
         private static int globalIndex = 0;
+        private Clr initVal;
         public static List<Lit> LitList
         {
             get { return Global.Instance.LitDict.Values.ToList(); }
             private set { }
         }
 
-        //public static void Load(XElement root) //, System.Windows.Forms.PictureBox pix)
-        //{
-        //    XElement xpN = root.Element("Lites");
-        //    foreach (XElement cur in xpN.Elements())
-        //    {
-        //        string nm = (string)cur.Attribute(@"nm");
-        //        switch (cur.Name.LocalName)
-        //        {
-        //            //case "MonoLit":
-        //            //    new MonoLit(nm, Color.FromName((string)cur.Attribute(@"clr")));
-        //            //    break;
-
-        //            //case "RGBLit":
-        //            //    new RGBLit(nm);
-        //            //    break;
-
-        //            //case "Tree":
-        //            //    new Tree(root, nm, cur); //, pix);
-        //            //    break;
-
-        //            //case "Candolier":
-        //            //    new Candolier(root, nm, cur, form);
-        //            //    break;
-
-        //            case "Mini":
-        //                new Mini(root, nm, cur); //, pix);
-        //                break;
-
-        //        }
-        //    }
-        //}
+ 
         private int index;
 
         public string Name { get; private set; }
@@ -79,7 +50,7 @@ namespace ConsoleApplication1
         public Lit(string nm, Clr clr)
             : this(nm)
         {
-            val = clr;
+            initVal = val = clr;
         }
 
         public virtual string Attributes() => string.Empty;
@@ -88,6 +59,8 @@ namespace ConsoleApplication1
         {
             this.val = val;
         }
+
+        public Clr InitVal { get { return initVal; } }
 
         public virtual Clr Get() => val;
 

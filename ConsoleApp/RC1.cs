@@ -52,18 +52,15 @@ namespace ConsoleApplication1
             InitializeComponent();
         }
 
-
         private void InitializeComponent()
         {
             this.MouseWheel += rc1_MouseWheel;
         }
 
-
         public void WinInit(IProgress<Tuple<string, string, string>> progress )
         {
             this.progress = progress;
         }
-
 
         public void D3DInit()
         {
@@ -72,57 +69,12 @@ namespace ConsoleApplication1
             sb = new[] { new MinMax(-90, 5), new MinMax(-90, 90), new MinMax(40, 300),
                 new MinMax(-250, 0), new MinMax(-300, 300), new MinMax(-200, 200) };
 
-            //int ndx = Global.Instance.VuDict["tree"].LitArray.Count();
-            //foreach (var lit in Global.Instance.LitDict.Values.OfType<GECELit>())
-            //    lit.GlobalIndex = ndx++;
-
-            //foreach (var lit in Global.Instance.LitDict.Values.OfType<DMXLit>())
-            //    lit.GlobalIndex = ndx++;
-
-            //foreach (var lit in Global.Instance.LitDict.Values.OfType<FeatureLit>())
-            //    lit.GlobalIndex = ndx++;
-
-
             IndexVertex[] monoGeceVertices =
                 Global.Instance.LitArray.Where(lit => lit is MonoLit || lit is GECELit)
                     .Select((x) => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)x.GlobalIndex))
                     .ToArray();
             int[] monoGeceIndices = Enumerable.Range(0, monoGeceVertices.Length).ToArray();
 
-
-            ////var test = Global.Instance.LitDict.Values.OfType<RGBLit>().Select(x => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)(x.GlobalIndex)));
-
-            //IndexVertex[] monoVertices =
-            //    Global.Instance.VuDict["tree"].LitArray.Select((x) => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)x.Index)).ToArray();
-            //int[] monoIndices = Enumerable.Range(0, monoVertices.Length).ToArray();
-
-            //IndexVertex[] geceVertices =
-            //    Global.Instance.LitDict.Values.OfType<GECELit>().Select(x => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)(x.GlobalIndex))).ToArray();
-            //int[] geceIndices = Enumerable.Range(0, geceVertices.Length).ToArray();
-
-            //IndexVertex[] dmxVertices =
-            //    Global.Instance.LitDict.Values.OfType<DMXLit>().Select(x => new IndexVertex(new Vector3(x.Pt.X / scale, x.Pt.Y / scale, x.Pt.Z / scale), (uint)(x.GlobalIndex))).ToArray();
-
-            Colors[] clrtbl = new[] { Colors.Red, Colors.Blue, Colors.Yellow, Colors.Green };
-            int colorCnt = Global.Instance.LitDict.Count();
-            colorTable = new Vector4[colorCnt];
-            int n = 0;
-            foreach (var lit in Global.Instance.LitDict.Values)
-            {
-                if (lit is MonoLit || lit is FeatureLit)
-                {
-                    var clr = lit.Get();
-                    colorTable[lit.GlobalIndex] = new Vector4(clr.R / 255.0f, clr.G / 255.0f, clr.B / 255.0f, 0);
-                }
-                else
-                {
-                    colorTable[lit.GlobalIndex] = (Vector4)(Clr)clrtbl[n++ % 4];
-                }
-            }
-
-
-
-            //var cvclr = new Vector4(1f, 0f, 0f, 1);
             lineVertices = Global.Instance.LineVertices.Select(pt => new IndexVertex(new Vector3(pt.X / scale, pt.Y / scale, pt.Z / scale), (uint)pt.Ndx)).ToArray();
             lineIndices = Global.Instance.LineIndices.ToArray();
 
@@ -155,9 +107,10 @@ namespace ConsoleApplication1
             //create constant buffer
             buffer = shaderBulbs.CreateBuffer<WVPAndR>();
 
+            colorTable = animate(0);
+
             clrTbl =
                 new SDXD3D11Buffer(device.Device, (colorTable.Length * 16 + 15) / 16 * 16, ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
-
 
 
             if (lineVertices.Length > 0)
@@ -176,18 +129,12 @@ namespace ConsoleApplication1
             shaderBulbs.VertexSize = SharpDX.Utilities.SizeOf<IndexVertex>();
             shaderBulbs.IndexCount = monoGeceIndices.Length;
 
-            //shaderLines.VertexBuffer = Buffer11.Create<ColoredVertex>(device.Device, BindFlags.VertexBuffer, lineVertices);
-            //shaderLines.IndexBuffer = Buffer11.Create(device.Device, BindFlags.IndexBuffer, lineIndices);
-            //shaderLines.VertexSize = SharpDX.Utilities.SizeOf<ColoredVertex>();
-            //shaderLines.IndexCount = lineIndices.Length;
-
             string version = SharpDX.Direct3D11.Device.GetSupportedFeatureLevel() == SharpDX.Direct3D.FeatureLevel.Level_11_0 ? "5_0" : "4_0";
             var pixelShaderByteCode = SharpDX.D3DCompiler.ShaderBytecode.CompileFromFile("../../HLSL.txt", "PSA", "ps_" + version);
             areaShader = new PixelShader(device.Device, pixelShaderByteCode);
 
             fpsCounter = new SharpFPS();
             fpsCounter.Reset();
-            //dsp = new DisplayUpdate();
         }
 
         public static SD.Size GetSize(Control C)
@@ -196,13 +143,9 @@ namespace ConsoleApplication1
             else return (SD.Size)C.Invoke(new Func<Control, SD.Size>(GetSize), C);
         }
 
-        private int lastoffset = -1;
         private int offset = 0;
         private WeakReference prevDspInfo = new WeakReference(null);
         private int prevDspInfoIndex = -1;
-
-
-        private int blink = 0;
 
         public void D3DRender(bool updated)
         {
@@ -259,51 +202,18 @@ namespace ConsoleApplication1
 
                 if (updated)
                 {
-
-                    //var curr = Global.Instance.currDisplay;
-
-                    ////if (Global.Instance.currMarque == null)
-                    ////{
-                    ////    foreach (var td in Global.Instance.dta)
-                    ////    {
-                    ////        colorTable[td.ndx].A = (byte)(Global.Instance.currDisplay[td] ? 255 : 0);
-                    ////    }
-                    ////}
-                    ////else
-                    ////{
-
-                    //updateds++;
-
-                    //var mrq = Global.Instance.currMarque;
-
-                    //foreach (var td in Global.Instance.dta)
-                    //{
-                    //    colorTable[td.Index] = ((curr[td] || ((td.MarqueNdx >= 0) && (mrq != null) && mrq[td])) ?
-                    //        new Vector4(td.Clr.R / 255.0f, td.Clr.G / 255.0f, td.Clr.B / 255.0f, 0) : new Vector4(0, 0, 0, 0));
-                    //}
-                    ////}
-
                     Vector4[] clrs = colorTable;
                     if (Global.Instance.Song != null)
                     {
                         var song = Global.Instance.Song;
                         if (song.DisplayInfo == null)
                         {
-                            if (song.LitValues != null)
-                            {
-                                offset++;
-                                clrs = song.LitValues[(offset / 60) % 5];
-                            }
+                            clrs = animate(offset++ / 60);
                         }
                         else
                         {
                             lock (song.DisplayInfoLock)
                             {
-                                //if (song.LitValues != null)
-                                //{
-                                //    offset++;
-                                //    clrs = song.LitValues[(offset / 60) % 5];
-                                //}
                                 var dspInfo = song.DisplayInfo;
                                 int rawNdx = song.Position * 30 / Global.pxpersec;
                                 int ndx = rawNdx;
@@ -311,11 +221,7 @@ namespace ConsoleApplication1
                                     ndx--;
                                 if (dspInfo == null || dspInfo.Index[ndx] == 0)
                                 {
-                                    if (song.LitValues != null)
-                                    {
-                                        offset++;
-                                        clrs = song.LitValues[(offset / 60) % 5];
-                                    }
+                                    clrs = animate(offset++ / 60);
                                 }
                                 else if (ndx != prevDspInfoIndex || dspInfo != prevDspInfo.Target)
                                 {
@@ -327,7 +233,6 @@ namespace ConsoleApplication1
                                     {
                                         var clr = new Clr(dspInfo.BinaryReader.ReadUInt32());
                                         clrs[lit] = new Vector4(clr.R / 255.0f, clr.G / 255.0f, clr.B / 255.0f, 0);
-                                        //clrs[lit] = new Vector4(((clr >> 16) & 0xff) / 256.0f, ((clr >> 8) & 0xff) / 256.0f, ((clr >> 0) & 0xff) / 256.0f, ((clr >> 24) & 0xff) / 256.0f);
                                     }
                                 }
                             }
@@ -335,34 +240,7 @@ namespace ConsoleApplication1
                     }
 
                     device.DeviceContext.UpdateSubresource<Vector4>(clrs, clrTbl);
-
-
-
-                    //if (triVertices.Length > 0)
-                    //{
-                    //    dispose(trivertbuff);
-
-                    //    var dmxStrand = Global.Instance.DMXStrand;
-                    //    foreach (var lit in dmxStrand.lites.OfType<DMXLit>())
-                    //    {
-                    //        var clr = clrs[lit.GlobalIndex];
-                    //        foreach (var ndx in lit.LiteNdx)
-                    //            triVertices[ndx].Color = clr;
-                    //        //clr.W = clr.W / 2; 
-                    //        clr.X = clr.X / 2; clr.Y = clr.Y/ 2; clr.Z = clr.Z / 2;
-                    //        foreach (var ndx in lit.DimNdx)
-                    //            triVertices[ndx].Color = clr;
-                    //    }
-                    //    trivertbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.VertexBuffer, triVertices);
-                    //}
                 }
-
-                //if (lineVertices.Length > 0)
-                //{
-                //    dispose(linvertbuff);
-
-                //    linvertbuff = SDXD3D11Buffer.Create(device.Device, BindFlags.VertexBuffer, lineVertices);
-                //}
 
                 ////draw mesh
                 ////mesh.DrawPoints(vertices.Length);
@@ -384,7 +262,7 @@ namespace ConsoleApplication1
 
                 if (triVertices.Length > 0)
                 {
-                    //  draw
+                    //  draw triangles
                     device.DeviceContext.PixelShader.Set(areaShader);
 
                     device.DeviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
@@ -396,6 +274,7 @@ namespace ConsoleApplication1
 
                 if (lineVertices.Length > 0)
                 {
+                    //  draw lines
                     device.DeviceContext.PixelShader.Set(shaderLines.PixelShader);
 
                     device.DeviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.LineStrip;
@@ -443,6 +322,17 @@ namespace ConsoleApplication1
         public void D3DRelease()
         {
 
+        }
+
+        private Vector4[] animate(int ndx)
+        {
+            Vector4[] clrz = new[] { aniHlpr(Colors.Red), aniHlpr(Colors.Blue), aniHlpr(Colors.Yellow), aniHlpr(Colors.Green), aniHlpr(Colors.Orange), aniHlpr(Colors.Cyan), aniHlpr(Colors.Magenta) };
+            return Global.Instance.LitArray.Select((x, n) => (x is MonoLit || x is FeatureLit) ? aniHlpr(x.InitVal) : clrz[(n + ndx) % clrz.Length]).ToArray();
+        }
+
+        private Vector4 aniHlpr(Clr c)
+        {
+            return new Vector4(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, 1.0f);
         }
 
         public void rc1_MouseWheel(object sender, MouseEventArgs e)

@@ -40,7 +40,7 @@ namespace ConsoleApplication1
         private float bgnmTm;
         private float endmTm;
         private float endtTm;
-        
+
         private int musicBeginPx;
         private int musicEndPx;
 
@@ -262,17 +262,17 @@ namespace ConsoleApplication1
                 return null;
             }
 
-            Colors[] clrtbl = new[] { Colors.Red, Colors.Blue, Colors.Yellow, Colors.Green, Colors.Orange };
-            var dict = Global.Instance.LitDict;
-            var lits = new Vector4[5][];
-            for (int ndx = 0; ndx < 5; ndx++)
-            {
-                lits[ndx] =
-                     Global.Instance.dta.Select((x, n) => new Vector4(x.Clr.R / 255.0f, x.Clr.G / 255.0f, x.Clr.B / 255.0f, 0))
-                     .Concat(Global.Instance.LitDict.Values.OfType<RGBLit>().Select((x, n) => (Vector4)(Clr)clrtbl[(n + ndx) % 5])).ToArray();
-            }
+            //Colors[] clrtbl = new[] { Colors.Red, Colors.Blue, Colors.Yellow, Colors.Green, Colors.Orange };
+            //var lits = new Clr[5][];
+            //for (int ndx = 0; ndx < 5; ndx++)
+            //{
+            //    lits[ndx] = 
+            //         Global.Instance.LitArray.Select((x, n) => 
+            //            (x is MonoLit || x is FeatureLit) ? x.InitVal :
+            //                (Clr)clrtbl[(n + ndx) % 5]).ToArray();
+            //}
 
-            song.litValues = lits;
+            //song.litValues = lits;
 
             song.DisplayMapSize = (int)Math.Ceiling(song.TrackTime * 30) * 4;
 
@@ -847,7 +847,7 @@ namespace ConsoleApplication1
 
         public float ToTimeHelper(short measure, short beat = 1, PartialBeats partialBeat = PartialBeats.None, short milliseconds = 0)
         {
-            if ((measure <= 0) || (measure >= measures.Length)) return 0f;
+            if ((measure < 0) || (measure >= measures.Length)) return 0f;
             Measure curr = measures[measure];
             if (curr == null) return 0f;
 
@@ -1012,18 +1012,18 @@ namespace ConsoleApplication1
             }
         }
 
-        private Vector4[][] litValues = null;
-        public Vector4[][] LitValues
-        {
-            get
-            {
-                return litValues;
-            }
-            set
-            {
-                SetPropertyField(nameof(LitValues), ref litValues, value);
-            }
-        }
+        //private Clr[][] litValues = null;
+        //public Clr[][] LitValues
+        //{
+        //    get
+        //    {
+        //        return litValues;
+        //    }
+        //    set
+        //    {
+        //        SetPropertyField(nameof(LitValues), ref litValues, value);
+        //    }
+        //}
         #region PropertyChanged
 
         protected void OnPropertyChanged(PropertyChangedEventArgs e)

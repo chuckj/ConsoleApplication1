@@ -27,11 +27,16 @@ namespace ConsoleApplication1
             if (name.StartsWith("#"))
             {
                 int val = Convert.ToInt32(name.Substring(1), 16);
-                return System.Drawing.Color.FromArgb((val >> 16) & 0xff, (val >> 8) & 0xff, val & 0xff);
+                return SD.Color.FromArgb((val >> 16) & 0xff, (val >> 8) & 0xff, val & 0xff);
             }
+
+            FeatureLit lit;
+            if (Global.Instance.FeatureLitDict.TryGetValue(name, out lit))
+                return lit.InitVal;
+
             //if (Global.Instance.CustomColors.TryGetValue(name, out clr))
             //    return clr;
-            return System.Drawing.Color.FromName(name);
+            return SD.Color.FromName(name);
         }
         #endregion
 

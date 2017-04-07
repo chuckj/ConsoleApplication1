@@ -19,7 +19,8 @@ namespace ConsoleApplication1
                     throw new ArgumentException("nm");
                 if ((string)color.Attribute("color") == null)
                     throw new ArgumentException("color");
-                FeatureLit.FromName((string)color.Attribute("color"));
+                Clr clr = Clr.FromName((string)color.Attribute("color"));
+                new FeatureLit(nm, clr);
             }
         }
     }

@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <root>
   <Features>
-    <Feature nm="feature" color="red"/>
+    <Feature nm="Hidden" color="#202020"/>
+    <Feature nm="Tree" color="DarkRed"/>
+    <Feature nm="Manger" color="#202020" />
   </Features>
   <Controllers>
     <USBController nm="USB1" serial="A6FOL1K7">
@@ -189,30 +191,30 @@
     </View>-->
     <View nm="manger" offset="250,-30,-250" main="true" strand="USB2_13">
       <dmx>
-        <triangle pt1="0,0,0" pt2="0,36,0" pt3="24,0,0" pt4="24,48,0" color="DarkGray"/> <!--back lt inside-->
-        <triangle pt1="24,48,0" pt2="48,36,0" pt3="24,0,0" pt4="48,0,0" color="DarkGray"/> <!--back rt inside-->
+        <triangle pt1="0,0,0" pt2="0,36,0" pt3="24,0,0" pt4="24,48,0" color="Manger"/> <!--back lt inside-->
+        <triangle pt1="24,48,0" pt2="48,36,0" pt3="24,0,0" pt4="48,0,0" color="Manger"/> <!--back rt inside-->
+        <triangle pt2="-12,30,-18" pt1="-12,30,0" pt4="24,48,-18" pt3="24,48,0" color="Black" alldark=""/> <!--roof lt btm-->
+        <triangle pt2="24,48,-18" pt1="24,48,0" pt4="60,30,-18" pt3="60,30,0" color="Black" alldark=""/> <!--roof rt btm-->
       </dmx>
-      <triangle pt2="0,0,0" pt1="0,36,0" pt4="24,0,0" pt3="24,48,0" color="#000040"/> <!--back lt outside-->
-      <triangle pt2="24,48,0" pt1="48,36,0" pt4="24,0,0" pt3="48,0,0" color="#000040"/> <!--back rt outside-->
+      <triangle pt2="0,0,0" pt1="0,36,0" pt4="24,0,0" pt3="24,48,0" color="Black"/> <!--back lt outside-->
+      <triangle pt2="24,48,0" pt1="48,36,0" pt4="24,0,0" pt3="48,0,0" color="Black"/> <!--back rt outside-->
 
-      <triangle pt1="-12,26,-18" pt2="-12,30,-18" pt3="24,44,-18" pt4="24,48,-18" color="DarkGray"/> <!--roof lt facia front-->
-      <triangle pt1="24,44,-18" pt2="24,48,-18" pt3="60,26,-18" pt4="60,30,-18" color="DarkGray"/> <!--roof rt facia front-->
+      <triangle pt1="-12,26,-18" pt2="-12,30,-18" pt3="24,44,-18" pt4="24,48,-18" color="Manger"/> <!--roof lt facia front-->
+      <triangle pt1="24,44,-18" pt2="24,48,-18" pt3="60,26,-18" pt4="60,30,-18" color="Manger"/> <!--roof rt facia front-->
       
-      <triangle pt1="-12,26,0" pt2="-12,30,0" pt3="-12,26,-18" pt4="-12,30,-18" color="DarkGray"/> <!--roof left facia lt-->
-      <triangle pt1="60,26,-18" pt2="60,30,-18" pt3="60,26,0" pt4="60,30,0" color="DarkGray"/> <!--roof rt facia rt-->
+      <triangle pt1="-12,26,0" pt2="-12,30,0" pt3="-12,26,-18" pt4="-12,30,-18" color="Manger"/> <!--roof left facia lt-->
+      <triangle pt1="60,26,-18" pt2="60,30,-18" pt3="60,26,0" pt4="60,30,0" color="Manger"/> <!--roof rt facia rt-->
 
-      <triangle pt1="-12,30,-18" pt2="-12,30,0" pt3="24,48,-18" pt4="24,48,0" color="DarkGray"/> <!--roof lt top-->
-      <triangle pt1="24,48,-18" pt2="24,48,0" pt3="60,30,-18" pt4="60,30,0" color="DarkGray"/> <!--roof rt top-->
-      <triangle pt2="-12,30,-18" pt1="-12,30,0" pt4="24,48,-18" pt3="24,48,0" color="#000040"/> <!--roof lt btm-->
-      <triangle pt2="24,48,-18" pt1="24,48,0" pt4="60,30,-18" pt3="60,30,0" color="#000040"/> <!--roof rt btm-->
+      <triangle pt1="-12,30,-18" pt2="-12,30,0" pt3="24,48,-18" pt4="24,48,0" color="Manger"/> <!--roof lt top-->
+      <triangle pt1="24,48,-18" pt2="24,48,0" pt3="60,30,-18" pt4="60,30,0" color="Manger"/> <!--roof rt top-->
     </View>
     
     
     <View nm="additionleft">
       <!-- addition left -->
-      <line pt1="2,12,-.5" pt2="2,234,-.5" color="#000040" />
-      <line pt1="-10,234,-12.5" pt2="22,234,-12.5" color="#000040" /> <!-- return -->
-      <line pt1="-11.3483, 234.8535,-12.5" pt2="132.5,326,-12.5" color="#000040" /> <!-- roof-->
+      <line pt1="2,12,-.5" pt2="2,234,-.5" color="Hidden" />
+      <line pt1="-10,234,-12.5" pt2="22,234,-12.5" color="Hidden" /> <!-- return -->
+      <line pt1="-11.3483, 234.8535,-12.5" pt2="132.5,326,-12.5" color="Hidden" /> <!-- roof-->
 
       <rgb row="0" col="2" repeat="28" rowinc="1" pt="2,12,-2" ptoffset="0,8,0" class="corner"/>
       <rgb row="28" col="0" repeat="5" colinc="1" pt="-10,234,-14" ptoffset="8,0,0" class="facia"/>
@@ -221,9 +223,9 @@
 
     <View nm="additionright">
       <!-- addition right -->
-      <line pt1="263.5,138,-.5" pt2="263.5,234,-.5" color="#000040" /> <!-- upper front corner -->
-      <line pt1="275,234,-12.5" pt2="243,234,-12.5" color="#000040" /> <!-- return -->
-      <line pt1="276.3483,234.8535,-12.5" pt2="132.5,326,-12.5" color="#000040" /> <!-- roof-->
+      <line pt1="263.5,138,-.5" pt2="263.5,234,-.5" color="Hidden" /> <!-- upper front corner -->
+      <line pt1="275,234,-12.5" pt2="243,234,-12.5" color="Hidden" /> <!-- return -->
+      <line pt1="276.3483,234.8535,-12.5" pt2="132.5,326,-12.5" color="Hidden" /> <!-- roof-->
 
       <rgb row="16" col="40" repeat="12" rowinc="1" pt="263.5,138,-2" ptoffset="0,8,0" class="corner"/>
       <rgb row="28" col="42" repeat="5" colinc="-1" pt="275,234,-14" ptoffset="-8,0,0" class="facia"/>
@@ -235,19 +237,19 @@
       <!-- garage -->
 
       <!--  vertical lines on driveway  -->
-      <line pt1="228,10,0" pt2="228,-60,-724.5" pt3="248,-70,-828" color="#00000040"/>
-      <line pt1="132,10,0" pt2="132,-70,-828" color="#00000040"/>
-      <line pt1="36,10,0" pt2="36,-60,-724.5" pt3="-8,-70,-828" color="#00000040"/>
-      <line pt1="-60,0,-103.5" pt2="-60,-50,-628.5" pt3="36,-60,-724.5" color="#00000040"/>
+      <line pt1="228,10,0" pt2="228,-60,-724.5" pt3="248,-70,-828" color="Hidden"/>
+      <line pt1="132,10,0" pt2="132,-70,-828" color="Hidden"/>
+      <line pt1="36,10,0" pt2="36,-60,-724.5" pt3="-8,-70,-828" color="Hidden"/>
+      <line pt1="-60,0,-103.5" pt2="-60,-50,-628.5" pt3="36,-60,-724.5" color="Hidden"/>
 
       <!--  horizontal lines on driveway  -->
-      <line pt1="228,10,0" pt2="36,10,0" color="#00000040"/>
-      <line pt1="228,0,-103.5" pt2="-60,0,-103.5" repeat="6" ptoffset="0,-10,-103.5" color="#00000040"/>
-      <line pt1="228,-60,-724.5" pt2="36,-60,-724.5" color="#00000040"/>
-      <line pt1="1036,-70,-828" pt2="-464,-70,-828" color="#00000040"/>
+      <line pt1="228,10,0" pt2="36,10,0" color="Hidden"/>
+      <line pt1="228,0,-103.5" pt2="-60,0,-103.5" repeat="6" ptoffset="0,-10,-103.5" color="Hidden"/>
+      <line pt1="228,-60,-724.5" pt2="36,-60,-724.5" color="Hidden"/>
+      <line pt1="1036,-70,-828" pt2="-464,-70,-828" color="Hidden"/>
 
       <!--  lites around garage door -->
-      <line pt1="234,10,-.5" pt2="234,82,-.5" pt3="217.5,98.5,-.5" pt4="49.5,98.5,-.5" pt5="33,82,-.5" pt6="33,10,-.5" color="#00000040" />
+      <line pt1="234,10,-.5" pt2="234,82,-.5" pt3="217.5,98.5,-.5" pt4="49.5,98.5,-.5" pt5="33,82,-.5" pt6="33,10,-.5" color="Hidden" />
 
       <rgb row="0" col="34" repeat="10" rowinc="1" pt="234,10,-2" ptoffset="0,8,0" class="garage"/>
       <rgb row="10" col="33" repeat="2" rowinc="1" colinc="-1" pt="228.5,87.5,-2" ptoffset="-5.5,5.5,0" class="garage" />
@@ -360,8 +362,8 @@
       </dmx>
 
       <!-- door -->
-      <line pt1="330.5,32,60" pt2="387.5,32,60" pt3="387.5,110,60" pt4="372.5,110,60" pt5="372.5,32,60" color="#000040"/>
-      <line pt1="372.5,110,60" pt2="315.5,110,60" pt3="315.5,32,60" pt4="330.5,32,60" pt5="330.5,110,60" color="#000040" />
+      <line pt1="330.5,32,60" pt2="387.5,32,60" pt3="387.5,110,60" pt4="372.5,110,60" pt5="372.5,32,60" color="Hidden"/>
+      <line pt1="372.5,110,60" pt2="315.5,110,60" pt3="315.5,32,60" pt4="330.5,32,60" pt5="330.5,110,60" color="Hidden" />
       
       <!-- porch roof-->
       <triangle pt1="253,160,48" pt2="615,160,48" pt3="253,132,-12" pt4="615,132,-12" color="black" />   <!-- porch roof -->
@@ -425,18 +427,18 @@
       <triangle pt1="389.5,60,0" pt2="599,60,0" pt3="389.5,56,0" pt4="599,56,0" color="black" />
       <triangle pt1="389.5,60,4" pt2="599,60,4" pt3="389.5,60,0" pt4="599,60,0" color="black" />
 
-      <line pt1="613,160.5,46" pt2="613,136.5,-6.8" color="#000040" />
-      <line pt1="613,130,-12.5" pt2="285,130,-12.5" color="#000040" />
+      <line pt1="613,160.5,46" pt2="613,136.5,-6.8" color="Hidden" />
+      <line pt1="613,130,-12.5" pt2="285,130,-12.5" color="Hidden" />
 
       <rgb row="17" col="84" repeat="9" rowinc="1" pt="613,162,46" ptoffset="0,-3.0,-6.6" class="edge porch"/>
       <rgb row="15" col="84" repeat="42" colinc="-1" pt="613,130,-14" ptoffset="-8,0,0" class="edge porch"/>
 
       <!-- roof -->
-      <line pt1="132.5,328.5,-4" pt2="132.5,328.5,212" color="#000040" />
-      <line pt1="613,330,218.5" pt2="133,330,218.5" color="#000040" />
-      <line pt1="275,238,38" pt2="136.275,331,211.6" color="#000040" />
-      <line pt1="-12.5,234,-8" pt2="-12.5,234,224" color="#000040" />
-      <line pt1="611.5,237.5,37" pt2="611.5,327.5,212" color="#000040" />
+      <line pt1="132.5,328.5,-4" pt2="132.5,328.5,212" color="Hidden" />
+      <line pt1="613,330,218.5" pt2="133,330,218.5" color="Hidden" />
+      <line pt1="275,238,38" pt2="136.275,331,211.6" color="Hidden" />
+      <line pt1="-12.5,234,-8" pt2="-12.5,234,224" color="Hidden" />
+      <line pt1="611.5,237.5,37" pt2="611.5,327.5,212" color="Hidden" />
 
       <rgb row="0" col="0" repeat="28" rowinc="1" pt="132.5,330,-4" ptoffset="0,0,8" class="ridge roof"/> <!-- addition -->
       <rgb row="0" col="0" repeat="61" rowinc="1" pt="613,330,217" ptoffset="-8,0,0" class="ridge roof"/> <!-- main -->
@@ -447,8 +449,8 @@
 
     <View nm="upperroof" offset="0,0,0">
       <!-- upper roof -->
-      <line pt1="601,162,47.5" pt2="601,226,47.5" color="#000040" />
-      <line pt1="613,234,35.5" pt2="285,234,35.5" color="#000040" />
+      <line pt1="601,162,47.5" pt2="601,226,47.5" color="Hidden" />
+      <line pt1="613,234,35.5" pt2="285,234,35.5" color="Hidden" />
 
       <!-- porch roof - left corner -->
       <dmx class="dmx ">
@@ -474,10 +476,10 @@
 
     <View nm="porchleft">
       <!-- porch left -->
-      <line pt1="264,26,-.5" pt2="264,114,-.5" color="#000040" />
-      <line pt1="264,58,-.5" pt2="315.5,58,-.5" color="#000040" />
-      <line pt1="315.5,26,-.5" pt2="315.5,114,-.5" color="#000040" />
-      <line pt1="387.5,114,-.5" pt2="387.5,26,-.5" color="#000040" />
+      <line pt1="264,26,-.5" pt2="264,114,-.5" color="Hidden" />
+      <line pt1="264,58,-.5" pt2="315.5,58,-.5" color="Hidden" />
+      <line pt1="315.5,26,-.5" pt2="315.5,114,-.5" color="Hidden" />
+      <line pt1="387.5,114,-.5" pt2="387.5,26,-.5" color="Hidden" />
 
       <rgb row="2" col="40" repeat="12" rowinc="1" pt="264,26,-2" ptoffset="0,8,0" class="railing"/>
       <rgb row="6" col="41" repeat="5" colinc="1" pt="272,58,-2" ptoffset="8.6,0,0" class="railing"/>
@@ -488,10 +490,10 @@
 
     <View nm="porchright">
       <!-- porch right -->
-      <line pt1="601,26,-.5" pt2="601,114,-.5" color="#000040" />
-      <line pt1="601,58,-.5" pt2="493,58,-.5" color="#000040" />
-      <line pt1="493,26,-.5" pt2="493,114,-.5" color="#000040" />
-      <line pt1="493,58,-.5" pt2="387.5,58,-.5" color="#000040" />
+      <line pt1="601,26,-.5" pt2="601,114,-.5" color="Hidden" />
+      <line pt1="601,58,-.5" pt2="493,58,-.5" color="Hidden" />
+      <line pt1="493,26,-.5" pt2="493,114,-.5" color="Hidden" />
+      <line pt1="493,58,-.5" pt2="387.5,58,-.5" color="Hidden" />
 
       <rgb row="2" col="83" repeat="12" rowinc="1" pt="601,26,-2" ptoffset="0,8,0" class="railing"/>
       <rgb row="6" col="82" repeat="12" colinc="-1" pt="593,58,-2" ptoffset="-8,0,0" class="railing"/>
@@ -617,13 +619,13 @@
         <Item name="cmsEditTreeFont" />
         <Item name="cmsEditTreeDisplay" /> 
       </CMS>
-      <line pt1="-23.2, -73.25,.5" pt2="23.2, -73.25,.5" pt3="0, 6.2,.5" close="true" color="Red"/>
+      <line pt1="-23.2, -73.25,.5" pt2="23.2, -73.25,.5" pt3="0, 6.2,.5" close="true" color="Tree"/>
       <triangle pt1="23.2,-73.25,2" pt2="-23.2,-73.25,2"  pt3="0, 6.2,2" color="Black"/>
-      <triangle pt2="23.2,-73.25,2.1" pt1="-23.2,-73.25,2.1"  pt3="0, 6.2,2.1" color="Red"/>
+      <triangle pt2="23.2,-73.25,2.1" pt1="-23.2,-73.25,2.1"  pt3="0, 6.2,2.1" color="Tree"/>
       <!--<triangle pt1="23.2,-73.25,3" pt2="-0,-73.25,15"  pt3="0, 6.2,3" color="Black"/>
       <triangle pt1="0,-73.25,15" pt2="-23.2,-73.25,3"  pt3="0, 6.2,3" color="Black"/>-->
-      <triangle pt1="-23.2,-73.25,3" pt2="-23.2,-73.25,0" pt3="0,6.2,3" pt4="0,6.2,0" color="Red"/>
-      <triangle pt1="23.2,-73.25,3" pt2="23.2,-73.25,0" pt3="0,6.2,3" pt4="0,6.2,0" color="Red"/>
+      <triangle pt1="-23.2,-73.25,3" pt2="-23.2,-73.25,0" pt3="0,6.2,3" pt4="0,6.2,0" color="Tree"/>
+      <triangle pt1="23.2,-73.25,3" pt2="23.2,-73.25,0" pt3="0,6.2,3" pt4="0,6.2,0" color="Tree"/>
       <mono ndx="306" row="0" col="0" cir="0" color="Red" />
       <mono ndx="305" row="1" col="0" cir="-1" color="Green" />
       <mono ndx="304" row="1" col="1" cir="1" color="Blue" />
