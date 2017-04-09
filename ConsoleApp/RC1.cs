@@ -129,10 +129,6 @@ namespace ConsoleApplication1
             shaderBulbs.VertexSize = SharpDX.Utilities.SizeOf<IndexVertex>();
             shaderBulbs.IndexCount = monoGeceIndices.Length;
 
-            string version = SharpDX.Direct3D11.Device.GetSupportedFeatureLevel() == SharpDX.Direct3D.FeatureLevel.Level_11_0 ? "5_0" : "4_0";
-            var pixelShaderByteCode = SharpDX.D3DCompiler.ShaderBytecode.CompileFromFile("../../HLSL.txt", "PSA", "ps_" + version);
-            areaShader = new PixelShader(device.Device, pixelShaderByteCode);
-
             fpsCounter = new SharpFPS();
             fpsCounter.Reset();
         }
@@ -168,7 +164,7 @@ namespace ConsoleApplication1
                 //Set matrices
                 var sz = GetSize(this);
                 float ratio = (float)sz.Width / (float)sz.Height;
-                Matrix projection = Matrix.PerspectiveFovLH(3.14F / 3.0F, ratio, 1, 1500 / scale);
+                Matrix projection = Matrix.PerspectiveFovLH(3.14F / 3.0F, ratio, 1, 2000 / scale);
                 var theda = -Math.PI * Global.Instance.Settings.GetViewPort(1) / 180.0;
                 var omega = Math.PI * Global.Instance.Settings.GetViewPort(0) / 180.0;
                 Matrix R1 = Matrix.RotationX((float)-omega);
@@ -179,7 +175,7 @@ namespace ConsoleApplication1
                 // ((float)(150 * Math.Sin(theda)), -vScrollBar1.Value, (float)(-150 * Math.Cos(theda))
 
                 Matrix view = Matrix.LookAtLH(Vector3.TransformCoordinate(new Vector3(0 / scale, 60 / scale, -Global.Instance.Settings.GetViewPort(2) * 5 / scale), R),
-                            new Vector3(-Global.Instance.Settings.GetViewPort(4) / scale, -Global.Instance.Settings.GetViewPort(3) / scale, Global.Instance.Settings.GetViewPort(5) / scale), Vector3.UnitY);
+                    new Vector3(-Global.Instance.Settings.GetViewPort(4) / scale, -Global.Instance.Settings.GetViewPort(3) / scale, Global.Instance.Settings.GetViewPort(5) / scale), Vector3.UnitY);
                 Matrix world = Matrix.RotationY(0); // (float)Math.PI /2);
                 Matrix WVP = world * view * projection;
 
@@ -263,7 +259,7 @@ namespace ConsoleApplication1
                 if (triVertices.Length > 0)
                 {
                     //  draw triangles
-                    device.DeviceContext.PixelShader.Set(areaShader);
+                    device.DeviceContext.PixelShader.Set(shaderLines.PixelShader); // areaShader);
 
                     device.DeviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleStrip;
                     device.DeviceContext.InputAssembler.SetVertexBuffers(0, new VertexBufferBinding(trivertbuff, SharpDX.Utilities.SizeOf<IndexVertex>(), 0));
@@ -352,7 +348,7 @@ namespace ConsoleApplication1
             Global.Instance.Settings.SetViewPort(sbNdx, newValue);
         }
 
-#region IDispose
+        #region IDispose
         bool disposed = false;
 
         public new void Dispose()

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Xml.Serialization;
 
 using System.Drawing;
+using ST = System.Threading;
 
 namespace ConsoleApplication1
 {
@@ -14,18 +15,23 @@ namespace ConsoleApplication1
     {
         private const int recentlyUsedCount = 10;
         private List<string> recentlyUsed = new List<string>(recentlyUsedCount);
-        private bool changed = false;
 
         private Point _tspMenu;
         private Point _tspFile;
         private Point _tspPlayer;
         private int _splitterDistance;
+        private ST.Timer timer;
 
         public int WindowTop { get; set; }
         public int WindowLeft { get; set; }
         public int WindowWidth { get; set; }
         public int WindowHeight { get; set; }
 
+        public AppSettings()
+        {
+            timer = new ST.Timer(SaveSettings, null, ST.Timeout.Infinite, ST.Timeout.Infinite);
+        }
+        
         public Point tspFile
         {
             get
@@ -35,7 +41,7 @@ namespace ConsoleApplication1
             set
             {
                 _tspFile = value;
-                changed = true;
+                Changed();
             }
         }
 
@@ -48,7 +54,7 @@ namespace ConsoleApplication1
             set
             {
                 _tspPlayer = value;
-                changed = true;
+                Changed();
             }
         }
         public Point tspMenu
@@ -60,7 +66,7 @@ namespace ConsoleApplication1
             set
             {
                 _tspMenu = value;
-                changed = true;
+                Changed();
             }
         }
 
@@ -73,7 +79,7 @@ namespace ConsoleApplication1
             set
             {
                 _splitterDistance = value;
-                changed = true;
+                Changed();
             }
         }
 
@@ -96,8 +102,18 @@ namespace ConsoleApplication1
             if (ViewPort[ndx] != value)
             {
                 ViewPort[ndx] = value;
-                changed = true;
+                Changed();
             }
+        }
+
+        void Changed()
+        {
+            timer.Change(2000, ST.Timeout.Infinite);
+        }
+
+        void SaveSettings(object sender)
+        {
+            SaveAppSettings();
         }
 
         public void SetMostRecentlyUsed(string fullPath)
@@ -110,15 +126,17 @@ namespace ConsoleApplication1
             while (recentlyUsed.Count >= recentlyUsedCount)
                 recentlyUsed.RemoveAt(recentlyUsedCount - 1);
 
-            changed = true;
+            Changed();
         }
 
         public void RemoveMostRecentlyUsed(string fullPath)
         {
             recentlyUsed.RemoveAll(n => n == fullPath);
 
-            changed = true;
+            Changed();
         }
+
+        public bool BypassUSBControllers { get; set; }
 
         public static AppSettings LoadAppSettings()
         {
@@ -144,14 +162,14 @@ namespace ConsoleApplication1
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 
             return settings;
         }
 
-        public bool SaveAppSettings()
+        public void SaveAppSettings()
         {
             if (true) //changed)
             {
@@ -167,13 +185,10 @@ namespace ConsoleApplication1
                         myWriter.Close();
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    
                 }
             }
-
-            return changed;
         }
     }
 }

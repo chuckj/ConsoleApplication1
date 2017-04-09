@@ -17,7 +17,7 @@ namespace ConsoleApplication1
         public string Serial { get; set; }
 
         // Create new instance of the FTDI device class
-        private FTDI myFtdiDevice = new FTDI();
+        private FTDI myFtdiDevice;
 
         private byte avl = 0x73;
         private byte maxavl = 0;
@@ -52,73 +52,77 @@ namespace ConsoleApplication1
             Serial = (string)el.Attribute("serial");
             strands.AddRange(from strnd in el.Elements("Strand") select new GECEStrand(strnd, this));
 
-            do
+            if (!Global.Instance.Settings.BypassUSBControllers)
             {
-                // Open first device by serial number
-                FTDI.FT_STATUS ftStatus = myFtdiDevice.OpenBySerialNumber(Serial);
-                if (ftStatus != FTDI.FT_STATUS.FT_OK)
-                {
-                    // Wait for a key press
-                    logger.Error("Failed to open device:" + Name + " (error " + ftStatus.ToString() + ")");
-                    break;
-                }
+                myFtdiDevice = new FTDI();
 
-                ftStatus = myFtdiDevice.Purge(FTDI.FT_PURGE.FT_PURGE_RX + FTDI.FT_PURGE.FT_PURGE_TX);
-                if (ftStatus != FTDI.FT_STATUS.FT_OK)
+                do
                 {
-                    // Wait for a key press
-                    logger.Error("Failed to purge device:" + Name + " (error " + ftStatus.ToString() + ")");
-                    break;
-                }
-
-                ftStatus = myFtdiDevice.InTransferSize(64);
-                if (ftStatus != FTDI.FT_STATUS.FT_OK)
-                {
-                    // Wait for a key press
-                    logger.Error("Failed to set InTransferSize device:" + Name + " (error " + ftStatus.ToString() + ")");
-                    break;
-                }
-
-                Console.WriteLine("Set to set timeouts");
-                // Set read timeout to 5 seconds, write timeout to infinite
-                ftStatus = myFtdiDevice.SetTimeouts(5000, 0);
-                if (ftStatus != FTDI.FT_STATUS.FT_OK)
-                {
-                    // Wait for a key press
-                    logger.Error("Failed to set timeouts:" + Name + " (error " + ftStatus.ToString() + ")");
-                    break;
-                }
-
-                Console.WriteLine("clear the data");
-                UInt32 numBytesAvailable = 0;
-                ftStatus = myFtdiDevice.GetRxBytesAvailable(ref numBytesAvailable);
-                if (ftStatus != FTDI.FT_STATUS.FT_OK)
-                {
-                    // Wait for a key press
-                    logger.Error("Failed to get number of bytes available to read:" + Name + " (error " + ftStatus.ToString() + ")");
-                    break;
-                }
-
-                if (numBytesAvailable > 0)
-                {
-                    byte[] readData = new byte[numBytesAvailable];
-                    UInt32 numBytesRead = 0;
-
-                    ftStatus = myFtdiDevice.Read(readData, numBytesAvailable, ref numBytesRead);
+                    // Open first device by serial number
+                    FTDI.FT_STATUS ftStatus = myFtdiDevice.OpenBySerialNumber(Serial);
                     if (ftStatus != FTDI.FT_STATUS.FT_OK)
                     {
                         // Wait for a key press
-                        logger.Error("Failed to read data:" + Name + " (error " + ftStatus.ToString() + ")");
+                        logger.Error("Failed to open device:" + Name + " (error " + ftStatus.ToString() + ")");
                         break;
                     }
-                    for (int i = 0; i < numBytesRead; i++)
-                    {
-                        Console.Write(readData[i].ToString("x") + " ");
-                    }
-                }
 
-                byte[] dataToWrite =
-                {
+                    ftStatus = myFtdiDevice.Purge(FTDI.FT_PURGE.FT_PURGE_RX + FTDI.FT_PURGE.FT_PURGE_TX);
+                    if (ftStatus != FTDI.FT_STATUS.FT_OK)
+                    {
+                        // Wait for a key press
+                        logger.Error("Failed to purge device:" + Name + " (error " + ftStatus.ToString() + ")");
+                        break;
+                    }
+
+                    ftStatus = myFtdiDevice.InTransferSize(64);
+                    if (ftStatus != FTDI.FT_STATUS.FT_OK)
+                    {
+                        // Wait for a key press
+                        logger.Error("Failed to set InTransferSize device:" + Name + " (error " + ftStatus.ToString() + ")");
+                        break;
+                    }
+
+                    Console.WriteLine("Set to set timeouts");
+                    // Set read timeout to 5 seconds, write timeout to infinite
+                    ftStatus = myFtdiDevice.SetTimeouts(5000, 0);
+                    if (ftStatus != FTDI.FT_STATUS.FT_OK)
+                    {
+                        // Wait for a key press
+                        logger.Error("Failed to set timeouts:" + Name + " (error " + ftStatus.ToString() + ")");
+                        break;
+                    }
+
+                    Console.WriteLine("clear the data");
+                    UInt32 numBytesAvailable = 0;
+                    ftStatus = myFtdiDevice.GetRxBytesAvailable(ref numBytesAvailable);
+                    if (ftStatus != FTDI.FT_STATUS.FT_OK)
+                    {
+                        // Wait for a key press
+                        logger.Error("Failed to get number of bytes available to read:" + Name + " (error " + ftStatus.ToString() + ")");
+                        break;
+                    }
+
+                    if (numBytesAvailable > 0)
+                    {
+                        byte[] readData = new byte[numBytesAvailable];
+                        UInt32 numBytesRead = 0;
+
+                        ftStatus = myFtdiDevice.Read(readData, numBytesAvailable, ref numBytesRead);
+                        if (ftStatus != FTDI.FT_STATUS.FT_OK)
+                        {
+                            // Wait for a key press
+                            logger.Error("Failed to read data:" + Name + " (error " + ftStatus.ToString() + ")");
+                            break;
+                        }
+                        for (int i = 0; i < numBytesRead; i++)
+                        {
+                            Console.Write(readData[i].ToString("x") + " ");
+                        }
+                    }
+
+                    byte[] dataToWrite =
+                    {
                 // command    sequence      length      chksum
                 (byte)0xff, (byte)0xff, (byte)0xff, (byte)0xff,     //Resync
                 (byte)0xff, (byte)0xff, (byte)0xff, (byte)0xff,     //
@@ -130,18 +134,19 @@ namespace ConsoleApplication1
                 (byte)0x85, (byte)0x00, (byte)0x01, (byte)0xff,     //ReSeq
                 (byte)0x82, (byte)0x00, (byte)0x01, (byte)0xff};    //Run
 
-                uint numBytesWritten = 0;
-                ftStatus = myFtdiDevice.Write(dataToWrite, dataToWrite.Length, ref numBytesWritten);
+                    uint numBytesWritten = 0;
+                    ftStatus = myFtdiDevice.Write(dataToWrite, dataToWrite.Length, ref numBytesWritten);
 
 
-                cts = new CancellationTokenSource();
-                tkn = cts.Token;
-                rxTsk = Task.Factory.StartNew(() => ShowRxData(), tkn);
-                txTsk = Task.Factory.StartNew(() => SendTxData(), tkn);
+                    cts = new CancellationTokenSource();
+                    tkn = cts.Token;
+                    rxTsk = Task.Factory.StartNew(() => ShowRxData(), tkn);
+                    txTsk = Task.Factory.StartNew(() => SendTxData(), tkn);
 
-                state = 0;
+                    state = 0;
 
-            } while (false);
+                } while (false);
+            }
 
             for (int ndx = 0; ndx < bufrPool.BoundedCapacity; ndx++)
                 bufrPool.Add(new USBMsg());
