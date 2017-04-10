@@ -1059,10 +1059,7 @@ namespace ConsoleApplication1
 
         private void tsppBackToStart_Click(object sender, EventArgs e)
         {
-            if (Global.Instance.Song.PlayerMode == PlayerMode.playing)
-            {
-                setPlayerMode(PlayerMode.paused);
-            }
+            setPlayerMode(PlayerMode.stopped);
             Global.Instance.Song.Position = 0;
         }
 

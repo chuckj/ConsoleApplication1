@@ -24,13 +24,13 @@ namespace ConsoleApplication1
         private SharpMesh mesh = null;
         private SharpShader shaderBulbs = null;
         private SharpShader shaderLines = null;
+        private SharpShader shaderCandles = null;
         private SDXD3D11Buffer buffer = null;
         private SDXD3D11Buffer clrTbl = null;
         private SDXD3D11Buffer linvertbuff = null;
         private SDXD3D11Buffer linndxbuff = null;
         private SDXD3D11Buffer trivertbuff = null;
         private SDXD3D11Buffer trindxbuff = null;
-        private PixelShader areaShader = null;
 
 
         private SharpFPS fpsCounter = null;
@@ -43,8 +43,10 @@ namespace ConsoleApplication1
         private int count = 0;
         private IndexVertex[] lineVertices = null;
         private IndexVertex[] triVertices = null;
+        private IndexVertex[] candleVertices = null;
         private short[] lineIndices = null;
         private short[] triIndices = null;
+        private short[] candleIndices = null;
         private IProgress<Tuple<string, string, string>> progress;
 
         public RC1()
@@ -81,6 +83,9 @@ namespace ConsoleApplication1
             triVertices = Global.Instance.TriVertices.Select(pt => new IndexVertex(new Vector3(pt.X / scale, pt.Y / scale, pt.Z / scale), (uint)pt.Ndx)).ToArray();
             triIndices = Global.Instance.TriIndices.ToArray();
 
+            candleVertices = Global.Instance.CandleVertices.Select(pt => new IndexVertex(new Vector3(pt.X / scale, pt.Y / scale, pt.Z / scale), (uint)pt.Ndx)).ToArray();
+            int[] candleIndices = Enumerable.Range(0, candleVertices.Length).ToArray();
+
             device = new SharpDevice(this);
 
             bool supportsConcurrentResources, supportsCommandLists;
@@ -99,6 +104,14 @@ namespace ConsoleApplication1
             //Create Shader for Line drawing
             shaderLines = new SharpShader(device, "../../HLSL.txt",
                     new SharpShaderDescription() { VertexShaderFunction = "VSL", PixelShaderFunction = "PSL" },
+                    new InputElement[] {
+                        new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0),
+                        new InputElement("TEXCOORD", 0, Format.R32_UInt, 12, 0),
+                    });
+
+            //Create Shader for Line drawing
+            shaderCandles = new SharpShader(device, "../../HLSL.txt",
+                    new SharpShaderDescription() { VertexShaderFunction = "VS", PixelShaderFunction = "PS", GeometryShaderFunction = "GSC" },
                     new InputElement[] {
                         new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0),
                         new InputElement("TEXCOORD", 0, Format.R32_UInt, 12, 0),
@@ -128,6 +141,11 @@ namespace ConsoleApplication1
             shaderBulbs.IndexBuffer = SDXD3D11Buffer.Create(device.Device, BindFlags.IndexBuffer, monoGeceIndices);
             shaderBulbs.VertexSize = SharpDX.Utilities.SizeOf<IndexVertex>();
             shaderBulbs.IndexCount = monoGeceIndices.Length;
+
+            shaderCandles.VertexBuffer = SDXD3D11Buffer.Create<IndexVertex>(device.Device, BindFlags.VertexBuffer, candleVertices);
+            shaderCandles.IndexBuffer = SDXD3D11Buffer.Create(device.Device, BindFlags.IndexBuffer, candleIndices);
+            shaderCandles.VertexSize = SharpDX.Utilities.SizeOf<IndexVertex>();
+            shaderCandles.IndexCount = candleIndices.Length;
 
             fpsCounter = new SharpFPS();
             fpsCounter.Reset();
@@ -244,6 +262,33 @@ namespace ConsoleApplication1
 
                 //begin drawing text
                 device.DeviceContext.GeometryShader.Set(null);
+
+
+
+                //apply shader
+                shaderCandles.Apply();
+
+                //apply constant buffer to geometry shader
+                device.DeviceContext.GeometryShader.SetConstantBuffer(0, buffer);
+
+                //apply constant buffer to geometry shader
+                device.DeviceContext.GeometryShader.SetConstantBuffer(1, clrTbl);
+
+                //update constant buffer
+                device.UpdateData<WVPAndR>(buffer, new WVPAndR(WVP, R));
+
+
+                ////draw mesh
+                ////mesh.DrawPoints(vertices.Length);
+                shaderCandles.Draw(SharpDX.Direct3D.PrimitiveTopology.PointList);
+
+                //begin drawing text
+                device.DeviceContext.GeometryShader.Set(null);
+
+
+
+
+
 
                 //apply shader
                 shaderLines.Apply();
@@ -377,7 +422,7 @@ namespace ConsoleApplication1
                 dispose(linndxbuff);
                 dispose(trivertbuff);
                 dispose(trindxbuff);
-                dispose(areaShader);
+                dispose(shaderCandles);
             }
 
             // Free any unmanaged objects here.

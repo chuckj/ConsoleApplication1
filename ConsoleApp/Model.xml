@@ -3,6 +3,8 @@
   <Features>
     <Feature nm="Hidden" color="#202020"/>
     <Feature nm="Tree" color="DarkRed"/>
+    <Feature nm="CandleStick" color="#505050"/>
+    <Feature nm="CandleShade" color="#101010"/>
     <Feature nm="Manger" color="#202020" />
   </Features>
   <Controllers>
@@ -260,24 +262,19 @@
 
     <View nm="candlesleft" offset="0,0,0">
       <!--  candles left along driveway  -->
-      <line pt1="-84, 0, -104" pt2="-84, 24,-104" repeat="15" ptoffset="0,-3.47826,-36" color="white" />
-      <rgb row="0" col="0" repeat="15" colinc="1" pt="-84, 24,-104" ptoffset="0,-3.47826,-36" class="candle"/>
-      <line pt1="-71.23,-52.2,-644" pt2="-71.23, -28.2,-644" repeat="3" ptoffset="36,-3.47826, -36" color="white" />
-      <rgb row="0" col="0" repeat="3" colinc="1" pt="-71.23, -28.2,-644" ptoffset="36,-3.47826, -36" class="candle"/>
+      <rgb row="0" col="0" repeat="15" colinc="1" pt="-84, 24,-104" ptoffset="0,-3.47826,-36" class="candle" candlestick=""/>
+      <rgb row="0" col="0" repeat="3" colinc="1" pt="-71.23, -28.2,-644" ptoffset="36,-3.47826, -36" class="candle" candlestick=""/>
 
       <!--  candles left of driveway along road -->
-      <line pt1="-14,-62.7,-756" pt2="-14,-38.7,-756" repeat="10" ptoffset="-36,0,0" color="white" />
-      <rgb row="0" col="0" repeat="10" colinc="1" pt="-14,-39.2,-756" ptoffset="-36,0,0" class="candle"/>
+      <rgb row="0" col="0" repeat="10" colinc="1" pt="-14,-38.7,-756" ptoffset="-36,0,0" class="candle" candlestick=""/>
     </View>
 
     <View nm="candlesright" offset="0,0,0">
       <!--  candles right along driveway  -->
-      <line pt1="252, -3.5, -140" pt2="252, 21.5,-140" repeat="17" ptoffset="0,-3.47826,-36" color="white"/>
-      <rgb row="0" col="0" repeat="17" colinc="1" pt="252, 21.5, -140.5" ptoffset="0,-3.47826,-36" class="candle"/>
+      <rgb row="0" col="0" repeat="17" colinc="1" pt="252, 21.5, -140.5" ptoffset="0,-3.47826,-36" class="candle" candlestick=""/>
 
       <!--  candles right of driveway along road -->
-      <line pt1="278,-62.7,-756" pt2="278, -38.7,-756" repeat="20" ptoffset="36,0,0" color="white" />
-      <rgb row="0" col="0" repeat="20" colinc="1" pt="278, -38.7,-756" ptoffset="36,0,0" class="candle"/>
+      <rgb row="0" col="0" repeat="20" colinc="1" pt="278, -38.7,-756" ptoffset="36,0,0" class="candle" candlestick=""/>
     </View>
     
     <View nm="porchroof" offset="0,0,0">
@@ -313,28 +310,28 @@
       <triangle pt1="603,128,60" pt2="603,128,374" pt3="603,0,60" pt4="603,0,374" color="black"/> <!-- lower-->
 
       <dmx class="dmx rightside">
-        <triangle pt1="604,64,60"   pt2="604,196,60" pt3="604,128,114" pt4="604,196,168" color="black"/>
-        <triangle pt1="604,196,168" pt2="604,64,168" pt3="604,128,114" pt4="604,64,60"   color="black"/>
+        <triangle pt1="604,64,60"   pt2="604,196,60" pt3="604,128,114" pt4="604,196,168" />
+        <triangle pt1="604,196,168" pt2="604,64,168" pt3="604,128,114" pt4="604,64,60"   />
       </dmx>
 
       <dmx class="dmx rightside">
-        <triangle pt1="604,64,168"  pt2="604,196,168" pt3="604,128,222" pt4="604,196,276" color="black"/>
-        <triangle pt1="604,196,276" pt2="604,64,276"  pt3="604,128,222" pt4="604,64,168"  color="black"/>
+        <triangle pt1="604,64,168"  pt2="604,196,168" pt3="604,128,222" pt4="604,196,276" />
+        <triangle pt1="604,196,276" pt2="604,64,276"  pt3="604,128,222" pt4="604,64,168"  />
       </dmx>
 
       <dmx class="dmx rightside">
-        <triangle pt1="604,64,276"  pt2="604,196,276" pt3="604,128,330" pt4="604,196,384" color="black"/>
-        <triangle pt1="604,196,384" pt2="604,64,384"  pt3="604,128,330" pt4="604,64,276"  color="black"/>
+        <triangle pt1="604,64,276"  pt2="604,196,276" pt3="604,128,330" pt4="604,196,384" />
+        <triangle pt1="604,196,384" pt2="604,64,384"  pt3="604,128,330" pt4="604,64,276"  />
       </dmx>
 
       <dmx class="dmx rightside">
-        <triangle pt1="604,196,48"  pt2="604,238,48"  pt3="604,238,135" pt4="604,324,222" color="black"/>
-        <triangle pt1="604,324,222" pt2="604,196,222" pt3="604,238,135" pt4="604,196,48"  color="black"/>
+        <triangle pt1="604,196,48"  pt2="604,238,48"  pt3="604,238,135" pt4="604,324,222" />
+        <triangle pt1="604,324,222" pt2="604,196,222" pt3="604,238,135" pt4="604,196,48"  />
       </dmx>
 
       <dmx class="dmx rightside">
-        <triangle pt1="604,196,222" pt2="604,324,222" pt3="604,238,304" pt4="604,238,386" color="black"/>
-        <triangle pt1="604,238,386" pt2="604,196,386" pt3="604,238,304" pt4="604,196,222" color="black"/>
+        <triangle pt1="604,196,222" pt2="604,324,222" pt3="604,238,304" pt4="604,238,386" />
+        <triangle pt1="604,238,386" pt2="604,196,386" pt3="604,238,304" pt4="604,196,222" />
       </dmx>
 
 
@@ -342,23 +339,23 @@
       <triangle pt1="0,236,217" pt2="0,236,0" pt3="0,0,217" pt4="0,0,0" color="black"/> <!-- side-->
 
       <dmx class="dmx leftside">
-        <triangle pt1="-1,0,0"     pt2="-1,0,108" pt3="-1,59,54" pt4="-1,118,108" color="black"/>
-        <triangle pt1="-1,118,108" pt2="-1,118,0" pt3="-1,59,54" pt4="-1,0,0"     color="black"/>
+        <triangle pt1="-1,0,0"     pt2="-1,0,108" pt3="-1,59,54" pt4="-1,118,108" />
+        <triangle pt1="-1,118,108" pt2="-1,118,0" pt3="-1,59,54" pt4="-1,0,0"     />
       </dmx>
 
       <dmx class="dmx leftside">
-        <triangle pt1="-1,118,0"   pt2="-1,118,108" pt3="-1,177,54" pt4="-1,236,108" color="black"/>
-        <triangle pt1="-1,236,108" pt2="-1,236,0"   pt3="-1,177,54" pt4="-1,118,0"  color="black"/>
+        <triangle pt1="-1,118,0"   pt2="-1,118,108" pt3="-1,177,54" pt4="-1,236,108" />
+        <triangle pt1="-1,236,108" pt2="-1,236,0"   pt3="-1,177,54" pt4="-1,118,0"  />
       </dmx>
 
       <dmx class="dmx leftside">
-        <triangle pt1="-1,0,108"   pt2="-1,0,217"   pt3="-1,59,162" pt4="-1,118,217" color="black"/>
-        <triangle pt1="-1,118,217" pt2="-1,118,108" pt3="-1,59,162" pt4="-1,0,108"   color="black"/>
+        <triangle pt1="-1,0,108"   pt2="-1,0,217"   pt3="-1,59,162" pt4="-1,118,217" />
+        <triangle pt1="-1,118,217" pt2="-1,118,108" pt3="-1,59,162" pt4="-1,0,108"   />
       </dmx>
 
       <dmx class="dmx leftside">
-        <triangle pt1="-1,118,108" pt2="-1,118,217" pt3="-1,177,162" pt4="-1,236,217" color="black"/>
-        <triangle pt1="-1,236,217" pt2="-1,236,108" pt3="-1,177,162" pt4="-1,118,108" color="black"/>
+        <triangle pt1="-1,118,108" pt2="-1,118,217" pt3="-1,177,162" pt4="-1,236,217" />
+        <triangle pt1="-1,236,217" pt2="-1,236,108" pt3="-1,177,162" pt4="-1,118,108" />
       </dmx>
 
       <!-- door -->
@@ -383,20 +380,20 @@
 
       <!-- porch - left corner -->
       <dmx class="dmx porch">
-        <triangle pt1="265,26,0" pt2="265,128,0" pt3="265,26,60" pt4="265,128,60" clr4="darkred" color="darkred"/>
-        <triangle pt1="265,128,60" pt2="315,128,60" pt3="265,26,60" pt4="315,26,60" clr4="darkred" color="darkred"/>
+        <triangle pt1="265,26,0" pt2="265,128,0" pt3="265,26,60" pt4="265,128,60"  />
+        <triangle pt1="265,128,60" pt2="315,128,60" pt3="265,26,60" pt4="315,26,60" />
       </dmx>
 
       <!-- porch - center -->
       <dmx class="dmx porch">      
-        <triangle pt1="388,26,60" pt2="388,128,60" pt3="432,26,60" pt4="432,128,60" clr4="darkred" color="darkred"/>
-        <triangle pt1="432,128,60" pt2="476,128,60" pt3="432,26,60" pt4="476,26,60" clr4="darkred" color="darkred"/>
+        <triangle pt1="388,26,60" pt2="388,128,60" pt3="432,26,60" pt4="432,128,60" />
+        <triangle pt1="432,128,60" pt2="476,128,60" pt3="432,26,60" pt4="476,26,60" />
       </dmx>
 
       <!-- porch - right -->
       <dmx class="dmx porch">      
-        <triangle pt1="555,26,60" pt2="555,128,60" pt3="579,26,60" pt4="579,128,60" clr4="darkred" color="darkred"/>
-        <triangle pt1="579,128,60" pt2="603,128,60" pt3="579,26,60" pt4="603,26,60" clr4="darkred" color="darkred"/>
+        <triangle pt1="555,26,60" pt2="555,128,60" pt3="579,26,60" pt4="579,128,60" />
+        <triangle pt1="579,128,60" pt2="603,128,60" pt3="579,26,60" pt4="603,26,60" />
       </dmx>
       
       <!-- porch column - left -->

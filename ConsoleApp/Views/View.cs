@@ -251,6 +251,17 @@ namespace ConsoleApplication1
                             }
 
                             Point3D repoffset = new Point3D();
+
+                            int cndlndxz = 0;
+                            bool candlesticks = (lit.Attribute("candlestick") != null);
+                            if (candlesticks)
+                            {
+                                FeatureLit flit;
+                                Global.Instance.FeatureLitDict.TryGetValue("CandleStick", out flit);
+                                cndlndxz = flit.GlobalIndex;
+                                Global.Instance.FeatureLitDict.TryGetValue("CandleShade", out flit);
+                                cndlndxz |= flit.GlobalIndex >> 16;
+                            }
                             do
                             {
                                 Clr clr = Colors.DarkGray;
@@ -272,6 +283,11 @@ namespace ConsoleApplication1
                                     point = new Point3D((xexp != null) ? xexp(rgb) : 0, (yexp != null) ? yexp(rgb) : 0, (zexp != null) ? zexp(rgb) : 0);
                                 }
                                 rgb.Pt = point + offset + repoffset;
+
+                                if (candlesticks)
+                                {
+                                    Global.Instance.CandleVertices.Add(new IndexPoint3D(rgb.Pt, cndlndxz));
+                                }
 
                                 if ((string)lit.Attribute("ndx") != null)
                                     rgb.Index = (Int32)lit.Attribute("ndx");

@@ -57,6 +57,8 @@ namespace ConsoleApplication1
         public List<IndexPoint3D> TriVertices = new List<IndexPoint3D>(100);
         public List<short> TriIndices = new List<short>(100);
 
+        public List<IndexPoint3D> CandleVertices = new List<IndexPoint3D>(100);
+
         private Song song = null;
         public Song Song
         {

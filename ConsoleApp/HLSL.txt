@@ -66,6 +66,37 @@ void GS(point GS_IN input[1], inout TriangleStream<PS_IN> TriStream )
     TriStream.RestartStrip();
 }
 
+[maxvertexcount(6)]
+void GSC(point GS_IN input[1], inout TriangleStream<PS_IN> TriStream )
+{
+	float s = 100.0f;
+    float size = 1.2f / s;
+
+    //create a cylinder from every vertex
+    PS_IN vertex;
+
+	uint ndx = input[0].texcoord;
+	
+    vertex.color = clrndx[(ndx >> 16) & 0xffff];
+    float4 P = float4(input[0].position.xyz, 1);
+    vertex.position = mul(w, mul(r, float4(size * -1, size * -24, 0, 0)) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, mul(r, float4(size * -1, size * -1, 0, 0)) + P);
+    TriStream.Append(vertex);
+    vertex.color = clrndx[ndx & 0xffff];
+    vertex.position = mul(w, mul(r, float4(0, size * -24, size * -1, 0)) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, mul(r, float4(0, size * -1, size * -1, 0)) + P);
+    TriStream.Append(vertex);
+    vertex.color = clrndx[(ndx >> 16) & 0xffff];
+    vertex.position = mul(w, mul(r, float4(size * 1, size * -24, 0, 0)) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, mul(r, float4(size * 1, size * -1, 0, 0)) + P);
+    TriStream.Append(vertex);
+    TriStream.RestartStrip();
+}
+
+
 //	pixel shader for bulbs
 float4 PS(PS_IN input) : SV_Target
 {
@@ -82,16 +113,9 @@ struct VSL_IN
 	uint texcoord: TEXCOORD;
 };
 
-struct PSL_IN
+PS_IN VSL(VSL_IN input)
 {
-    float4 position : SV_POSITION;
-	float4 color: COLOR;
-};
-
-
-PSL_IN VSL(VSL_IN input)
-{
-	PSL_IN output;
+	PS_IN output;
 	output.position = mul(w, float4(input.position.xyz, 1));
 	int ndx = input.texcoord;
 	output.color = clrndx[ndx & 0x0000ffff];
@@ -103,14 +127,8 @@ PSL_IN VSL(VSL_IN input)
 }
 
 //	pixel shader for lines
-float4 PSL(PSL_IN input) : SV_Target
+float4 PSL(PS_IN input) : SV_Target
 {
 	return input.color;
 }
 
-
-//	pixel shader for black-out surfaces
-float4 PSA(PSL_IN input) : SV_Target
-{
-	return input.color;
-}
