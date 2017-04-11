@@ -621,7 +621,7 @@
       <triangle pt2="23.2,-73.25,2.1" pt1="-23.2,-73.25,2.1"  pt3="0, 6.2,2.1" color="Tree"/>
       <!--<triangle pt1="23.2,-73.25,3" pt2="-0,-73.25,15"  pt3="0, 6.2,3" color="Black"/>
       <triangle pt1="0,-73.25,15" pt2="-23.2,-73.25,3"  pt3="0, 6.2,3" color="Black"/>-->
-      <triangle pt1="-23.2,-73.25,3" pt2="-23.2,-73.25,0" pt3="0,6.2,3" pt4="0,6.2,0" color="Tree"/>
+      <triangle pt1="-23.2,-73.25,0" pt2="-23.2,-73.25,3" pt3="0,6.2,0" pt4="0,6.2,3" color="Tree"/>
       <triangle pt1="23.2,-73.25,3" pt2="23.2,-73.25,0" pt3="0,6.2,3" pt4="0,6.2,0" color="Tree"/>
       <mono ndx="306" row="0" col="0" cir="0" color="Red" />
       <mono ndx="305" row="1" col="0" cir="-1" color="Green" />

@@ -7,7 +7,7 @@ using SD = System.Drawing;
 
 namespace ConsoleApplication1
 {
-    class PixelBMP : IPixelSource
+    public class PixelBMP : IPixelSource
     {
         public SD.Color[] Pixels { get; set; }
         public bool WillRepeat { get; set; }

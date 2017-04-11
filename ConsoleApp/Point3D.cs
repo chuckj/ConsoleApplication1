@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDX;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -93,6 +94,13 @@ namespace ConsoleApplication1
         public float Y => pt.Y;
         public float Z => pt.Z;
         public int Ndx => ndx;
+
+        static float scale = 100.0f;
+
+        public IndexVertex ToIndexVertex()
+        {
+            return new IndexVertex(new Vector3(X / scale, Y / scale, Z / scale), (uint)Ndx);
+        }
 
         public string DebuggerDisplay => $"({pt.X},{pt.Y},{pt.Z}):{ndx}";
 

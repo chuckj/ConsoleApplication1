@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.IO.MemoryMappedFiles;
 
 namespace ConsoleApplication1
 {
     public class DisplayInfo : IDisposable
     {
-        public FileStream FileStream { get; set; }
-        public BinaryReader BinaryReader { get; set; }
+        public MemoryMappedFile MMFile { get; set; }
+        public MemoryMappedViewAccessor MMViewAccessor { get; set; }
+
         public int[] Index { get; set; }
 
         #region IDisposable Support
@@ -25,24 +27,16 @@ namespace ConsoleApplication1
                     // TODO: dispose managed state (managed objects).
                 }
 
-                if (BinaryReader != null)
+               
+                if (MMFile != null)
                 {
                     try
                     {
-                        BinaryReader.Close();
+                        MMFile.Dispose();
                     }
                     finally { };
                 }
-                if (FileStream != null)
-                {
-                    try
-                    {
-                        FileStream.Dispose();
-                    }
-                    finally { };
-                }
-                FileStream = null;
-                BinaryReader = null;
+                MMFile = null;
 
                 Index = null;
 

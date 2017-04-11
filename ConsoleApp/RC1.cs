@@ -39,14 +39,14 @@ namespace ConsoleApplication1
         private int updateds = 0;
         private MinMax[] sb;
         private float scale = 100.0f;
-        private Vector4[] colorTable = null;
+        private uint[] colorTable = null;
         private int count = 0;
         private IndexVertex[] lineVertices = null;
         private IndexVertex[] triVertices = null;
         private IndexVertex[] candleVertices = null;
         private short[] lineIndices = null;
         private short[] triIndices = null;
-        private short[] candleIndices = null;
+        private int[] candleIndices = null;
         private IProgress<Tuple<string, string, string>> progress;
 
         public RC1()
@@ -77,14 +77,14 @@ namespace ConsoleApplication1
                     .ToArray();
             int[] monoGeceIndices = Enumerable.Range(0, monoGeceVertices.Length).ToArray();
 
-            lineVertices = Global.Instance.LineVertices.Select(pt => new IndexVertex(new Vector3(pt.X / scale, pt.Y / scale, pt.Z / scale), (uint)pt.Ndx)).ToArray();
+            lineVertices = Global.Instance.LineVertices.Select(pt => pt.ToIndexVertex()).ToArray();
             lineIndices = Global.Instance.LineIndices.ToArray();
 
-            triVertices = Global.Instance.TriVertices.Select(pt => new IndexVertex(new Vector3(pt.X / scale, pt.Y / scale, pt.Z / scale), (uint)pt.Ndx)).ToArray();
+            triVertices = Global.Instance.TriVertices.Select(pt => pt.ToIndexVertex()).ToArray();
             triIndices = Global.Instance.TriIndices.ToArray();
 
-            candleVertices = Global.Instance.CandleVertices.Select(pt => new IndexVertex(new Vector3(pt.X / scale, pt.Y / scale, pt.Z / scale), (uint)pt.Ndx)).ToArray();
-            int[] candleIndices = Enumerable.Range(0, candleVertices.Length).ToArray();
+            candleVertices = Global.Instance.CandleVertices.Select(pt => pt.ToIndexVertex()).ToArray();
+            candleIndices = Enumerable.Range(0, candleVertices.Length).ToArray();
 
             device = new SharpDevice(this);
 
@@ -103,7 +103,7 @@ namespace ConsoleApplication1
 
             //Create Shader for Line drawing
             shaderLines = new SharpShader(device, "../../HLSL.txt",
-                    new SharpShaderDescription() { VertexShaderFunction = "VSL", PixelShaderFunction = "PSL" },
+                    new SharpShaderDescription() { VertexShaderFunction = "VSL", PixelShaderFunction = "PS" },
                     new InputElement[] {
                         new InputElement("POSITION", 0, Format.R32G32B32_Float, 0, 0),
                         new InputElement("TEXCOORD", 0, Format.R32_UInt, 12, 0),
@@ -216,13 +216,12 @@ namespace ConsoleApplication1
 
                 if (updated)
                 {
-                    Vector4[] clrs = colorTable;
                     if (Global.Instance.Song != null)
                     {
                         var song = Global.Instance.Song;
                         if (song.DisplayInfo == null)
                         {
-                            clrs = animate(offset++ / 60);
+                            colorTable = animate(offset++ / 60);
                         }
                         else
                         {
@@ -235,24 +234,20 @@ namespace ConsoleApplication1
                                     ndx--;
                                 if (dspInfo == null || dspInfo.Index[ndx] == 0)
                                 {
-                                    clrs = animate(offset++ / 60);
+                                    colorTable = animate(offset++ / 60);
                                 }
                                 else if (ndx != prevDspInfoIndex || dspInfo != prevDspInfo.Target)
                                 {
                                     prevDspInfoIndex = ndx;
                                     prevDspInfo.Target = dspInfo;
 
-                                    dspInfo.FileStream.Position = dspInfo.Index[ndx];
-                                    for (int lit = 0; lit < clrs.Length; lit++)
-                                    {
-                                        var clr = new Clr(dspInfo.BinaryReader.ReadUInt32());
-                                        clrs[lit] = new Vector4(clr.R / 255.0f, clr.G / 255.0f, clr.B / 255.0f, 0);
-                                    }
+                                    dspInfo.MMViewAccessor.ReadArray<UInt32>(dspInfo.Index[ndx], colorTable, 0, colorTable.Length);
                                 }
                             }
                         }
                     }
 
+                    Vector4[] clrs = colorTable.Select(c => new Vector4(((c>>16) & 0xff) / 256.0f, ((c >> 8) & 0xff) / 256.0f, (c & 0xff) / 256.0f, 1.0f)).ToArray();
                     device.DeviceContext.UpdateSubresource<Vector4>(clrs, clrTbl);
                 }
 
@@ -261,7 +256,7 @@ namespace ConsoleApplication1
                 shaderBulbs.Draw(SharpDX.Direct3D.PrimitiveTopology.PointList);
 
                 //begin drawing text
-                device.DeviceContext.GeometryShader.Set(null);
+                //device.DeviceContext.GeometryShader.Set(null);
 
 
 
@@ -269,13 +264,13 @@ namespace ConsoleApplication1
                 shaderCandles.Apply();
 
                 //apply constant buffer to geometry shader
-                device.DeviceContext.GeometryShader.SetConstantBuffer(0, buffer);
+                //device.DeviceContext.GeometryShader.SetConstantBuffer(0, buffer);
 
                 //apply constant buffer to geometry shader
-                device.DeviceContext.GeometryShader.SetConstantBuffer(1, clrTbl);
+                //device.DeviceContext.GeometryShader.SetConstantBuffer(1, clrTbl);
 
                 //update constant buffer
-                device.UpdateData<WVPAndR>(buffer, new WVPAndR(WVP, R));
+                //device.UpdateData<WVPAndR>(buffer, new WVPAndR(WVP, R));
 
 
                 ////draw mesh
@@ -294,7 +289,7 @@ namespace ConsoleApplication1
                 shaderLines.Apply();
 
                 //update constant buffer
-                device.UpdateData<Matrix>(buffer, WVP);
+                //device.UpdateData<Matrix>(buffer, WVP);
 
                 //apply constant buffer to vertex shader
                 device.DeviceContext.VertexShader.SetConstantBuffer(0, buffer);
@@ -365,15 +360,12 @@ namespace ConsoleApplication1
 
         }
 
-        private Vector4[] animate(int ndx)
-        {
-            Vector4[] clrz = new[] { aniHlpr(Colors.Red), aniHlpr(Colors.Blue), aniHlpr(Colors.Yellow), aniHlpr(Colors.Green), aniHlpr(Colors.Orange), aniHlpr(Colors.Cyan), aniHlpr(Colors.Magenta) };
-            return Global.Instance.LitArray.Select((x, n) => (x is MonoLit || x is FeatureLit) ? aniHlpr(x.InitVal) : clrz[(n + ndx) % clrz.Length]).ToArray();
-        }
+        static uint[] clrz = new[] { (uint)(Clr)Colors.Red, (uint)(Clr)Colors.Blue, (uint)(Clr)Colors.Yellow, (uint)(Clr)Colors.Green, (uint)(Clr)Colors.Orange,
+                (uint)(Clr)Colors.Cyan, (uint)(Clr)Colors.Magenta };
 
-        private Vector4 aniHlpr(Clr c)
+        private uint[] animate(int ndx)
         {
-            return new Vector4(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, 1.0f);
+            return Global.Instance.LitArray.Select((x, n) => (x is MonoLit || x is FeatureLit) ? (uint)x.InitVal : clrz[(n + ndx) % clrz.Length]).ToArray();
         }
 
         public void rc1_MouseWheel(object sender, MouseEventArgs e)

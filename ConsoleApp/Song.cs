@@ -274,7 +274,6 @@ namespace ConsoleApplication1
 
             //song.litValues = lits;
 
-            song.DisplayMapSize = (int)Math.Ceiling(song.TrackTime * 30) * 4;
 
             var tsk = RunTime.RunNow(song);
             tsk.Wait();

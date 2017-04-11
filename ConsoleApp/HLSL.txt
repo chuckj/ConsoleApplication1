@@ -36,31 +36,45 @@ GS_IN VS(VS_IN input)
     return output;
 }
 
-[maxvertexcount(6)]
+[maxvertexcount(10)]
 void GS(point GS_IN input[1], inout TriangleStream<PS_IN> TriStream )
 {
 	float s = 100.0f;
-    float size = 1.2f / s;
+    float size = 1.5f / s;
 
     //create a hexagon from every vertex
     PS_IN vertex;
 
 	uint ndx = input[0].texcoord;
-	
-    vertex.color = clrndx[ndx];
-
+    float4 clr = clrndx[ndx];
     float4 P = float4(input[0].position.xyz, 1);
+
+	vertex.color = float4(clr.rgb / 2, 1.0);
     vertex.position = mul(w, mul(r, float4(0, size, 0, 0)) + P);
     TriStream.Append(vertex);
     vertex.position = mul(w, mul(r, float4(size * .8, size * .4, 0, 0)) + P);
     TriStream.Append(vertex);
-    vertex.position = mul(w, mul(r, float4(-size * .8, size * .4, 0, 0)) + P);
+	vertex.color = clr;
+	vertex.position = mul(w, P);
     TriStream.Append(vertex);
+	vertex.color = float4(clr.rgb / 2, 1.0);
     vertex.position = mul(w, mul(r, float4(size * .8, -size * .4, 0, 0)) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, mul(r, float4(0, -size, 0, 0)) + P);
+    TriStream.Append(vertex);
+    TriStream.RestartStrip();
+
+    vertex.position = mul(w, mul(r, float4(0, -size, 0, 0)) + P);
     TriStream.Append(vertex);
     vertex.position = mul(w, mul(r, float4(-size * .8, -size * .4, 0, 0)) + P);
     TriStream.Append(vertex);
-    vertex.position = mul(w, mul(r, float4(0, -size, 0, 0)) + P);
+	vertex.color = clr;
+	vertex.position = mul(w, P);
+    TriStream.Append(vertex);
+	vertex.color = float4(clr.rgb / 2, 1.0);
+    vertex.position = mul(w, mul(r, float4(-size * .8, size * .4, 0, 0)) + P);
+    TriStream.Append(vertex);
+    vertex.position = mul(w, mul(r, float4(0, size, 0, 0)) + P);
     TriStream.Append(vertex);
 
     TriStream.RestartStrip();
@@ -103,10 +117,7 @@ float4 PS(PS_IN input) : SV_Target
 	return input.color;
 }
 
-
-
 //	lines/areas
-
 struct VSL_IN
 {
     float3 position : POSITION;
@@ -125,10 +136,3 @@ PS_IN VSL(VSL_IN input)
 	}
     return output;
 }
-
-//	pixel shader for lines
-float4 PSL(PS_IN input) : SV_Target
-{
-	return input.color;
-}
-

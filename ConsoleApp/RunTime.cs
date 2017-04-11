@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.IO;
+using System.IO.MemoryMappedFiles;
 
 namespace ConsoleApplication1
 {
@@ -105,6 +106,7 @@ namespace ConsoleApplication1
                 using (newFile = File.Create(fullpath, 64*1024, FileOptions.RandomAccess))
                 using (accessor = new BinaryWriter(newFile))
                 {
+                    song.DisplayMapSize = (int)Math.Ceiling(song.TrackTime * 30) * 4;
                     var mapsize = song.DisplayMapSize;
 
                     //  Clear l'map and map
@@ -203,13 +205,14 @@ namespace ConsoleApplication1
                     File.Move(fullpath, song.DisplayInfoFileName);
 
                     var dspInfo = new DisplayInfo();
-                    dspInfo.FileStream = File.Open(song.DisplayInfoFileName, FileMode.Open, FileAccess.Read);
-                    dspInfo.BinaryReader = new BinaryReader(dspInfo.FileStream);
-                    var mapsize = dspInfo.BinaryReader.ReadInt32() / 4;
-                    dspInfo.Index = new int[mapsize];
-                    for (int ndx = 0; ndx < mapsize; ndx++)
-                        dspInfo.Index[ndx] = dspInfo.BinaryReader.ReadInt32();
 
+                    dspInfo.MMFile = MemoryMappedFile.CreateFromFile(song.DisplayInfoFileName);
+
+                    dspInfo.MMViewAccessor = dspInfo.MMFile.CreateViewAccessor();
+
+                    var mapsize = dspInfo.MMViewAccessor.ReadInt32(0);
+                    dspInfo.Index = new int[mapsize];
+                    dspInfo.MMViewAccessor.ReadArray<Int32>(4, dspInfo.Index, 0, mapsize);
                     song.DisplayInfo = dspInfo;
                 }
             }
