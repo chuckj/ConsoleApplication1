@@ -49,6 +49,10 @@ namespace ConsoleApplication1
         private int[] candleIndices = null;
         private IProgress<Tuple<string, string, string>> progress;
 
+        private Matrix WVP;
+        private Matrix projection;
+        private Matrix view;
+
         public RC1()
         {
             InitializeComponent();
@@ -57,11 +61,18 @@ namespace ConsoleApplication1
         private void InitializeComponent()
         {
             this.MouseWheel += rc1_MouseWheel;
+            this.MouseClick += rc1_MouseClick;
         }
 
         public void WinInit(IProgress<Tuple<string, string, string>> progress )
         {
             this.progress = progress;
+        }
+
+        private IProgress<string> clickOn;
+        public void ClickOnInit(IProgress<string> progress)
+        {
+            this.clickOn = progress;
         }
 
         public void D3DInit()
@@ -182,7 +193,7 @@ namespace ConsoleApplication1
                 //Set matrices
                 var sz = GetSize(this);
                 float ratio = (float)sz.Width / (float)sz.Height;
-                Matrix projection = Matrix.PerspectiveFovLH(3.14F / 3.0F, ratio, 1, 2000 / scale);
+                projection = Matrix.PerspectiveFovLH(3.14F / 3.0F, ratio, 1, 2000 / scale);
                 var theda = -Math.PI * Global.Instance.Settings.GetViewPort(1) / 180.0;
                 var omega = Math.PI * Global.Instance.Settings.GetViewPort(0) / 180.0;
                 Matrix R1 = Matrix.RotationX((float)-omega);
@@ -192,10 +203,10 @@ namespace ConsoleApplication1
 
                 // ((float)(150 * Math.Sin(theda)), -vScrollBar1.Value, (float)(-150 * Math.Cos(theda))
 
-                Matrix view = Matrix.LookAtLH(Vector3.TransformCoordinate(new Vector3(0 / scale, 60 / scale, -Global.Instance.Settings.GetViewPort(2) * 5 / scale), R),
+                view = Matrix.LookAtLH(Vector3.TransformCoordinate(new Vector3(0 / scale, 60 / scale, -Global.Instance.Settings.GetViewPort(2) * 5 / scale), R),
                     new Vector3(-Global.Instance.Settings.GetViewPort(4) / scale, -Global.Instance.Settings.GetViewPort(3) / scale, Global.Instance.Settings.GetViewPort(5) / scale), Vector3.UnitY);
                 Matrix world = Matrix.RotationY(0); // (float)Math.PI /2);
-                Matrix WVP = world * view * projection;
+                WVP = world * view * projection;
 
 
                 device.Clear(Color.Black);
@@ -384,6 +395,39 @@ namespace ConsoleApplication1
             if (newValue < sb[sbNdx].min) newValue = sb[sbNdx].min;
             Global.Instance.Settings.SetViewPort(sbNdx, newValue);
         }
+
+
+        private void rc1_MouseClick(object sender, MouseEventArgs e)
+        {
+            int mouseX = e.X;
+            int mouseY = e.Y;
+
+            Vector3 nearsource = new Vector3((float)mouseX, (float)mouseY, 0f);
+            Vector3 farsource = new Vector3((float)mouseX, (float)mouseY, 1f);
+
+
+            //Vector3 ZFarPlane = Vector3.Unproject(new Vector3(Coordinate, 0), 0, 0, ScreenSize.Width, ScreenSize.Height, -1000, 1000, View * Projection);
+            //Vector3 ZNearPlane = Vector3.Unproject(new Vector3(Coordinate, 1), 0, 0, ScreenSize.Width, ScreenSize.Height, -1000, 1000, View * Projection);
+            //Vector3 Direction = (ZFarPlane - ZNearPlane);
+            //Direction.Normalize();
+            //Ray ray = new Ray(ZNearPlane, Direction);
+
+
+            Matrix vp = view * projection;
+
+            Vector3 nearPoint;
+            Vector3.Unproject(ref nearsource, 0, 0, this.Width, this.Height, -1000, 1000, ref vp, out nearPoint);
+
+            Vector3 farPoint;
+            Vector3.Unproject(ref farsource, 0, 0, this.Width, this.Height, -1000, 1000, ref vp, out farPoint);
+
+            Vector3 direction = (farPoint - nearPoint);
+            direction.Normalize();
+
+            string report = string.Format($"({nearPoint.X},{nearPoint.Y},{nearPoint.Z}) ({farPoint.X},{farPoint.Y},{farPoint.Z})  ({direction.X},{direction.Y},{direction.Z})");
+            clickOn.Report(report);
+        }
+
 
         #region IDispose
         bool disposed = false;

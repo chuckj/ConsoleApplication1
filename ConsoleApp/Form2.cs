@@ -66,6 +66,7 @@ namespace ConsoleApplication1
         private ToolStripButton tsppBackToStart;
         private ToolStripMenuItem runToolStripMenuItem;
         private ToolStripProgressBar ssProgressBar1;
+        private ToolStripStatusLabel ssClickOn;
         private SWF.Timer progbartimer;
 
         public Form2()
@@ -159,6 +160,11 @@ namespace ConsoleApplication1
             });
             rc1.WinInit(rc1Prog);
 
+            var rc1ClickOn = new Progress<string>((parms) =>
+            {
+                ssClickOn.Text = parms;
+            });
+            rc1.ClickOnInit(rc1ClickOn);
             //  rc3 init
 
             var tsppTimeProg = new Progress<string>((t) => tsppTime.Text = t);
@@ -219,6 +225,7 @@ namespace ConsoleApplication1
             this.ssLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.ssLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.ssLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ssProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.ssSpring = new System.Windows.Forms.ToolStripStatusLabel();
             this.ssHoverSep = new System.Windows.Forms.ToolStripStatusLabel();
             this.ssHover = new System.Windows.Forms.ToolStripStatusLabel();
@@ -227,7 +234,9 @@ namespace ConsoleApplication1
             this.toolTip1 = new TheArtOfDev.HtmlRenderer.WinForms.HtmlToolTip();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.rc1 = new ConsoleApplication1.RC1();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.rc2 = new ConsoleApplication1.RC2();
             this.tspPlayer = new System.Windows.Forms.ToolStrip();
             this.tsppPlay = new System.Windows.Forms.ToolStripButton();
             this.tsppPause = new System.Windows.Forms.ToolStripButton();
@@ -251,9 +260,7 @@ namespace ConsoleApplication1
             this.tspfNew = new System.Windows.Forms.ToolStripButton();
             this.tspfOpen = new System.Windows.Forms.ToolStripButton();
             this.tspFSave = new System.Windows.Forms.ToolStripButton();
-            this.ssProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.rc1 = new ConsoleApplication1.RC1();
-            this.rc2 = new ConsoleApplication1.RC2();
+            this.ssClickOn = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -280,6 +287,7 @@ namespace ConsoleApplication1
             this.ssLabel4,
             this.ssProgressBar1,
             this.ssSpring,
+            this.ssClickOn,
             this.ssHoverSep,
             this.ssHover,
             this.ssSelectedSep,
@@ -323,11 +331,20 @@ namespace ConsoleApplication1
             this.ssLabel4.Name = "ssLabel4";
             this.ssLabel4.Size = new System.Drawing.Size(4, 19);
             // 
+            // ssProgressBar1
+            // 
+            this.ssProgressBar1.AutoSize = false;
+            this.ssProgressBar1.BackColor = System.Drawing.Color.Black;
+            this.ssProgressBar1.ForeColor = System.Drawing.Color.ForestGreen;
+            this.ssProgressBar1.Name = "ssProgressBar1";
+            this.ssProgressBar1.Size = new System.Drawing.Size(110, 18);
+            this.ssProgressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            // 
             // ssSpring
             // 
             this.ssSpring.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
             this.ssSpring.Name = "ssSpring";
-            this.ssSpring.Size = new System.Drawing.Size(813, 19);
+            this.ssSpring.Size = new System.Drawing.Size(777, 19);
             this.ssSpring.Spring = true;
             // 
             // ssHoverSep
@@ -421,10 +438,22 @@ namespace ConsoleApplication1
             this.splitContainer1.Panel2.BackColor = System.Drawing.Color.Black;
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(1087, 612);
-            this.splitContainer1.SplitterDistance = 479;
+            this.splitContainer1.SplitterDistance = 481;
             this.splitContainer1.SplitterWidth = 2;
             this.splitContainer1.TabIndex = 7;
             this.splitContainer1.SizeChanged += new System.EventHandler(this.splitContainer1_SizeChanged);
+            // 
+            // rc1
+            // 
+            this.rc1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rc1.BackColor = System.Drawing.Color.Black;
+            this.rc1.Location = new System.Drawing.Point(0, 0);
+            this.rc1.Name = "rc1";
+            this.rc1.Size = new System.Drawing.Size(1087, 486);
+            this.rc1.TabIndex = 4;
+            this.rc1.TabStop = false;
             // 
             // splitContainer2
             // 
@@ -443,10 +472,21 @@ namespace ConsoleApplication1
             // 
             this.splitContainer2.Panel2.BackColor = System.Drawing.Color.Black;
             this.splitContainer2.Panel2.Controls.Add(this.rc2);
-            this.splitContainer2.Size = new System.Drawing.Size(1087, 131);
+            this.splitContainer2.Size = new System.Drawing.Size(1087, 129);
             this.splitContainer2.SplitterDistance = 100;
             this.splitContainer2.SplitterWidth = 2;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // rc2
+            // 
+            this.rc2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.rc2.BackColor = System.Drawing.Color.Black;
+            this.rc2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rc2.Location = new System.Drawing.Point(0, 0);
+            this.rc2.Name = "rc2";
+            this.rc2.Size = new System.Drawing.Size(985, 129);
+            this.rc2.TabIndex = 5;
+            this.rc2.TabStop = false;
             // 
             // tspPlayer
             // 
@@ -662,37 +702,12 @@ namespace ConsoleApplication1
             this.tspFSave.Size = new System.Drawing.Size(23, 22);
             this.tspFSave.Click += new System.EventHandler(this.tspFSave_Click);
             // 
-            // ssProgressBar1
+            // ssClickOn
             // 
-            this.ssProgressBar1.AutoSize = false;
-            this.ssProgressBar1.BackColor = System.Drawing.Color.Black;
-            this.ssProgressBar1.ForeColor = System.Drawing.Color.ForestGreen;
-            this.ssProgressBar1.Name = "ssProgressBar1";
-            this.ssProgressBar1.Size = new System.Drawing.Size(110, 18);
-            this.ssProgressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            // 
-            // rc1
-            // 
-            this.rc1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rc1.BackColor = System.Drawing.Color.Black;
-            this.rc1.Location = new System.Drawing.Point(0, 0);
-            this.rc1.Name = "rc1";
-            this.rc1.Size = new System.Drawing.Size(1087, 484);
-            this.rc1.TabIndex = 4;
-            this.rc1.TabStop = false;
-            // 
-            // rc2
-            // 
-            this.rc2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.rc2.BackColor = System.Drawing.Color.Black;
-            this.rc2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rc2.Location = new System.Drawing.Point(0, 0);
-            this.rc2.Name = "rc2";
-            this.rc2.Size = new System.Drawing.Size(985, 131);
-            this.rc2.TabIndex = 5;
-            this.rc2.TabStop = false;
+            this.ssClickOn.ForeColor = System.Drawing.Color.White;
+            this.ssClickOn.Name = "ssClickOn";
+            this.ssClickOn.Size = new System.Drawing.Size(36, 19);
+            this.ssClickOn.Text = "Click:";
             // 
             // Form2
             // 
