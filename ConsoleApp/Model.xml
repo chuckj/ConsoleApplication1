@@ -159,10 +159,12 @@
       <View nm="pl3" view="pole" strand="USB2_13"/>
     </View>
 
-    <View nm="arch1" offset="150,-60,-500" main="true">
+    <View nm="arch1" offset="420,-30,-250" main="true">
       <View nm="ar1" view="arch" strand="USB2_12"/>
     </View>
-
+    <View nm="arch2" offset="500,-30,-250" main="true">
+      <View nm="ar2" view="arch" strand="USB2_12"/>
+    </View>
     <!--<View nm="arch2" x="1050" y="650" main="true"
       xbase="300 + Single(150 * Math.Cos(Math.PI * Circle / 49))"
       ybase="150 - Single(150 * Math.Sin(Math.PI * Circle / 49))">
@@ -285,8 +287,32 @@
       <triangle pt1="132.5,324,0" pt2="132.5,324,-12" pt3="277,232,0" pt4="277,232,-12" color="black" /> <!-- right soffet -->
       <triangle pt1="-12,236,0" pt2="132.5,324,0" pt3="132.5,236,0" pt4="277,236,0" color="black" /> <!-- gable -->
       
+      <dmx class="dmx gable lt">
+        <triangle pt1="-12,236,-1" pt2="132.5,324,-1" pt3="84,250,-1" pt4="132.5,236,-1" pt5="-12,236,-1"/>
+      </dmx>
+
+      <dmx class="dmx gable rt">
+        <triangle pt1="132.5,236,-1"  pt2="132.5,324,-1" pt3="184,250,-1" pt4="277,236,-1" pt5="132.5,236,-1"/>
+      </dmx>
+
+
       <!-- garage front-->
-      <triangle pt1="0,236,0" pt2="265,236,0" pt3="0,10,0" pt4="265,10,0" color="black" />
+      <triangle pt1="34.5,10,0" pt2="0,10,0" pt3="34.5,82,0" pt4="0,236,0" pt5="49.5,97,0" pt6="265,236,0" pt7="217.5,97,0" pt8="265,82,0" pt9="232,82,0" 
+                pt10="265,10,0" pt11="232.5,10,0" color="black" />
+      <!-- garage door-->
+      <triangle pt1="34.5,10,8" pt2="34.5,10,0" pt3="34.5,82,8" pt4="34.5,82,0" pt5="49.5,97,8" pt6="49.5,97,0" pt7="217.5,97,8" pt8="217.5,97,0" pt9="232.5,82,8" 
+                pt10="232.5,82,0" pt11="232.5,10,8" pt12="232.5,10,0" color="black" />
+      <triangle pt1="34.5,97,8" pt2="232.5,97,8"  pt3="34.5,10,8" pt4="232.5,10,8" color="black" />
+
+      <dmx class="dmx gargae door lt">
+        <triangle pt1="34.5,10,7" pt2="34.5,82,7" pt3="84.5,46,7" pt4="49.5,97,7" pt5="133.5,97,7" />
+        <triangle pt1="133.5,97,7" pt2="133.5,10,7" pt3="84.5,46,7" pt4="34.5,10,7" />
+      </dmx>
+
+      <dmx class="dmx garage door rt">
+        <triangle pt1="133.5,10,7"  pt2="133.5,97,7" pt3="182.5,46,7" pt4="217.5,97,7" pt5="232.5,82,7"/>
+        <triangle pt1="232.5,82,7" pt2="232.5,10,7" pt3="182.5,46,7" pt4="133.5,10,7"  />
+      </dmx>
 
       <!-- garage side-->
       <triangle pt1="-.1,236,36" pt2="0,236,0" pt3="-.1,10,36" pt4="0,10,0" color="black" />
@@ -593,8 +619,8 @@
 
 
     <View nm="arch"
-        xexp="Single(61 * Math.Cos(Math.PI * Circle / 49))"
-        yexp="Single(61 * Math.Sin(Math.PI * Circle / 49))"
+        xexp="Single(38 * Math.Cos(Math.PI - Math.PI * Circle / 49))"
+        yexp="Single(38 * Math.Sin(Math.PI - Math.PI * Circle / 49))"
         zexp="0">
       <rgb row="0" col="0" cir="0" repeat="50" rowinc="1" colinc="0" cirinc="1"/>
       <Groups>

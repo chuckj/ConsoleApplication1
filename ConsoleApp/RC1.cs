@@ -49,9 +49,15 @@ namespace ConsoleApplication1
         private int[] candleIndices = null;
         private IProgress<Tuple<string, string, string>> progress;
 
+        private bool projectionUpdated = true;
+
         private Matrix WVP;
         private Matrix projection;
         private Matrix view;
+        private Matrix world;
+        private Matrix Rotation;
+
+        private List<int> selected = new List<int>();
 
         public RC1()
         {
@@ -131,7 +137,7 @@ namespace ConsoleApplication1
             //create constant buffer
             buffer = shaderBulbs.CreateBuffer<WVPAndR>();
 
-            colorTable = animate(0);
+            colorTable = animate();
 
             clrTbl =
                 new SDXD3D11Buffer(device.Device, (colorTable.Length * 16 + 15) / 16 * 16, ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0);
@@ -168,7 +174,6 @@ namespace ConsoleApplication1
             else return (SD.Size)C.Invoke(new Func<Control, SD.Size>(GetSize), C);
         }
 
-        private int offset = 0;
         private WeakReference prevDspInfo = new WeakReference(null);
         private int prevDspInfoIndex = -1;
 
@@ -185,28 +190,19 @@ namespace ConsoleApplication1
                 {
                     device.Resize();
                     //font.Resize();
+                    projectionUpdated = true;
                 }
 
                 //apply states
                 device.UpdateAllStates();
 
-                //Set matrices
-                var sz = GetSize(this);
-                float ratio = (float)sz.Width / (float)sz.Height;
-                projection = Matrix.PerspectiveFovLH(3.14F / 3.0F, ratio, 1, 2000 / scale);
-                var theda = -Math.PI * Global.Instance.Settings.GetViewPort(1) / 180.0;
-                var omega = Math.PI * Global.Instance.Settings.GetViewPort(0) / 180.0;
-                Matrix R1 = Matrix.RotationX((float)-omega);
-                Matrix R2 = Matrix.RotationY((float)-theda);
+                if (projectionUpdated)
+                {
+                    computeProjection();
 
-                Matrix R = R1 * R2;
-
-                // ((float)(150 * Math.Sin(theda)), -vScrollBar1.Value, (float)(-150 * Math.Cos(theda))
-
-                view = Matrix.LookAtLH(Vector3.TransformCoordinate(new Vector3(0 / scale, 60 / scale, -Global.Instance.Settings.GetViewPort(2) * 5 / scale), R),
-                    new Vector3(-Global.Instance.Settings.GetViewPort(4) / scale, -Global.Instance.Settings.GetViewPort(3) / scale, Global.Instance.Settings.GetViewPort(5) / scale), Vector3.UnitY);
-                Matrix world = Matrix.RotationY(0); // (float)Math.PI /2);
-                WVP = world * view * projection;
+                    //update constant buffer
+                    device.UpdateData<WVPAndR>(buffer, new WVPAndR(WVP, Rotation));
+                }
 
 
                 device.Clear(Color.Black);
@@ -221,9 +217,6 @@ namespace ConsoleApplication1
                 //apply constant buffer to geometry shader
                 device.DeviceContext.GeometryShader.SetConstantBuffer(1, clrTbl);
 
-                //update constant buffer
-                device.UpdateData<WVPAndR>(buffer, new WVPAndR(WVP, R));
-
 
                 if (updated)
                 {
@@ -232,7 +225,7 @@ namespace ConsoleApplication1
                         var song = Global.Instance.Song;
                         if (song.DisplayInfo == null)
                         {
-                            colorTable = animate(offset++ / 60);
+                            colorTable = animate();
                         }
                         else
                         {
@@ -245,7 +238,7 @@ namespace ConsoleApplication1
                                     ndx--;
                                 if (dspInfo == null || dspInfo.Index[ndx] == 0)
                                 {
-                                    colorTable = animate(offset++ / 60);
+                                    colorTable = animate();
                                 }
                                 else if (ndx != prevDspInfoIndex || dspInfo != prevDspInfo.Target)
                                 {
@@ -257,7 +250,13 @@ namespace ConsoleApplication1
                             }
                         }
                     }
+                    else
+                    {
+                        colorTable = animate();
+                    }
 
+                    foreach (var ndx in selected)
+                        colorTable[ndx] = (uint)(Clr)Colors.White;
                     Vector4[] clrs = colorTable.Select(c => new Vector4(((c>>16) & 0xff) / 256.0f, ((c >> 8) & 0xff) / 256.0f, (c & 0xff) / 256.0f, 1.0f)).ToArray();
                     device.DeviceContext.UpdateSubresource<Vector4>(clrs, clrTbl);
                 }
@@ -266,41 +265,20 @@ namespace ConsoleApplication1
                 ////mesh.DrawPoints(vertices.Length);
                 shaderBulbs.Draw(SharpDX.Direct3D.PrimitiveTopology.PointList);
 
-                //begin drawing text
-                //device.DeviceContext.GeometryShader.Set(null);
-
-
 
                 //apply shader
                 shaderCandles.Apply();
-
-                //apply constant buffer to geometry shader
-                //device.DeviceContext.GeometryShader.SetConstantBuffer(0, buffer);
-
-                //apply constant buffer to geometry shader
-                //device.DeviceContext.GeometryShader.SetConstantBuffer(1, clrTbl);
-
-                //update constant buffer
-                //device.UpdateData<WVPAndR>(buffer, new WVPAndR(WVP, R));
-
-
+           
                 ////draw mesh
                 ////mesh.DrawPoints(vertices.Length);
                 shaderCandles.Draw(SharpDX.Direct3D.PrimitiveTopology.PointList);
 
+
                 //begin drawing text
                 device.DeviceContext.GeometryShader.Set(null);
 
-
-
-
-
-
                 //apply shader
                 shaderLines.Apply();
-
-                //update constant buffer
-                //device.UpdateData<Matrix>(buffer, WVP);
 
                 //apply constant buffer to vertex shader
                 device.DeviceContext.VertexShader.SetConstantBuffer(0, buffer);
@@ -374,9 +352,32 @@ namespace ConsoleApplication1
         static uint[] clrz = new[] { (uint)(Clr)Colors.Red, (uint)(Clr)Colors.Blue, (uint)(Clr)Colors.Yellow, (uint)(Clr)Colors.Green, (uint)(Clr)Colors.Orange,
                 (uint)(Clr)Colors.Cyan, (uint)(Clr)Colors.Magenta };
 
-        private uint[] animate(int ndx)
+        static int animateOffset = 0;
+        static int animateTimer = 0;
+        private uint[] animate()
         {
+            if ((animateTimer++ % 10) == 0)
+                animateOffset += clrz.Length - 1;
+            int ndx = animateOffset;
+            
             return Global.Instance.LitArray.Select((x, n) => (x is MonoLit || x is FeatureLit) ? (uint)x.InitVal : clrz[(n + ndx) % clrz.Length]).ToArray();
+        }
+
+        private void computeProjection()
+        {
+            projectionUpdated = false;
+
+            var sz = GetSize(this);
+            float ratio = (float)sz.Width / (float)sz.Height;
+            projection = Matrix.PerspectiveFovLH(3.14F / 3.0F, ratio, 1, 2000 / scale);
+            var theda = -Math.PI * Global.Instance.Settings.GetViewPort(1) / 180.0;
+            var omega = Math.PI * Global.Instance.Settings.GetViewPort(0) / 180.0;
+            Rotation = Matrix.RotationX((float)-omega) * Matrix.RotationY((float)-theda);
+
+            view = Matrix.LookAtLH(Vector3.TransformCoordinate(new Vector3(0 / scale, 60 / scale, -Global.Instance.Settings.GetViewPort(2) * 5 / scale), Rotation),
+                new Vector3(-Global.Instance.Settings.GetViewPort(4) / scale, -Global.Instance.Settings.GetViewPort(3) / scale, Global.Instance.Settings.GetViewPort(5) / scale), Vector3.UnitY);
+            world = Matrix.RotationY(0); // (float)Math.PI /2);
+            WVP = world * view * projection;
         }
 
         public void rc1_MouseWheel(object sender, MouseEventArgs e)
@@ -394,37 +395,43 @@ namespace ConsoleApplication1
             if (newValue > sb[sbNdx].max) newValue = sb[sbNdx].max;
             if (newValue < sb[sbNdx].min) newValue = sb[sbNdx].min;
             Global.Instance.Settings.SetViewPort(sbNdx, newValue);
+            projectionUpdated = true;
         }
 
 
         private void rc1_MouseClick(object sender, MouseEventArgs e)
         {
-            int mouseX = e.X;
-            int mouseY = e.Y;
+            float mouseX = e.X;
+            float mouseY = e.Y;
 
-            Vector3 nearsource = new Vector3((float)mouseX, (float)mouseY, 0f);
-            Vector3 farsource = new Vector3((float)mouseX, (float)mouseY, 1f);
+            Vector3 nearsource = new Vector3(mouseX, mouseY, 0f);
+            Vector3 farsource = new Vector3(mouseX, mouseY, 100f);
 
-
-            //Vector3 ZFarPlane = Vector3.Unproject(new Vector3(Coordinate, 0), 0, 0, ScreenSize.Width, ScreenSize.Height, -1000, 1000, View * Projection);
-            //Vector3 ZNearPlane = Vector3.Unproject(new Vector3(Coordinate, 1), 0, 0, ScreenSize.Width, ScreenSize.Height, -1000, 1000, View * Projection);
-            //Vector3 Direction = (ZFarPlane - ZNearPlane);
-            //Direction.Normalize();
-            //Ray ray = new Ray(ZNearPlane, Direction);
-
-
-            Matrix vp = view * projection;
-
-            Vector3 nearPoint;
-            Vector3.Unproject(ref nearsource, 0, 0, this.Width, this.Height, -1000, 1000, ref vp, out nearPoint);
-
-            Vector3 farPoint;
-            Vector3.Unproject(ref farsource, 0, 0, this.Width, this.Height, -1000, 1000, ref vp, out farPoint);
+            Vector3 nearPoint, farPoint;
+            Vector3.Unproject(ref nearsource, 0, 0, this.Width, this.Height, -1000, 1000, ref WVP, out nearPoint);
+            Vector3.Unproject(ref farsource, 0, 0, this.Width, this.Height, -1000, 1000, ref WVP, out farPoint);
 
             Vector3 direction = (farPoint - nearPoint);
             direction.Normalize();
 
-            string report = string.Format($"({nearPoint.X},{nearPoint.Y},{nearPoint.Z}) ({farPoint.X},{farPoint.Y},{farPoint.Z})  ({direction.X},{direction.Y},{direction.Z})");
+            var hd = new HitData(nearPoint.X * scale, nearPoint.Y * scale, nearPoint.Z * scale, direction);
+
+            if ((Control.ModifierKeys & Keys.Shift) == Keys.None)
+                selected.Clear();
+
+            Lit hit = null;
+            var list = Global.Instance.LitArray.OfType<GECELit>().Select(rgb => rgb.Hit(hd)).Where(rgb => rgb != null).ToList();
+            if (list.Count == 0)
+                 list = Global.Instance.LitArray.OfType<DMXLit>().Select(rgb => rgb.Hit(hd)).Where(rgb => rgb != null).ToList();
+            if (list.Count > 0)
+            {
+                hit = list.Aggregate((agg, item) => item.Distance < agg.Distance ? item : agg).Lit;
+                if (!selected.Contains(hit.GlobalIndex))
+                    selected.Add(hit.GlobalIndex);
+                else
+                    selected.Remove(hit.GlobalIndex);
+            }
+            string report = $"({nearPoint.X * scale},{nearPoint.Y * scale},{nearPoint.Z * scale}) ({direction.X * scale},{direction.Y * scale},{direction.Z * scale}) {(hit != null ? hit.Name : "")}";
             clickOn.Report(report);
         }
 

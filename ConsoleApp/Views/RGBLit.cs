@@ -11,8 +11,6 @@ namespace ConsoleApplication1
 {
     public class RGBLit : Lit
     {
-        private static int staticIndex = 307;
-
         public string name;
 
         protected RGBLit()
@@ -65,5 +63,7 @@ namespace ConsoleApplication1
         }
 
         public override Clr Get() => last;
+
+
     }
 }

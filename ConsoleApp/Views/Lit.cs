@@ -90,5 +90,10 @@ namespace ConsoleApplication1
         //{
         //    g.FillEllipse(new SolidBrush(Get()), rect);
         //}
+
+        public virtual HitResult Hit(HitData data)
+        {
+            return null;
+        }
     }
 }

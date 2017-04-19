@@ -444,6 +444,7 @@ namespace ConsoleApplication1
                                                 attrb = trig.Attribute("pt" + ndx);
                                                 if (string.IsNullOrEmpty((string)attrb)) break;
                                                 Point3D pt = (Point3D)attrb + offset;
+                                                dmx.AddPoint(pt);
                                                 Global.Instance.TriIndices.Add((short)Global.Instance.TriVertices.Count);
                                                 Global.Instance.TriVertices.Add(new IndexPoint3D(pt, dmx.GlobalIndex | ((!alldark && ndx == 3) ? 0 : 0x00010000 )));
                                             }
