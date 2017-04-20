@@ -89,10 +89,13 @@
  
   <steps>
     <stepi begin="0m2" end="0m4" color="blue" text="" regex=":dmx:" mode="0" transition="crossfade"/>
+    <stepi begin="0m2" end="0m4" color="black" text="" regex=":ar1:" mode="0" transition="crossfade"/>
+    <stepi begin="0m2" end="0m4" color="black" text="" regex=":ar2:" mode="0" transition="crossfade"/>
     <!--<stepi begin="0m1" end="0m1" color="yellow" text="" regex="^((?!(:dmx:|:tree:|:cdl)).)*$" mode="0" transition="immediate"/>-->
     <!--<stepi begin="0m1" end="0m1" color="white" text="" regex="tree" mode="0" transition="immediate"/>-->
     <stepi begin="0m2" end="0m4" color="orange" text="" regex="cdl" mode="0" transition="crossfade"/>
     <!--<stepi begin="0m1" end="0m1" color="white" text="" regex="^(?!.*dmx)" mode="0" transition="immediate"/>-->
+    
     <repeat tm1="0" tm2="2" tm3="4" tm4="6" tm5="8" tm6="10">
 
       <stepi begin="1m1" end="1m1" color="white" text="" regex=":dmx:" mode="0" transition="flash"/>
@@ -128,6 +131,32 @@
 
       <stepi begin="2m4" end="2m4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
     </repeat>
+
+    <stepi begin="1m1" end="1m1+2/4" color="white" text="" regex=":ar1:\d*[02468]$" mode="0" transition="crawl"/>
+    <stepi begin="1m1" end="1m1+2/4" color="red" text="" regex=":ar1:\d*[13579]$" mode="1" transition="crawl"/>
+    <stepi begin="1m1+2/4" end="1m1+3/4" color="green" text="" regex=":ar1:\d*[02468]$" mode="0" transition="crawl"/>
+    <stepi begin="1m1+2/4" end="1m1+3/4" color="white" text="" regex=":ar1:\d*[13579]$" mode="1" transition="crawl"/>
+    <stepi begin="1m1+3/4" end="1m1+4/4" color="white" text="" regex=":ar1:" mode="0" transition="crawl"/>
+    <stepi begin="1m1+4/4" end="1m2" color="blue" text="" regex=":ar1:" mode="1" transition="crawl"/>
+    
+    <!--<stepi begin="1m1+4/4" end="2m1" color="white" text="" regex=":ar1:" mode="0" transition="crawl"/>-->
+    <stepi begin="1m2" end="1m3" color="white" text="" regex=":ar2:" mode="0" transition="crawl"/>
+    <stepi begin="1m3" end="1m4" color="green" text="" regex=":ar1:" mode="0" transition="crawl"/>
+    <stepi begin="1m4" end="2m1" color="red" text="" regex=":ar2:" mode="0" transition="crawl"/>
+
+    <stepi begin="2m1" end="2m2" color="white" text="" regex=":ar1:" mode="0" transition="crawl"/>
+    <stepi begin="2m2" end="2m3" color="white" text="" regex=":ar2:" mode="0" transition="crawl"/>
+    <stepi begin="2m3" end="2m4" color="green" text="" regex=":ar2:" mode="1" transition="crawl"/>
+    <stepi begin="2m4" end="3m1" color="red" text="" regex=":ar1:" mode="1" transition="crawl"/>
+
+    <stepi begin="3m1" end="3m2" color="green" text="" regex=":ar1:" mode="0" transition="crawl"/>
+    <stepi begin="3m2" end="3m3" color="red" text="" regex=":ar1:" mode="1" transition="crawl"/>
+    <stepi begin="3m3" end="3m4" color="green" text="" regex=":ar1:" mode="0" transition="crawl"/>
+    <stepi begin="3m4" end="4m1" color="red" text="" regex=":ar1:" mode="1" transition="crawl"/>
+
+    <stepi begin="1m1" end="2m1" color="white" text="" regex=":pl1:" mode="0" transition="crawl"/>
+    <stepi begin="1m1" end="2m1" color="white" text="" regex=":pl2:" mode="0" transition="crawl"/>
+    <stepi begin="1m1" end="2m1" color="white" text="" regex=":pl3:" mode="0" transition="crawl"/>
 
     <stepmsg begin="1m1" end="8m3" msg="RUDOLPH, THE RED NOSED REINEER " />
     

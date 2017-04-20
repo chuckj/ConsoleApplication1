@@ -106,14 +106,14 @@ namespace ConsoleApplication1
             //Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var frm = new Form2();
-            try
-            {
-                Application.Run(frm);
-            }
-            catch (Exception e)
-            {
-                logger.Info($"Unhandled exception: {e}");
-            }
+            //try
+            //{
+               Application.Run(frm);
+            //}
+            //catch (Exception e)
+            //{
+            //    logger.Info($"Unhandled exception: {e}");
+            //}
 
             return;
         }

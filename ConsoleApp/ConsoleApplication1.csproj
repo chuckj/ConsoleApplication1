@@ -153,6 +153,7 @@
     <Compile Include="KeyFrame.cs" />
     <Compile Include="Models\BitMapImg.cs" />
     <Compile Include="ObservableDictionary.cs" />
+    <Compile Include="StepTransition_Linear.cs" />
     <Compile Include="StepTransition_Position.cs" />
     <Compile Include="PropDialogItem.cs" />
     <Compile Include="RunTime.cs" />

@@ -24,5 +24,10 @@ namespace ConsoleApplication1
         }
 
         protected string DebuggerDisplay => $"hld:{Hold}";
+
+        //public virtual IEnumerable<int> Xeq(RunTime context)
+        //{
+        //    yield break;
+        //}
     }
 }

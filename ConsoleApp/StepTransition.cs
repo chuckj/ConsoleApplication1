@@ -31,7 +31,8 @@ namespace ConsoleApplication1
                         Transitions.Add(StepTransition_Fade.Factory(child));
                         break;
 
-                    default:
+                    case "linear":
+                        Transitions.Add(StepTransition_Linear.Factory(child));
                         break;
                 }
             }

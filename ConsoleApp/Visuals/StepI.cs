@@ -42,6 +42,8 @@ namespace ConsoleApplication1
         private SD.Color color;
 
         private Regex regex;
+        private Func<Lit, bool> selector;
+        private Func<Lit, int> orderby;
         #endregion
 
         #region Ctors
@@ -81,6 +83,17 @@ namespace ConsoleApplication1
                 throw new Exception($"Regex not found.");
 
             regex = new Regex(regx, RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+            var wrk = (string)xml.Attribute("selector");
+            if (wrk != null)
+            {
+                selector = (Func<Lit, bool>)System.Linq.Dynamic.DynamicExpression.ParseLambda(typeof(Lit), typeof(bool), wrk).Compile();
+            }
+            wrk = (string)xml.Attribute("orderby");
+            if (wrk != null)
+            {
+                orderby = (Func<Lit, int>)System.Linq.Dynamic.DynamicExpression.ParseLambda(typeof(Lit), typeof(int), wrk).Compile();
+            }
         }
         #endregion
 
@@ -294,9 +307,44 @@ namespace ConsoleApplication1
                             break;
                     }
                 }
-            }
+                else if (tran is StepTransition_Linear)
+                {
+                    var linear = (StepTransition_Linear)tran;
 
-            yield break;
+                    var litx = Global.Instance.LitDict.Values.OfType<Lit>()
+                        .Where(v => regex.IsMatch(v.Name));
+                    if (selector != null)
+                        litx = litx.Where(lit => selector(lit));
+                    if (orderby != null)
+                        litx = litx.OrderBy(lit => orderby(lit));
+                    var lits = litx.ToArray();
+                    float start = this.startTimeMark.Time;
+                    float endTime = this.endTimeMark.Time;
+                    var fade = linear.Fade;
+                    var backward = (mode & 1) > 0;
+
+                    int ndx = 0;
+                    do
+                    {
+                        float fraction;
+                        if (start >= endTime)
+                            fraction = 1;
+                        else
+                            fraction = Math.Min((context.CurTime - start) / (endTime - start), 1);
+
+                        int newptr = (int)Math.Ceiling(lits.Count() * fraction);
+                        for (; ndx < newptr; ndx++)
+                        {
+                            context[lits[mode != 0 ? lits.Count() - 1 - ndx : ndx].GlobalIndex] = this.color;
+                        }
+
+                        yield return context.CurTime + 4;
+                    } while (context.CurTime < endTime);
+
+                    for (; ndx < lits.Count(); ndx++)
+                        context[lits[mode != 0 ? lits.Count() - 1 - ndx : ndx].GlobalIndex] = this.color;
+                }
+            }
 
             //yield return EndPoint.X;
 
@@ -308,9 +356,10 @@ namespace ConsoleApplication1
         private SD.Color factor(Clr bgn, SD.Color end, float fraction)
         {
             fraction = Math.Max(Math.Min(fraction, 1), 0);
-            int red = Math.Min((int)(((uint)bgn.R) * (1 - fraction) + ((uint)end.R) * fraction), 255);
-            int green = Math.Min((int)(((uint)bgn.G) * (1 - fraction) + ((uint)end.G) * fraction), 255);
-            int blue = Math.Min((int)(((uint)bgn.B) * (1 - fraction) + ((uint)end.B) * fraction), 255);
+            var fraction_ = 1 - fraction;
+            int red = Math.Min((int)(((uint)bgn.R) * fraction_ + ((uint)end.R) * fraction), 255);
+            int green = Math.Min((int)(((uint)bgn.G) * fraction_ + ((uint)end.G) * fraction), 255);
+            int blue = Math.Min((int)(((uint)bgn.B) * fraction_ + ((uint)end.B) * fraction), 255);
             return SD.Color.FromArgb(red, green, blue);
         }
 

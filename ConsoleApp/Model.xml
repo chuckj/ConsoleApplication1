@@ -193,6 +193,7 @@
         </GrpSeq>
       </GrpSeqs>
     </View>-->
+    
     <View nm="manger" offset="250,-30,-250" main="true" strand="USB2_13">
       <dmx>
         <triangle pt1="0,0,0" pt2="0,36,0" pt3="24,0,0" pt4="24,48,0" color="Manger"/> <!--back lt inside-->
@@ -1445,6 +1446,12 @@
       </transition>
       <transition name="flash">
         <fade steps="1" fade="1" />
+      </transition>
+      <transition name="crawl">
+        <linear steps="0" fade="0" />
+      </transition>    
+      <transition name="bicrawl">
+        <linear steps="0" fade="1" />
       </transition>
     </steptransitions>
   </root>
