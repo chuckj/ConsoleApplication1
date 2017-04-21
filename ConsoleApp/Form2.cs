@@ -1,23 +1,14 @@
-﻿using System;
+﻿using SharpHelper;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using SharpDX;
-using SharpHelper;
-using SharpDX.Windows;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using Buffer11 = SharpDX.Direct3D11.Buffer;
-using System.Threading;
-using System.Windows.Forms;
-using SharpDX.Direct3D;
-using Colors = System.Drawing.Color;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using SD = System.Drawing;
 using SWF = System.Windows.Forms;
-using System.ComponentModel;
 
 namespace ConsoleApplication1
 {

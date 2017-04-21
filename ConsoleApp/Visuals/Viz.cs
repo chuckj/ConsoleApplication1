@@ -1,18 +1,16 @@
 ﻿using Newtonsoft.Json;
 using SharpDX;
-using SharpDX.Direct2D1;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using SD = System.Drawing;
 
 namespace ConsoleApplication1
 {
-	#region VizFeatures
-	[Flags]
+    #region VizFeatures
+    [Flags]
 	public enum VizFeatures
 	{
 		None = 0,

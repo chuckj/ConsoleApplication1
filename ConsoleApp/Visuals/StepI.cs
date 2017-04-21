@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using SharpDX;
-using SharpDX.Direct2D1;
-using System.Windows.Forms;
-using System.Xml.Linq;
-using System.Threading.Tasks;
-using SD = System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using SD = System.Drawing;
 using SLD = System.Linq.Dynamic;
 
 namespace ConsoleApplication1

@@ -1,23 +1,18 @@
-﻿using SharpDX;
+﻿using NAudio.Wave;
+using SharpDX;
 using SharpDX.Direct2D1;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using SD = System.Drawing;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using System.Threading;
-using System.ComponentModel;
-using Colors = System.Drawing.Color;
-using NAudio.Wave;
-using Sample_NAudio;
-using System.IO.MemoryMappedFiles;
+using SD = System.Drawing;
 
 
 namespace ConsoleApplication1

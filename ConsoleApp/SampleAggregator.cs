@@ -4,7 +4,6 @@
 // All other rights reserved.
 
 using System;
-using NAudio.Dsp;
 
 namespace Sample_NAudio
 {

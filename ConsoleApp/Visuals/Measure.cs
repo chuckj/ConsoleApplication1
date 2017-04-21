@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Xml.Linq;
-using SharpDX;
+﻿using SharpDX;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
+using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace ConsoleApplication1
 {
-	[DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
 	public class Measure : Viz
 	{
         public override string DebuggerDisplay => $"Meas {StartingMeasure}: {base.DebuggerDisplay} bpm:{BeatsPerMeasure}";

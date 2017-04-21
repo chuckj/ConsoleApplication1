@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SharpDX;
 using System.Diagnostics;
-using SharpDX;
-using SharpDX.Direct2D1;
 
 namespace ConsoleApplication1
 {

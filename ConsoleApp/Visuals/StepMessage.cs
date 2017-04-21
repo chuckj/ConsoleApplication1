@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using SharpDX;
-using SharpDX.Direct2D1;
-using System.Windows.Forms;
 using System.Xml.Linq;
-using System.Threading.Tasks;
 using SD = System.Drawing;
 
 namespace ConsoleApplication1

@@ -1,19 +1,16 @@
-﻿using Newtonsoft.Json;
+﻿using ConsoleApplication1.Dialogs;
+using Newtonsoft.Json;
+using SharpDX;
+using SharpDX.DirectWrite;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-
 using System.Windows.Forms;
 using System.Xml.Linq;
-using System.Xml.Serialization;
-using ConsoleApplication1.Dialogs;
-using SharpDX;
-using SharpDX.DirectWrite;
-using SharpDX.Direct2D1;
 
 namespace ConsoleApplication1
 {
-	[DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
 	public class Lyric : Viz
 	{
         [JsonIgnore]

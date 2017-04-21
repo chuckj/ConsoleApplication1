@@ -1,14 +1,8 @@
 ﻿//using dw = SharpDX.DirectWrite;
-using dx = SharpDX.DXGI;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using dx = SharpDX.DXGI;
 
 namespace ConsoleApplication1
 {

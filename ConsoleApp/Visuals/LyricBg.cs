@@ -1,14 +1,11 @@
-﻿using System;
+﻿using SharpDX;
 using System.Collections.Generic;
 using System.Diagnostics;
-
 using System.Windows.Forms;
-using SharpDX;
-using SharpDX.Direct2D1;
 
 namespace ConsoleApplication1
 {
-	[DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
 	public class LyricBg : Viz
 	{
         public override string DebuggerDisplay => $"LyrBg: {base.DebuggerDisplay}";

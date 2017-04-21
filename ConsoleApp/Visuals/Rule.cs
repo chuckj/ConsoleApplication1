@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SharpDX;
+using System;
 using System.Diagnostics;
-using SharpDX;
-using SharpDX.Direct2D1;
-using SharpDX.DirectWrite;
 
 namespace ConsoleApplication1
 {
-	[DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
 	public class Rule : Viz
 	{
         public override string DebuggerDisplay => $"Rule";

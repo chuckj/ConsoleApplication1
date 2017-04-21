@@ -1,12 +1,8 @@
 ﻿using SharpDX;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SD = System.Drawing;
 using System.Diagnostics;
+using System.Globalization;
+using SD = System.Drawing;
 
 namespace ConsoleApplication1
 {

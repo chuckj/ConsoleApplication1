@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using SharpDX;
-using SharpDX.Direct2D1;
-using SD = System.Drawing;
+﻿using System.Diagnostics;
 
 namespace ConsoleApplication1
 {
-	[DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
 	public class Drag : Viz
     {
         private static DragRes resources;

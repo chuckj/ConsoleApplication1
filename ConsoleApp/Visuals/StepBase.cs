@@ -1,11 +1,8 @@
-﻿using System;
+﻿using SharpDX;
 using System.Collections.Generic;
 using System.Diagnostics;
-using SharpDX;
-using SharpDX.Direct2D1;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using System.Threading.Tasks;
 
 namespace ConsoleApplication1
 {

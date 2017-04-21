@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using Microsoft.ConcurrencyVisualizer.Instrumentation;
 using SharpDX;
-using SharpDX.DirectWrite;
 using SharpDX.Direct2D1;
-using System.Linq;
-using Microsoft.ConcurrencyVisualizer.Instrumentation;
+using System.Diagnostics;
 
 namespace ConsoleApplication1
 {
-	[DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
 	public class Wave : Viz
 	{
         public override string DebuggerDisplay => $"Wave: {base.DebuggerDisplay}";

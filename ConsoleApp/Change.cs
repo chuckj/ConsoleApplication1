@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleApplication1
 {
-	
-	public class Change
+
+    public class Change
 	{
 		public List<VizCmd> vizCmds { get; set; }
 	}

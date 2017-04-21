@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ConsoleApplication1
 {
-	public class KeyFrame
+    public class KeyFrame
 	{
 		public int Measure;
 		public int BeatsPerMeasure;

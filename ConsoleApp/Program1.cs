@@ -1,23 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-
+using System.Linq;
 using System.Windows.Forms;
 //using System.Drawing;
-using SharpHelper;
-using SharpDX.Windows;
-using SharpDX;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
 
 
 using System.Xml.Linq;
-using System.Runtime.InteropServices;
-using System.Threading;
-
 using SD = System.Drawing;
 
 namespace ConsoleApplication1

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
-namespace ConsoleApplication1
+﻿namespace ConsoleApplication1
 {
     [System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class StepTransition_Base

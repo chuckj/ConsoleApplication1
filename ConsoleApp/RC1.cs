@@ -1,19 +1,16 @@
-﻿using SharpDX;
+﻿using Microsoft.ConcurrencyVisualizer.Instrumentation;
+using SharpDX;
+using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using SD = System.Drawing;
 using Colors = System.Drawing.Color;
+using SD = System.Drawing;
 using SDXD3D11Buffer = SharpDX.Direct3D11.Buffer;
-using SharpDX.Direct3D;
-using System.Threading;
-using Microsoft.ConcurrencyVisualizer.Instrumentation;
 
 namespace ConsoleApplication1
 {

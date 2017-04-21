@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using SharpDX;
 //using System.Drawing;
 using SharpDX.Direct2D1;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using SharpDX.DirectWrite;
-using SharpDX;
-using System.Reflection;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using SD = System.Drawing;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Xml.Linq;
 
 namespace ConsoleApplication1
 {

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SharpDX;
 using System.Diagnostics;
-using SharpDX;
-using SharpDX.Direct2D1;
 
 namespace ConsoleApplication1
 {
-	[DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
 	public class SliderThumb : Viz
     {
         private static SliderThumbRes resources;

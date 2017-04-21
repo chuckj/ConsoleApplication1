@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using SharpDX;
+﻿using SharpDX;
 using SharpDX.Direct2D1;
+using System.Diagnostics;
 
 namespace ConsoleApplication1
 {

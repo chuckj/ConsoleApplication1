@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
-
 using System.Windows.Forms;
 using System.Xml.Serialization;
-
-using System.Drawing;
 using ST = System.Threading;
 
 namespace ConsoleApplication1
