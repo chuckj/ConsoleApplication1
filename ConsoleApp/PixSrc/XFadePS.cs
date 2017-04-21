@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SD = System.Drawing;
 
-namespace ConsoleApplication1.PixSrc
+namespace ConsoleApplication1
 {
     public class XFadePS : IPixSrc
     {

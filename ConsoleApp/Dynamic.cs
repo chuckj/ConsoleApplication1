@@ -158,6 +158,8 @@ namespace System.Linq.Dynamic
 
         public static Expression<Func<T, S>> ParseLambda<T, S>(string expression, params object[] values) => (Expression<Func<T, S>>)ParseLambda(typeof(T), typeof(S), expression, values);
 
+        public static Func<T, S> CompileLambda<T, S>(string expression, params object[] values) => ParseLambda<T, S>(expression, values).Compile();
+
         public static Type CreateClass(params DynamicProperty[] properties) => ClassFactory.Instance.GetDynamicClass(properties);
 
         public static Type CreateClass(IEnumerable<DynamicProperty> properties) => ClassFactory.Instance.GetDynamicClass(properties);

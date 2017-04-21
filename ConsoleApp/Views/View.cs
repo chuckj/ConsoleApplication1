@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Colors = System.Drawing.Color;
+using SLD = System.Linq.Dynamic;
 
 namespace ConsoleApplication1
 {
@@ -99,13 +100,13 @@ namespace ConsoleApplication1
             Func<Lit, float> nuxexp = null, nuyexp = null, nuzexp = (x) => 0f;
             attrb = vu.Attribute("xexp");
             if (!string.IsNullOrEmpty((string)attrb))
-                nuxexp = (Func<Lit, float>)System.Linq.Dynamic.DynamicExpression.ParseLambda(typeof(Lit), typeof(float), (string)attrb, vu).Compile();
+                nuxexp = SLD.DynamicExpression.CompileLambda<Lit, float>((string)attrb, vu);
             attrb = vu.Attribute("yexp");
             if (!string.IsNullOrEmpty((string)attrb))
-                nuyexp = (Func<Lit, float>)System.Linq.Dynamic.DynamicExpression.ParseLambda(typeof(Lit), typeof(float), (string)attrb, vu).Compile();
+                nuyexp = SLD.DynamicExpression.CompileLambda<Lit, float>((string)attrb, vu);
             attrb = vu.Attribute("zexp");
             if (!string.IsNullOrEmpty((string)attrb))
-                nuzexp = (Func<Lit, float>)System.Linq.Dynamic.DynamicExpression.ParseLambda(typeof(Lit), typeof(float), (string)attrb, vu).Compile();
+                nuzexp = SLD.DynamicExpression.CompileLambda<Lit, float>((string)attrb, vu);
 
             bldView(root, vu, strndnu, 0, 0, nuoffset, nuxexp, nuyexp, nuzexp, nm, view);
 

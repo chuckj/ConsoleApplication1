@@ -10,6 +10,7 @@ using SD = System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using SLD = System.Linq.Dynamic;
 
 namespace ConsoleApplication1
 {
@@ -39,7 +40,8 @@ namespace ConsoleApplication1
 
         private StepTransition Transition;
 
-        private SD.Color color;
+        //private SD.Color color;
+        private PaletPS palet;
 
         private Regex regex;
         private Func<Lit, bool> selector;
@@ -59,9 +61,28 @@ namespace ConsoleApplication1
                     throw new Exception($"BMI '{img}' not found.");
             }
 
-            var clr = (string)xml.Attribute("color");
-            if (clr != null)
-                this.color = SD.Color.FromName(clr);
+            var wrk = (string)xml.Attribute("color");
+            if (wrk != null)
+            {
+                var clrs = new List<SD.Color>();
+                bool wrap = true;
+                foreach (var clr in wrk.Split(',').Select(clr => clr.Trim()))
+                {
+                    if (clr == "wrap")
+                    {
+                        wrap = true;
+                    }
+                    else if (clr == "nowrap")
+                    {
+                        wrap = false;
+                    }
+                    else
+                    {
+                        clrs.Add(Clr.FromName(clr));
+                    }
+                }
+                this.palet = new PaletPS(clrs, wrap);
+            }
 
             StepTransition trans = null;
             var nam = (string)xml.Attribute("transition");
@@ -84,15 +105,15 @@ namespace ConsoleApplication1
 
             regex = new Regex(regx, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-            var wrk = (string)xml.Attribute("selector");
+            wrk = (string)xml.Attribute("selector");
             if (wrk != null)
             {
-                selector = (Func<Lit, bool>)System.Linq.Dynamic.DynamicExpression.ParseLambda(typeof(Lit), typeof(bool), wrk).Compile();
+                selector = SLD.DynamicExpression.CompileLambda<Lit, bool>(wrk);
             }
             wrk = (string)xml.Attribute("orderby");
             if (wrk != null)
             {
-                orderby = (Func<Lit, int>)System.Linq.Dynamic.DynamicExpression.ParseLambda(typeof(Lit), typeof(int), wrk).Compile();
+                orderby = SLD.DynamicExpression.CompileLambda<Lit, int>(wrk);
             }
         }
         #endregion
@@ -264,9 +285,10 @@ namespace ConsoleApplication1
                                     else
                                         fraction = Math.Min((context.CurTime - start) / (endTime - start), 1);
 
+                                    int ndx = 0;
                                     foreach (var bgn in initClr)
                                     {
-                                        context[bgn.Ndx] = factor(bgn.clr, this.color, fraction);
+                                        context[bgn.Ndx] = factor(bgn.clr, this.palet[ndx++], fraction);
                                     }
 
                                     fade++;
@@ -283,8 +305,9 @@ namespace ConsoleApplication1
                                    .Select(l => new bgnColor() { clr = context[l.GlobalIndex], Ndx = l.GlobalIndex })
                                    .ToArray();
 
+                                int ndx = 0;
                                 foreach (var bgn in initClr)
-                                    context[bgn.Ndx] = this.color;
+                                    context[bgn.Ndx] = this.palet[ndx++];
                             }
                             break;
 
@@ -295,8 +318,9 @@ namespace ConsoleApplication1
                                     .Select(l => new bgnColor() { clr = context[(int)l.GlobalIndex], Ndx = (int)l.GlobalIndex })
                                     .ToArray();
 
+                                int ndx = 0;
                                 foreach (var bgn in initClr)
-                                    context[bgn.Ndx] = this.color;
+                                    context[bgn.Ndx] = this.palet[ndx++];
 
                                 yield return context.CurTime + 4;
 
@@ -324,6 +348,7 @@ namespace ConsoleApplication1
                     var backward = (mode & 1) > 0;
 
                     int ndx = 0;
+                    int indx = 0;
                     do
                     {
                         float fraction;
@@ -335,14 +360,14 @@ namespace ConsoleApplication1
                         int newptr = (int)Math.Ceiling(lits.Count() * fraction);
                         for (; ndx < newptr; ndx++)
                         {
-                            context[lits[mode != 0 ? lits.Count() - 1 - ndx : ndx].GlobalIndex] = this.color;
+                            context[lits[mode != 0 ? lits.Count() - 1 - ndx : ndx].GlobalIndex] = this.palet[indx++];
                         }
 
                         yield return context.CurTime + 4;
                     } while (context.CurTime < endTime);
 
                     for (; ndx < lits.Count(); ndx++)
-                        context[lits[mode != 0 ? lits.Count() - 1 - ndx : ndx].GlobalIndex] = this.color;
+                        context[lits[mode != 0 ? lits.Count() - 1 - ndx : ndx].GlobalIndex] = this.palet[indx++];
                 }
             }
 
