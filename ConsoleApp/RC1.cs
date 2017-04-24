@@ -5,7 +5,6 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpHelper;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Colors = System.Drawing.Color;
@@ -53,8 +52,6 @@ namespace ConsoleApplication1
         private Matrix view;
         private Matrix world;
         private Matrix Rotation;
-
-        private List<int> selected = new List<int>();
 
         public RC1()
         {
@@ -252,7 +249,7 @@ namespace ConsoleApplication1
                         colorTable = animate();
                     }
 
-                    foreach (var ndx in selected)
+                    foreach (var ndx in Global.Instance.Selected)
                         colorTable[ndx] = (uint)(Clr)Colors.White;
                     Vector4[] clrs = colorTable.Select(c => new Vector4(((c>>16) & 0xff) / 256.0f, ((c >> 8) & 0xff) / 256.0f, (c & 0xff) / 256.0f, 1.0f)).ToArray();
                     device.DeviceContext.UpdateSubresource<Vector4>(clrs, clrTbl);
@@ -414,7 +411,7 @@ namespace ConsoleApplication1
             var hd = new HitData(nearPoint.X * scale, nearPoint.Y * scale, nearPoint.Z * scale, direction);
 
             if ((Control.ModifierKeys & Keys.Shift) == Keys.None)
-                selected.Clear();
+                Global.Instance.Selected.Clear();
 
             Lit hit = null;
             var list = Global.Instance.LitArray.OfType<GECELit>().Select(rgb => rgb.Hit(hd)).Where(rgb => rgb != null).ToList();
@@ -423,10 +420,10 @@ namespace ConsoleApplication1
             if (list.Count > 0)
             {
                 hit = list.Aggregate((agg, item) => item.Distance < agg.Distance ? item : agg).Lit;
-                if (!selected.Contains(hit.GlobalIndex))
-                    selected.Add(hit.GlobalIndex);
+                if (!Global.Instance.Selected.Contains(hit.GlobalIndex))
+                    Global.Instance.Selected.Add(hit.GlobalIndex);
                 else
-                    selected.Remove(hit.GlobalIndex);
+                    Global.Instance.Selected.Remove(hit.GlobalIndex);
             }
             string report = $"({nearPoint.X * scale},{nearPoint.Y * scale},{nearPoint.Z * scale}) ({direction.X * scale},{direction.Y * scale},{direction.Z * scale}) {(hit != null ? hit.Name : "")}";
             clickOn.Report(report);

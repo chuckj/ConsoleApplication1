@@ -17,6 +17,7 @@ namespace ConsoleApplication1
         private Point _tspMenu;
         private Point _tspFile;
         private Point _tspPlayer;
+        private Point _tspSearch;
         private int _splitterDistance;
         private ST.Timer timer;
 
@@ -39,6 +40,18 @@ namespace ConsoleApplication1
             set
             {
                 _tspFile = value;
+                Changed();
+            }
+        }
+        public Point tspSearch
+        {
+            get
+            {
+                return _tspSearch;
+            }
+            set
+            {
+                _tspSearch = value;
                 Changed();
             }
         }

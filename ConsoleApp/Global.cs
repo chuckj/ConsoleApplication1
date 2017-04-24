@@ -23,7 +23,7 @@ namespace ConsoleApplication1
         public volatile MarqueUpdate currMarque;
 
         //public Dictionary<Tuple<int, int>, MonoLit> dict = new Dictionary<Tuple<int, int>, MonoLit>();
-		public object conLock = new object();
+        public object conLock = new object();
         public Dictionary<string, TreeTransition> TreeTransitionDict = new Dictionary<string, TreeTransition>();
         public short[] tdOrder;
         public Dictionary<char, FontUpdate> FontDict = new Dictionary<char, FontUpdate>();
@@ -173,6 +173,8 @@ namespace ConsoleApplication1
 
         public DMXStrand DMXStrand = new DMXStrand();
 
+        public List<int> Selected = new List<int>();
+
         static Global()
         {
 
@@ -236,8 +238,6 @@ namespace ConsoleApplication1
                 })
                 .Where(x => x.attr != null && !string.IsNullOrEmpty(x.attr.XmlName) && x.mi != null)
                 .ToDictionary(x => x.attr.XmlName, x => (Func<XElement, Song, int, Viz>)x.mi.CreateDelegate(typeof(Func<XElement, Song, int, Viz>), null));
-
-
         }
 
 

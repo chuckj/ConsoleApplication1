@@ -42,6 +42,7 @@ namespace ConsoleApplication1
         private Regex regex;
         private Func<Lit, bool> selector;
         private Func<Lit, int> orderby;
+        private Func<Lit, int> groupby;
         #endregion
 
         #region Ctors
@@ -110,6 +111,11 @@ namespace ConsoleApplication1
             if (wrk != null)
             {
                 orderby = SLD.DynamicExpression.CompileLambda<Lit, int>(wrk);
+            }
+            wrk = (string)xml.Attribute("groupby");
+            if (wrk != null)
+            {
+                groupby = SLD.DynamicExpression.CompileLambda<Lit, int>(wrk);
             }
         }
         #endregion
@@ -337,33 +343,84 @@ namespace ConsoleApplication1
                         litx = litx.Where(lit => selector(lit));
                     if (orderby != null)
                         litx = litx.OrderBy(lit => orderby(lit));
-                    var lits = litx.ToArray();
+                    int[][] lits;
+                    if (groupby != null)
+                        lits = litx.GroupBy(lit => groupby(lit), (key, grp) => grp.Select(lit => lit.GlobalIndex).ToArray()).ToArray();
+                    else
+                        lits = litx.Select(lit => new int[] { lit.GlobalIndex }).ToArray();
                     float start = this.startTimeMark.Time;
                     float endTime = this.endTimeMark.Time;
                     var fade = linear.Fade;
                     var backward = (mode & 1) > 0;
+                    var climb = (mode & 2) > 0;
 
                     int ndx = 0;
                     int indx = 0;
-                    do
+                    if (!climb)
                     {
-                        float fraction;
-                        if (start >= endTime)
-                            fraction = 1;
-                        else
-                            fraction = Math.Min((context.CurTime - start) / (endTime - start), 1);
-
-                        int newptr = (int)Math.Ceiling(lits.Count() * fraction);
-                        for (; ndx < newptr; ndx++)
+                        do
                         {
-                            context[lits[mode != 0 ? lits.Count() - 1 - ndx : ndx].GlobalIndex] = this.palet[indx++];
+                            float fraction;
+                            if (start >= endTime)
+                                fraction = 1;
+                            else
+                                fraction = Math.Min((context.CurTime - start) / (endTime - start), 1);
+
+                            int newptr = (int)Math.Ceiling(lits.Count() * fraction);
+                            for (; ndx < newptr; ndx++)
+                            {
+                                foreach (var indy in lits[backward ? lits.Count() - 1 - ndx : ndx])
+                                    context[indy] = this.palet[indx];
+                                indx++;
+                            }
+
+                            yield return context.CurTime + 4;
+                        } while (context.CurTime < endTime);
+
+                        for (; ndx < lits.Count(); ndx++)
+                        {
+                            foreach (var indy in lits[backward ? lits.Count() - 1 - ndx : ndx])
+                                context[indy] = this.palet[indx];
+                            indx++;
                         }
+                    }
+                    else
+                    {
+                        do
+                        {
+                            float fraction;
+                            if (start >= endTime)
+                                fraction = 1;
+                            else
+                                fraction = Math.Min((context.CurTime - start) / (endTime - start), 1);
 
-                        yield return context.CurTime + 4;
-                    } while (context.CurTime < endTime);
+                            int newptr = (int)Math.Ceiling((lits.Count() - 1) * fraction);
+                            indx = 0;
+                            try
+                            {
+                                for (ndx = newptr; ndx >= 0; ndx--)
+                                {
+                                    foreach (var indy in lits[backward ? lits.Count() - 1 - ndx : ndx])
+                                        context[indy] = this.palet[indx];
+                                    indx++;
+                                }
+                            }
+                            catch (Exception e)
+                            {
 
-                    for (; ndx < lits.Count(); ndx++)
-                        context[lits[mode != 0 ? lits.Count() - 1 - ndx : ndx].GlobalIndex] = this.palet[indx++];
+                            }
+
+                            yield return context.CurTime + 4;
+                        } while (context.CurTime < endTime);
+
+                        indx = 0;
+                        for (ndx = lits.Length - 1; ndx >= 0; ndx--)
+                        {
+                            foreach (var indy in lits[backward ? lits.Count() - 1 - ndx : ndx])
+                                context[indy] = this.palet[indx];
+                            indx++;
+                        }
+                    }
                 }
             }
 
