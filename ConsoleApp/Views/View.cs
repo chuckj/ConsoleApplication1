@@ -105,7 +105,7 @@ namespace ConsoleApplication1
             if (!string.IsNullOrEmpty((string)attrb))
                 nuzexp = SLD.DynamicExpression.CompileLambda<Lit, float>((string)attrb, vu);
 
-            bldView(root, vu, strndnu, 0, 0, nuoffset, nuxexp, nuyexp, nuzexp, nm, view);
+            bldView(root, vu, strndnu, 0, 0, nuoffset, nuxexp, nuyexp, nuzexp, null, nm, view);
 
             view.InitDone();
             return view;
@@ -113,7 +113,7 @@ namespace ConsoleApplication1
 
 
         private static void bldView(XElement root, XElement vu, List<GECEStrand> strndlst, int rowoff, int coloff, Point3D offset, 
-            Func<Lit, float> xexp, Func<Lit, float> yexp, Func<Lit, float> zexp, string nm, View view)
+            Func<Lit, float> xexp, Func<Lit, float> yexp, Func<Lit, float> zexp, Func<Lit, int> cirexp, string nm, View view)
         {
             int blb = 0;
             int rgbt = 0;
@@ -160,13 +160,17 @@ namespace ConsoleApplication1
 
                             attrb = vunu.Attribute("xexp") ?? lit.Attribute("xexp");
                             if (!string.IsNullOrEmpty((string)attrb))
-                                nuxexp = (Func<Lit, float>)System.Linq.Dynamic.DynamicExpression.ParseLambda(typeof(Lit), typeof(float), (string)attrb, vu).Compile();
+                                nuxexp = SLD.DynamicExpression.CompileLambda<Lit, float>((string)attrb, vu);
                             attrb = vunu.Attribute("yexp") ?? lit.Attribute("yexp");
                             if (!string.IsNullOrEmpty((string)attrb))
-                                nuyexp = (Func<Lit, float>)System.Linq.Dynamic.DynamicExpression.ParseLambda(typeof(Lit), typeof(float), (string)attrb, vu).Compile();
+                                nuyexp = SLD.DynamicExpression.CompileLambda<Lit, float>((string)attrb, vu);
                             attrb = vunu.Attribute("zexp") ?? lit.Attribute("zexp");
                             if (!string.IsNullOrEmpty((string)attrb))
-                                nuzexp = (Func<Lit, float>)System.Linq.Dynamic.DynamicExpression.ParseLambda(typeof(Lit), typeof(float), (string)attrb, vu).Compile();
+                                nuzexp = SLD.DynamicExpression.CompileLambda<Lit, float>((string)attrb, vu);
+
+                            attrb = vunu.Attribute("cirexp") ?? lit.Attribute("cirexp");
+                            if (!string.IsNullOrEmpty((string)attrb))
+                                cirexp = SLD.DynamicExpression.CompileLambda<Lit, int>((string)attrb, lit);
 
                             List<GECEStrand> strndnu = strndlst;
                             if (lit.Attribute("strand") != null)
@@ -182,7 +186,7 @@ namespace ConsoleApplication1
                                 }
                             }
 
-                            bldView(root, vunu, strndnu, nurowoff, nucoloff, nuoffset, nuxexp, nuyexp, nuzexp, nunm, view);
+                            bldView(root, vunu, strndnu, nurowoff, nucoloff, nuoffset, nuxexp, nuyexp, nuzexp, cirexp, nunm, view);
 
                         }
                         break;
@@ -227,6 +231,10 @@ namespace ConsoleApplication1
                             if ((string)lit.Attribute("cir") != null)
                                 cir = (Int32)lit.Attribute("cir");
 
+                            attrb = lit.Attribute("cirexp");
+                            if (!string.IsNullOrEmpty((string)attrb))
+                                cirexp = SLD.DynamicExpression.CompileLambda<Lit, int>((string)attrb, lit);
+
                             Point3D point = new Point3D();
                             attrb = lit.Attribute("pt");
                             if (string.IsNullOrEmpty((string)attrb))
@@ -269,8 +277,8 @@ namespace ConsoleApplication1
                                 {
                                     Strnd = strand,
                                     Index = strand.lites.Count,
-                                    Row = rw + rowoff,
-                                    Column = cl + coloff,
+                                    Row = rw,
+                                    Column = cl,
                                     Circle = cir,
                                     Clr = clr,
 
@@ -281,6 +289,14 @@ namespace ConsoleApplication1
                                     point = new Point3D((xexp != null) ? xexp(rgb) : 0, (yexp != null) ? yexp(rgb) : 0, (zexp != null) ? zexp(rgb) : 0);
                                 }
                                 rgb.Pt = point + offset + repoffset;
+
+                                if (cirexp != null)
+                                {
+                                    rgb.Circle = cirexp(rgb);
+                                }
+
+                                rgb.Row += rowoff;
+                                rgb.Column += coloff;
 
                                 if (candlesticks)
                                 {

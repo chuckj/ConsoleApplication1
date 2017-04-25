@@ -525,19 +525,19 @@
       <rgb row="6" col="69" repeat="12" colinc="-1" pt="485,58,-2" ptoffset="-8,0,0" class="railing"/>
     </View>
 
-    <View nm="win">
-      <rgb strandndx="0" row="0" col="10" repeat="9" rowinc="1" cir="25" pt="80,0,0" ptoffset="0,8,0" class="window"/>
-      <rgb strandndx="0" row="8" col="9" repeat="9" rowinc="-1" cir="25" pt="72,64,0" ptoffset="0,-8,0" class="window"/>
-      <rgb strandndx="0" row="0" col="8" repeat="9" rowinc="1" cir="25"  pt="64,0,0" ptoffset="0,8,0" class="window"/>
-      <rgb strandndx="0" row="8" col="7" repeat="9" rowinc="-1" cir="25" pt="56,64,0" ptoffset="0,-8,0" class="window"/>
-      <rgb strandndx="0" row="0" col="6" repeat="9" rowinc="1" cir="25"  pt="48,0,0" ptoffset="0,8,0" class="window"/>
-      <rgb strandndx="0" row="8" col="5" repeat="5" rowinc="-1" cir="25" pt="40,64,0" ptoffset="0,-8,0" class="window"/>
-      <rgb strandndx="1" row="3" col="5" repeat="4" rowinc="-1" cir="25" pt="40,24,0" ptoffset="0,-8,0" class="window"/>
-      <rgb strandndx="1" row="0" col="4" repeat="9" rowinc="1" cir="25" pt="32,0,0" ptoffset="0,8,0" class="window"/>
-      <rgb strandndx="1" row="8" col="3" repeat="9" rowinc="-1" cir="25" pt="24,64,0" ptoffset="0,-8,0" class="window"/>
-      <rgb strandndx="1" row="0" col="2" repeat="9" rowinc="1" cir="25" pt="16,0,0" ptoffset="0,8,0" class="window"/>
-      <rgb strandndx="1" row="8" col="1" repeat="9" rowinc="-1" cir="25" pt="8,64,0" ptoffset="0,-8,0" class="window"/>
-      <rgb strandndx="1" row="0" col="0" repeat="9" rowinc="1" cir="25" pt="0,0,0" ptoffset="0,8,0" class="window"/>
+    <View nm="win" cirexp="Convert.ToInt32(Math.Sqrt((row-4)*(row-4) + (column-5)*(column-5)))" >
+      <rgb strandndx="0" row="0" col="10" repeat="9" rowinc="1"  pt="80,0,0" ptoffset="0,8,0" class="window"/>
+      <rgb strandndx="0" row="8" col="9"  repeat="9" rowinc="-1" pt="72,64,0" ptoffset="0,-8,0" class="window"/>
+      <rgb strandndx="0" row="0" col="8"  repeat="9" rowinc="1"  pt="64,0,0" ptoffset="0,8,0" class="window"/>
+      <rgb strandndx="0" row="8" col="7"  repeat="9" rowinc="-1" pt="56,64,0" ptoffset="0,-8,0" class="window"/>
+      <rgb strandndx="0" row="0" col="6"  repeat="9" rowinc="1"  pt="48,0,0" ptoffset="0,8,0" class="window"/>
+      <rgb strandndx="0" row="8" col="5"  repeat="5" rowinc="-1" pt="40,64,0" ptoffset="0,-8,0" class="window"/>
+      <rgb strandndx="1" row="3" col="5"  repeat="4" rowinc="-1" pt="40,24,0" ptoffset="0,-8,0" class="window"/>
+      <rgb strandndx="1" row="0" col="4"  repeat="9" rowinc="1"  pt="32,0,0" ptoffset="0,8,0" class="window"/>
+      <rgb strandndx="1" row="8" col="3"  repeat="9" rowinc="-1" pt="24,64,0" ptoffset="0,-8,0" class="window"/>
+      <rgb strandndx="1" row="0" col="2"  repeat="9" rowinc="1"  pt="16,0,0" ptoffset="0,8,0" class="window"/>
+      <rgb strandndx="1" row="8" col="1"  repeat="9" rowinc="-1" pt="8,64,0" ptoffset="0,-8,0" class="window"/>
+      <rgb strandndx="1" row="0" col="0"  repeat="9" rowinc="1"  pt="0,0,0" ptoffset="0,8,0" class="window"/>
 
       <Groups>
         <Group nm="$all"/>

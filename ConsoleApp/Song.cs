@@ -704,11 +704,11 @@ namespace ConsoleApplication1
 
         public void ArrangeSteps()
         {
-            float[] stopTime = new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            float[] stopTime = new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             foreach (StepBase step in vizs.OfType<StepBase>())
             {
                 int row = 0;
-                for (row = 0; row < 8; row++)
+                for (row = 0; row < stopTime.Length; row++)
                 {
                     if (stopTime[row] < step.StartPoint.X)
                     {
