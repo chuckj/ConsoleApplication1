@@ -13,18 +13,18 @@ namespace ConsoleApplication1
     [Flags]
 	public enum VizFeatures
 	{
-		None = 0,
-		IsSelectable = 1 << 0,
+		None              = 0,
+		IsSelectable      = 1 << 0,
 		IsMultiSelectable = 1 << 1,
-		IsDraggable = 1 << 2,
-		HasContextMenu = 1 << 3,
-		IsFixedSize = 1 << 5,
-		IsKeyFrame = 1 << 6,
-		HasToolTip = 1 << 7,
-		HasHilites = 1 << 8,
-		HasProperties = 1 << 9,
-		CanInsertDelete = 1 << 10,
-		HasRegex = 1 << 11,
+		IsDraggable       = 1 << 2,
+		HasContextMenu    = 1 << 3,
+		IsFixedSize       = 1 << 5,
+		IsKeyFrame        = 1 << 6,
+		HasToolTip        = 1 << 7,
+		HasHilites        = 1 << 8,
+		HasProperties     = 1 << 9,
+		CanInsertDelete   = 1 << 10,
+		HasRegex          = 1 << 11,
 
 	}
 	#endregion
