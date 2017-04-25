@@ -389,6 +389,11 @@ namespace ConsoleApplication1
             }
             set
             {
+                if (currOver != null && currOver.HasRegex)
+                {
+                    Global.Instance.Selected.Clear();
+                }
+
                 currOver = value;
 
                 if (currOver == null)
@@ -399,6 +404,12 @@ namespace ConsoleApplication1
                 {
                     ssHover.Text = currOver.DebuggerDisplay;
                     ssHoverSep.Visible = ssHover.Visible = true;
+                    if (currOver.HasRegex)
+                    {
+                        var regex = ((IHasRegex)CurrOver).GetRegex();
+                        Global.Instance.Selected.Clear();
+                        Global.Instance.Selected.AddRange(Global.Instance.LitDict.Values.OfType<Lit>().Where(v => regex.IsMatch(v.Name)).Select(v => v.GlobalIndex));
+                    }
                 }
             }
         }
@@ -553,11 +564,16 @@ namespace ConsoleApplication1
                 hovertimer.Enabled = false;
                 //toolStripStatusLabel3.Text = "hover";
                 hoverMode = HoverMode.Active;
-                string msg = "<b>" + prvover.DebuggerDisplay + "</b><hr class='hr'/>this is a <span class='c1'>test</span> of the <b>tooltip</b> window.  <span class='b1'>THis is only a test.</span>";
+                string msg = "<b>" + htmlEncode(prvover.DebuggerDisplay) + "</b><hr class='hr'/>this is a <span class='c1'>test</span> of the <b>tooltip</b> window.  <span class='b1'>THis is only a test.</span>";
 
                 //toolTip1.ToolTipTitle = prvover.ToString();
                 toolTip1.Show(msg, this, this.PointToClient(Control.MousePosition + new SD.Size(0, 50)));
             }
+        }
+
+        private string htmlEncode(string text)
+        {
+            return text.Replace("<", "&lt;").Replace(">", "&gt;");
         }
 
         private void endhover()

@@ -34,7 +34,6 @@ namespace ConsoleApplication1
 
         private float bgnmTm;
         private float endmTm;
-        private float endtTm;
 
         private int musicBeginPx;
         private int musicEndPx;
@@ -704,7 +703,7 @@ namespace ConsoleApplication1
 
         public void ArrangeSteps()
         {
-            float[] stopTime = new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            float[] stopTime = new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             foreach (StepBase step in vizs.OfType<StepBase>())
             {
                 int row = 0;

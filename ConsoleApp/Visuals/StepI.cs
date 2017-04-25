@@ -12,7 +12,7 @@ namespace ConsoleApplication1
 {
     [Step("stepi")]
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class StepI : StepBase, IRunTime
+    public class StepI : StepBase, IRunTime, IHasRegex
     {
         #region Statics
         private static log4net.ILog logger = log4net.LogManager.GetLogger(nameof(StepI));
@@ -119,6 +119,8 @@ namespace ConsoleApplication1
             }
         }
         #endregion
+
+        public override VizFeatures Features => base.Features | VizFeatures.HasRegex;
 
 
         private int[,] bgnndx;
@@ -461,5 +463,10 @@ namespace ConsoleApplication1
                 context[bgnndx[row, col]] = before[row, col];
             }
         }
+
+        #region IHasRegex
+        public Regex GetRegex() => regex;
+        #endregion
+
     }
 }

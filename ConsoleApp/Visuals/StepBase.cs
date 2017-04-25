@@ -18,8 +18,8 @@ namespace ConsoleApplication1
             resources = new StepBaseRes();
         }
 
-        public override string DebuggerDisplay => $"StepBase: {base.DebuggerDisplay}";
-        public string DebuggerDisplayShort => $"{base.DebuggerDisplay}";
+        public override string DebuggerDisplay => $"StepBase: {xml} {base.DebuggerDisplay}";
+        public string DebuggerDisplayShort => $"{xml} {base.DebuggerDisplay}";
 
         public TimeMark startTimeMark;
         public TimeMark endTimeMark;

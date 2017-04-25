@@ -249,9 +249,8 @@ namespace ConsoleApplication1
                         colorTable = animate();
                     }
 
-                    foreach (var ndx in Global.Instance.Selected)
-                        colorTable[ndx] = (uint)(Clr)Colors.White;
-                    Vector4[] clrs = colorTable.Select(c => new Vector4(((c>>16) & 0xff) / 256.0f, ((c >> 8) & 0xff) / 256.0f, (c & 0xff) / 256.0f, 1.0f)).ToArray();
+                    Vector4[] clrs = colorTable.Select((c,n) => Global.Instance.Selected.Contains(n) ? (uint)(Clr)Colors.White : c)
+                        .Select(c => new Vector4(((c>>16) & 0xff) / 256.0f, ((c >> 8) & 0xff) / 256.0f, (c & 0xff) / 256.0f, 1.0f)).ToArray();
                     device.DeviceContext.UpdateSubresource<Vector4>(clrs, clrTbl);
                 }
 
