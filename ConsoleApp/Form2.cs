@@ -9,8 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SD = System.Drawing;
-using SWF = System.Windows.Forms;
 using SLD = System.Linq.Dynamic;
+using SWF = System.Windows.Forms;
 
 namespace ConsoleApplication1
 {
@@ -238,14 +238,19 @@ namespace ConsoleApplication1
             this.toolTip1 = new TheArtOfDev.HtmlRenderer.WinForms.HtmlToolTip();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.rc1 = new ConsoleApplication1.RC1();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.tspPlayer = new System.Windows.Forms.ToolStrip();
-            this.tsppPlay = new System.Windows.Forms.ToolStripButton();
-            this.tsppPause = new System.Windows.Forms.ToolStripButton();
-            this.tsppStop = new System.Windows.Forms.ToolStripButton();
-            this.tsppBackToStart = new System.Windows.Forms.ToolStripButton();
-            this.tsppReplay = new System.Windows.Forms.ToolStripButton();
-            this.tsppTime = new System.Windows.Forms.ToolStripLabel();
+            this.rc2 = new ConsoleApplication1.RC2();
+            this.tspSearch = new System.Windows.Forms.ToolStrip();
+            this.tspsLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.tspsRegex = new System.Windows.Forms.ToolStripTextBox();
+            this.tspsLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.tspsSelector = new System.Windows.Forms.ToolStripTextBox();
+            this.tspsSearch = new System.Windows.Forms.ToolStripButton();
+            this.tspFile = new System.Windows.Forms.ToolStrip();
+            this.tspfNew = new System.Windows.Forms.ToolStripButton();
+            this.tspfOpen = new System.Windows.Forms.ToolStripButton();
+            this.tspFSave = new System.Windows.Forms.ToolStripButton();
             this.tspMenu = new System.Windows.Forms.MenuStrip();
             this.tsmiFile = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiNew = new System.Windows.Forms.ToolStripMenuItem();
@@ -258,18 +263,13 @@ namespace ConsoleApplication1
             this.tsmiExit = new System.Windows.Forms.ToolStripMenuItem();
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiGenerate = new System.Windows.Forms.ToolStripMenuItem();
-            this.tspFile = new System.Windows.Forms.ToolStrip();
-            this.tspfNew = new System.Windows.Forms.ToolStripButton();
-            this.tspfOpen = new System.Windows.Forms.ToolStripButton();
-            this.tspFSave = new System.Windows.Forms.ToolStripButton();
-            this.tspSearch = new System.Windows.Forms.ToolStrip();
-            this.tspsLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.tspsRegex = new System.Windows.Forms.ToolStripTextBox();
-            this.tspsSearch = new System.Windows.Forms.ToolStripButton();
-            this.tspsSelector = new System.Windows.Forms.ToolStripTextBox();
-            this.tspsLabel2 = new System.Windows.Forms.ToolStripLabel();
-            this.rc1 = new ConsoleApplication1.RC1();
-            this.rc2 = new ConsoleApplication1.RC2();
+            this.tspPlayer = new System.Windows.Forms.ToolStrip();
+            this.tsppPlay = new System.Windows.Forms.ToolStripButton();
+            this.tsppPause = new System.Windows.Forms.ToolStripButton();
+            this.tsppStop = new System.Windows.Forms.ToolStripButton();
+            this.tsppBackToStart = new System.Windows.Forms.ToolStripButton();
+            this.tsppReplay = new System.Windows.Forms.ToolStripButton();
+            this.tsppTime = new System.Windows.Forms.ToolStripLabel();
             this.statusStrip1.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -281,10 +281,10 @@ namespace ConsoleApplication1
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.tspPlayer.SuspendLayout();
-            this.tspMenu.SuspendLayout();
-            this.tspFile.SuspendLayout();
             this.tspSearch.SuspendLayout();
+            this.tspFile.SuspendLayout();
+            this.tspMenu.SuspendLayout();
+            this.tspPlayer.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -417,7 +417,7 @@ namespace ConsoleApplication1
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer1);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1087, 663);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(1087, 613);
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
             this.toolStripContainer1.Size = new System.Drawing.Size(1087, 688);
@@ -427,10 +427,10 @@ namespace ConsoleApplication1
             // toolStripContainer1.TopToolStripPanel
             // 
             this.toolStripContainer1.TopToolStripPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
+            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.tspSearch);
+            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.tspFile);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.tspMenu);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.tspPlayer);
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.tspFile);
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.tspSearch);
             this.toolStripContainer1.TopToolStripPanel.ForeColor = System.Drawing.Color.White;
             // 
             // splitContainer1
@@ -455,11 +455,23 @@ namespace ConsoleApplication1
             // 
             this.splitContainer1.Panel2.BackColor = System.Drawing.Color.Black;
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1087, 661);
-            this.splitContainer1.SplitterDistance = 536;
+            this.splitContainer1.Size = new System.Drawing.Size(1087, 611);
+            this.splitContainer1.SplitterDistance = 490;
             this.splitContainer1.SplitterWidth = 2;
             this.splitContainer1.TabIndex = 7;
             this.splitContainer1.SizeChanged += new System.EventHandler(this.splitContainer1_SizeChanged);
+            // 
+            // rc1
+            // 
+            this.rc1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rc1.BackColor = System.Drawing.Color.Black;
+            this.rc1.Location = new System.Drawing.Point(0, 0);
+            this.rc1.Name = "rc1";
+            this.rc1.Size = new System.Drawing.Size(1087, 495);
+            this.rc1.TabIndex = 4;
+            this.rc1.TabStop = false;
             // 
             // splitContainer2
             // 
@@ -478,84 +490,121 @@ namespace ConsoleApplication1
             // 
             this.splitContainer2.Panel2.BackColor = System.Drawing.Color.Black;
             this.splitContainer2.Panel2.Controls.Add(this.rc2);
-            this.splitContainer2.Size = new System.Drawing.Size(1087, 123);
+            this.splitContainer2.Size = new System.Drawing.Size(1087, 119);
             this.splitContainer2.SplitterDistance = 100;
             this.splitContainer2.SplitterWidth = 2;
             this.splitContainer2.TabIndex = 0;
             // 
-            // tspPlayer
+            // rc2
             // 
-            this.tspPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
-            this.tspPlayer.Dock = System.Windows.Forms.DockStyle.None;
-            this.tspPlayer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsppPlay,
-            this.tsppPause,
-            this.tsppStop,
-            this.tsppBackToStart,
-            this.tsppReplay,
-            this.tsppTime});
-            this.tspPlayer.Location = new System.Drawing.Point(142, 0);
-            this.tspPlayer.Name = "tspPlayer";
-            this.tspPlayer.Size = new System.Drawing.Size(205, 25);
-            this.tspPlayer.TabIndex = 0;
+            this.rc2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.rc2.BackColor = System.Drawing.Color.Black;
+            this.rc2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rc2.Location = new System.Drawing.Point(0, 0);
+            this.rc2.Name = "rc2";
+            this.rc2.Size = new System.Drawing.Size(985, 119);
+            this.rc2.TabIndex = 5;
+            this.rc2.TabStop = false;
             // 
-            // tsppPlay
+            // tspSearch
             // 
-            this.tsppPlay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
-            this.tsppPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsppPlay.ForeColor = System.Drawing.Color.White;
-            this.tsppPlay.Image = global::ConsoleApplication1.Properties.Resources.Play;
-            this.tsppPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsppPlay.Name = "tsppPlay";
-            this.tsppPlay.Size = new System.Drawing.Size(23, 22);
-            this.tsppPlay.Click += new System.EventHandler(this.tsppPlay_Click);
+            this.tspSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
+            this.tspSearch.Dock = System.Windows.Forms.DockStyle.None;
+            this.tspSearch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tspsLabel1,
+            this.tspsRegex,
+            this.tspsLabel2,
+            this.tspsSelector,
+            this.tspsSearch});
+            this.tspSearch.Location = new System.Drawing.Point(3, 0);
+            this.tspSearch.Name = "tspSearch";
+            this.tspSearch.Size = new System.Drawing.Size(363, 25);
+            this.tspSearch.TabIndex = 4;
             // 
-            // tsppPause
+            // tspsLabel1
             // 
-            this.tsppPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsppPause.Image = global::ConsoleApplication1.Properties.Resources.Pause;
-            this.tsppPause.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsppPause.Name = "tsppPause";
-            this.tsppPause.Size = new System.Drawing.Size(23, 22);
-            this.tsppPause.Click += new System.EventHandler(this.tsppPause_Click);
+            this.tspsLabel1.ActiveLinkColor = System.Drawing.Color.White;
+            this.tspsLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tspsLabel1.ForeColor = System.Drawing.Color.White;
+            this.tspsLabel1.Name = "tspsLabel1";
+            this.tspsLabel1.Size = new System.Drawing.Size(41, 22);
+            this.tspsLabel1.Text = "Regex:";
             // 
-            // tsppStop
+            // tspsRegex
             // 
-            this.tsppStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsppStop.ForeColor = System.Drawing.Color.White;
-            this.tsppStop.Image = global::ConsoleApplication1.Properties.Resources.Stop;
-            this.tsppStop.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsppStop.Name = "tsppStop";
-            this.tsppStop.Size = new System.Drawing.Size(23, 22);
-            this.tsppStop.Click += new System.EventHandler(this.tsppStop_Click);
+            this.tspsRegex.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.tspsRegex.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.tspsRegex.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
+            this.tspsRegex.ForeColor = System.Drawing.Color.White;
+            this.tspsRegex.Name = "tspsRegex";
+            this.tspsRegex.Size = new System.Drawing.Size(100, 25);
+            this.tspsRegex.Leave += new System.EventHandler(this.tspsRegex_Leave);
+            this.tspsRegex.TextChanged += new System.EventHandler(this.tspsRegex_TextChanged);
             // 
-            // tsppBackToStart
+            // tspsLabel2
             // 
-            this.tsppBackToStart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsppBackToStart.Image = global::ConsoleApplication1.Properties.Resources.GotoFirstRow_287_32;
-            this.tsppBackToStart.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsppBackToStart.Name = "tsppBackToStart";
-            this.tsppBackToStart.Size = new System.Drawing.Size(23, 22);
-            this.tsppBackToStart.Click += new System.EventHandler(this.tsppBackToStart_Click);
+            this.tspsLabel2.Name = "tspsLabel2";
+            this.tspsLabel2.Size = new System.Drawing.Size(52, 22);
+            this.tspsLabel2.Text = "Selector:";
             // 
-            // tsppReplay
+            // tspsSelector
             // 
-            this.tsppReplay.Checked = true;
-            this.tsppReplay.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.tsppReplay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsppReplay.Image = global::ConsoleApplication1.Properties.Resources.Repeat;
-            this.tsppReplay.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsppReplay.Name = "tsppReplay";
-            this.tsppReplay.Size = new System.Drawing.Size(23, 22);
-            this.tsppReplay.Click += new System.EventHandler(this.tsppReplay_Click);
+            this.tspsSelector.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
+            this.tspsSelector.ForeColor = System.Drawing.Color.White;
+            this.tspsSelector.Name = "tspsSelector";
+            this.tspsSelector.Size = new System.Drawing.Size(100, 25);
+            this.tspsSelector.Leave += new System.EventHandler(this.tspsSelector_Leave);
+            this.tspsSelector.TextChanged += new System.EventHandler(this.tspsSelector_TextChanged);
             // 
-            // tsppTime
+            // tspsSearch
             // 
-            this.tsppTime.Font = new System.Drawing.Font("OCR A Extended", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tsppTime.ForeColor = System.Drawing.Color.Red;
-            this.tsppTime.Name = "tsppTime";
-            this.tsppTime.Size = new System.Drawing.Size(78, 22);
-            this.tsppTime.Text = "00:00.0";
+            this.tspsSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tspsSearch.Image = ((System.Drawing.Image)(resources.GetObject("tspsSearch.Image")));
+            this.tspsSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tspsSearch.Name = "tspsSearch";
+            this.tspsSearch.Size = new System.Drawing.Size(23, 22);
+            this.tspsSearch.Text = "toolStripButton1";
+            this.tspsSearch.Click += new System.EventHandler(this.tspfNew_Click);
+            // 
+            // tspFile
+            // 
+            this.tspFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
+            this.tspFile.Dock = System.Windows.Forms.DockStyle.None;
+            this.tspFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tspfNew,
+            this.tspfOpen,
+            this.tspFSave});
+            this.tspFile.Location = new System.Drawing.Point(69, 25);
+            this.tspFile.Name = "tspFile";
+            this.tspFile.Size = new System.Drawing.Size(81, 25);
+            this.tspFile.TabIndex = 1;
+            // 
+            // tspfNew
+            // 
+            this.tspfNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tspfNew.Image = global::ConsoleApplication1.Properties.Resources.NewDocument;
+            this.tspfNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tspfNew.Name = "tspfNew";
+            this.tspfNew.Size = new System.Drawing.Size(23, 22);
+            this.tspfNew.Click += new System.EventHandler(this.tspfNew_Click);
+            // 
+            // tspfOpen
+            // 
+            this.tspfOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tspfOpen.Image = global::ConsoleApplication1.Properties.Resources.OpenFile;
+            this.tspfOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tspfOpen.Name = "tspfOpen";
+            this.tspfOpen.Size = new System.Drawing.Size(23, 22);
+            this.tspfOpen.Click += new System.EventHandler(this.tspfOpen_Click);
+            // 
+            // tspFSave
+            // 
+            this.tspFSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tspFSave.Image = global::ConsoleApplication1.Properties.Resources.Save;
+            this.tspFSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tspFSave.Name = "tspFSave";
+            this.tspFSave.Size = new System.Drawing.Size(23, 22);
+            this.tspFSave.Click += new System.EventHandler(this.tspFSave_Click);
             // 
             // tspMenu
             // 
@@ -564,7 +613,7 @@ namespace ConsoleApplication1
             this.tspMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiFile,
             this.tsmiGenerate});
-            this.tspMenu.Location = new System.Drawing.Point(3, 0);
+            this.tspMenu.Location = new System.Drawing.Point(3, 50);
             this.tspMenu.Name = "tspMenu";
             this.tspMenu.Size = new System.Drawing.Size(139, 24);
             this.tspMenu.Stretch = false;
@@ -657,128 +706,79 @@ namespace ConsoleApplication1
             this.tsmiGenerate.Text = "Generate";
             this.tsmiGenerate.Click += new System.EventHandler(this.tsmiGenerate_Click);
             // 
-            // tspFile
+            // tspPlayer
             // 
-            this.tspFile.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
-            this.tspFile.Dock = System.Windows.Forms.DockStyle.None;
-            this.tspFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tspfNew,
-            this.tspfOpen,
-            this.tspFSave});
-            this.tspFile.Location = new System.Drawing.Point(347, 0);
-            this.tspFile.Name = "tspFile";
-            this.tspFile.Size = new System.Drawing.Size(81, 25);
-            this.tspFile.TabIndex = 1;
+            this.tspPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
+            this.tspPlayer.Dock = System.Windows.Forms.DockStyle.None;
+            this.tspPlayer.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsppPlay,
+            this.tsppPause,
+            this.tsppStop,
+            this.tsppBackToStart,
+            this.tsppReplay,
+            this.tsppTime});
+            this.tspPlayer.Location = new System.Drawing.Point(142, 50);
+            this.tspPlayer.Name = "tspPlayer";
+            this.tspPlayer.Size = new System.Drawing.Size(205, 25);
+            this.tspPlayer.TabIndex = 0;
             // 
-            // tspfNew
+            // tsppPlay
             // 
-            this.tspfNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tspfNew.Image = global::ConsoleApplication1.Properties.Resources.NewDocument;
-            this.tspfNew.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tspfNew.Name = "tspfNew";
-            this.tspfNew.Size = new System.Drawing.Size(23, 22);
-            this.tspfNew.Click += new System.EventHandler(this.tspfNew_Click);
+            this.tsppPlay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
+            this.tsppPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsppPlay.ForeColor = System.Drawing.Color.White;
+            this.tsppPlay.Image = global::ConsoleApplication1.Properties.Resources.Play;
+            this.tsppPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsppPlay.Name = "tsppPlay";
+            this.tsppPlay.Size = new System.Drawing.Size(23, 22);
+            this.tsppPlay.Click += new System.EventHandler(this.tsppPlay_Click);
             // 
-            // tspfOpen
+            // tsppPause
             // 
-            this.tspfOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tspfOpen.Image = global::ConsoleApplication1.Properties.Resources.OpenFile;
-            this.tspfOpen.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tspfOpen.Name = "tspfOpen";
-            this.tspfOpen.Size = new System.Drawing.Size(23, 22);
-            this.tspfOpen.Click += new System.EventHandler(this.tspfOpen_Click);
+            this.tsppPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsppPause.Image = global::ConsoleApplication1.Properties.Resources.Pause;
+            this.tsppPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsppPause.Name = "tsppPause";
+            this.tsppPause.Size = new System.Drawing.Size(23, 22);
+            this.tsppPause.Click += new System.EventHandler(this.tsppPause_Click);
             // 
-            // tspFSave
+            // tsppStop
             // 
-            this.tspFSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tspFSave.Image = global::ConsoleApplication1.Properties.Resources.Save;
-            this.tspFSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tspFSave.Name = "tspFSave";
-            this.tspFSave.Size = new System.Drawing.Size(23, 22);
-            this.tspFSave.Click += new System.EventHandler(this.tspFSave_Click);
+            this.tsppStop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsppStop.ForeColor = System.Drawing.Color.White;
+            this.tsppStop.Image = global::ConsoleApplication1.Properties.Resources.Stop;
+            this.tsppStop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsppStop.Name = "tsppStop";
+            this.tsppStop.Size = new System.Drawing.Size(23, 22);
+            this.tsppStop.Click += new System.EventHandler(this.tsppStop_Click);
             // 
-            // tspSearch
+            // tsppBackToStart
             // 
-            this.tspSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
-            this.tspSearch.Dock = System.Windows.Forms.DockStyle.None;
-            this.tspSearch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tspsLabel1,
-            this.tspsRegex,
-            this.tspsLabel2,
-            this.tspsSelector,
-            this.tspsSearch});
-            this.tspSearch.Location = new System.Drawing.Point(442, 0);
-            this.tspSearch.Name = "tspSearch";
-            this.tspSearch.Size = new System.Drawing.Size(363, 25);
-            this.tspSearch.TabIndex = 4;
+            this.tsppBackToStart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsppBackToStart.Image = global::ConsoleApplication1.Properties.Resources.GotoFirstRow_287_32;
+            this.tsppBackToStart.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsppBackToStart.Name = "tsppBackToStart";
+            this.tsppBackToStart.Size = new System.Drawing.Size(23, 22);
+            this.tsppBackToStart.Click += new System.EventHandler(this.tsppBackToStart_Click);
             // 
-            // tspsLabel1
+            // tsppReplay
             // 
-            this.tspsLabel1.ActiveLinkColor = System.Drawing.Color.White;
-            this.tspsLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tspsLabel1.ForeColor = System.Drawing.Color.White;
-            this.tspsLabel1.Name = "tspsLabel1";
-            this.tspsLabel1.Size = new System.Drawing.Size(41, 22);
-            this.tspsLabel1.Text = "Regex:";
+            this.tsppReplay.Checked = true;
+            this.tsppReplay.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.tsppReplay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsppReplay.Image = global::ConsoleApplication1.Properties.Resources.Repeat;
+            this.tsppReplay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsppReplay.Name = "tsppReplay";
+            this.tsppReplay.Size = new System.Drawing.Size(23, 22);
+            this.tsppReplay.Click += new System.EventHandler(this.tsppReplay_Click);
             // 
-            // tspsRegex
+            // tsppTime
             // 
-            this.tspsRegex.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
-            this.tspsRegex.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tspsRegex.ForeColor = System.Drawing.Color.White;
-            this.tspsRegex.Name = "tspsRegex";
-            this.tspsRegex.Size = new System.Drawing.Size(100, 25);
-            this.tspsRegex.Text = "hello";
-            this.tspsRegex.Leave += new System.EventHandler(this.tspsRegex_Leave);
-            this.tspsRegex.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tspsRegex_KeyPress);
-            // 
-            // tspsSearch
-            // 
-            this.tspsSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tspsSearch.Image = ((System.Drawing.Image)(resources.GetObject("tspsSearch.Image")));
-            this.tspsSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tspsSearch.Name = "tspsSearch";
-            this.tspsSearch.Size = new System.Drawing.Size(23, 22);
-            this.tspsSearch.Text = "toolStripButton1";
-            this.tspsSearch.Click += new System.EventHandler(this.tspfNew_Click);
-            // 
-            // tspsSelector
-            // 
-            this.tspsSelector.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
-            this.tspsSelector.ForeColor = System.Drawing.Color.White;
-            this.tspsSelector.Name = "tspsSelector";
-            this.tspsSelector.Size = new System.Drawing.Size(100, 25);
-            this.tspsSelector.Leave += new System.EventHandler(this.tspsSelector_Leave);
-            this.tspsSelector.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tspsSelector_KeyPress);
-            // 
-            // tspsLabel2
-            // 
-            this.tspsLabel2.Name = "tspsLabel2";
-            this.tspsLabel2.Size = new System.Drawing.Size(52, 22);
-            this.tspsLabel2.Text = "Selector:";
-            // 
-            // rc1
-            // 
-            this.rc1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rc1.BackColor = System.Drawing.Color.Black;
-            this.rc1.Location = new System.Drawing.Point(0, 0);
-            this.rc1.Name = "rc1";
-            this.rc1.Size = new System.Drawing.Size(1087, 541);
-            this.rc1.TabIndex = 4;
-            this.rc1.TabStop = false;
-            // 
-            // rc2
-            // 
-            this.rc2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.rc2.BackColor = System.Drawing.Color.Black;
-            this.rc2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rc2.Location = new System.Drawing.Point(0, 0);
-            this.rc2.Name = "rc2";
-            this.rc2.Size = new System.Drawing.Size(985, 123);
-            this.rc2.TabIndex = 5;
-            this.rc2.TabStop = false;
+            this.tsppTime.Font = new System.Drawing.Font("OCR A Extended", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tsppTime.ForeColor = System.Drawing.Color.Red;
+            this.tsppTime.Name = "tsppTime";
+            this.tsppTime.Size = new System.Drawing.Size(78, 22);
+            this.tsppTime.Text = "00:00.0";
             // 
             // Form2
             // 
@@ -805,14 +805,14 @@ namespace ConsoleApplication1
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.tspPlayer.ResumeLayout(false);
-            this.tspPlayer.PerformLayout();
-            this.tspMenu.ResumeLayout(false);
-            this.tspMenu.PerformLayout();
-            this.tspFile.ResumeLayout(false);
-            this.tspFile.PerformLayout();
             this.tspSearch.ResumeLayout(false);
             this.tspSearch.PerformLayout();
+            this.tspFile.ResumeLayout(false);
+            this.tspFile.PerformLayout();
+            this.tspMenu.ResumeLayout(false);
+            this.tspMenu.PerformLayout();
+            this.tspPlayer.ResumeLayout(false);
+            this.tspPlayer.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1194,48 +1194,31 @@ namespace ConsoleApplication1
             RunTime.RunNow(Global.Instance.Song);
         }
 
-        private void tspsRegex_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            //Console.WriteLine("keypress:" + e.KeyChar.ToString());
-            if (e.KeyChar == '\r')
-            {
-                trySelect();
-            }
-            else
-            {
-                tspsRegex.ForeColor = SD.Color.White;
-                tspsSelector.ForeColor = SD.Color.White;
-            }
-        }
-
-        private void tspsSelector_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == '\r')
-            {
-                trySelect();
-            }
-            else
-            {
-                tspsRegex.ForeColor = SD.Color.White;
-                tspsSelector.ForeColor = SD.Color.White;
-            }
-
-        }
-
-        private void tspsSelector_Leave(object sender, EventArgs e)
+        private void tspsRegex_TextChanged(object sender, EventArgs e)
         {
             trySelect();
         }
 
         private void tspsRegex_Leave(object sender, EventArgs e)
         {
+            trySelect(true);
+        }
+ 
+        private void tspsSelector_TextChanged(object sender, EventArgs e)
+        {
             trySelect();
         }
 
-        private void trySelect()
+        private void tspsSelector_Leave(object sender, EventArgs e)
+        {
+            trySelect(true);
+        }
+
+        private void trySelect(bool save = false)
         {
             if (!String.IsNullOrEmpty(tspsRegex.Text))
             {
+                bool iserr = false;
                 try
                 {
                     var regex = new Regex(tspsRegex.Text, RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -1250,12 +1233,33 @@ namespace ConsoleApplication1
                     }
 
                     Global.Instance.Selected = litx.Select(lit => lit.GlobalIndex).ToList();
+                    iserr = Global.Instance.Selected.Count == 0;
                 }
                 catch (Exception)
+                {
+                    iserr = true;
+                }
+
+                if (iserr)
                 {
                     tspsRegex.ForeColor = SD.Color.Red;
                     tspsSelector.ForeColor = SD.Color.Red;
                     return;
+                }
+
+                if (save)
+                {
+                    tspsRegex.AutoCompleteCustomSource.Remove(tspsRegex.Text);
+                    if (tspsRegex.AutoCompleteCustomSource.Count > 5)
+                        tspsRegex.AutoCompleteCustomSource.RemoveAt(5);
+                    tspsRegex.AutoCompleteCustomSource.Insert(0, tspsRegex.Text);
+                    if (!String.IsNullOrEmpty(tspsSelector.Text))
+                    {
+                        tspsSelector.AutoCompleteCustomSource.Remove(tspsSelector.Text);
+                        if (tspsSelector.AutoCompleteCustomSource.Count > 5)
+                            tspsSelector.AutoCompleteCustomSource.RemoveAt(5);
+                        tspsSelector.AutoCompleteCustomSource.Insert(0, tspsSelector.Text);
+                    }
                 }
             }
             tspsRegex.ForeColor = SD.Color.White;

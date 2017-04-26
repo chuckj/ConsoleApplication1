@@ -105,7 +105,7 @@ namespace ConsoleApplication1
             if (!string.IsNullOrEmpty((string)attrb))
                 nuzexp = SLD.DynamicExpression.CompileLambda<Lit, float>((string)attrb, vu);
 
-            bldView(root, vu, strndnu, 0, 0, nuoffset, nuxexp, nuyexp, nuzexp, null, nm, view);
+            bldView(root, vu, strndnu, 0, 0, nuoffset, nuxexp, nuyexp, nuzexp, null, null, null, nm, view);
 
             view.InitDone();
             return view;
@@ -113,7 +113,9 @@ namespace ConsoleApplication1
 
 
         private static void bldView(XElement root, XElement vu, List<GECEStrand> strndlst, int rowoff, int coloff, Point3D offset, 
-            Func<Lit, float> xexp, Func<Lit, float> yexp, Func<Lit, float> zexp, Func<Lit, int> cirexp, string nm, View view)
+            Func<Lit, float> xexp, Func<Lit, float> yexp, Func<Lit, float> zexp, 
+            Func<Lit, int> cirexp, Func<Lit, float> radexp, Func<Lit, float> theexp, 
+            string nm, View view)
         {
             int blb = 0;
             int rgbt = 0;
@@ -171,6 +173,12 @@ namespace ConsoleApplication1
                             attrb = vunu.Attribute("cirexp") ?? lit.Attribute("cirexp");
                             if (!string.IsNullOrEmpty((string)attrb))
                                 cirexp = SLD.DynamicExpression.CompileLambda<Lit, int>((string)attrb, lit);
+                            attrb = vunu.Attribute("radexp") ?? lit.Attribute("radexp");
+                            if (!string.IsNullOrEmpty((string)attrb))
+                                radexp = SLD.DynamicExpression.CompileLambda<Lit, float>((string)attrb, lit);
+                            attrb = vunu.Attribute("theexp") ?? lit.Attribute("theexp");
+                            if (!string.IsNullOrEmpty((string)attrb))
+                                theexp = SLD.DynamicExpression.CompileLambda<Lit, float>((string)attrb, lit);
 
                             List<GECEStrand> strndnu = strndlst;
                             if (lit.Attribute("strand") != null)
@@ -186,7 +194,7 @@ namespace ConsoleApplication1
                                 }
                             }
 
-                            bldView(root, vunu, strndnu, nurowoff, nucoloff, nuoffset, nuxexp, nuyexp, nuzexp, cirexp, nunm, view);
+                            bldView(root, vunu, strndnu, nurowoff, nucoloff, nuoffset, nuxexp, nuyexp, nuzexp, cirexp, radexp, theexp, nunm, view);
 
                         }
                         break;
@@ -266,7 +274,7 @@ namespace ConsoleApplication1
                                 Global.Instance.FeatureLitDict.TryGetValue("CandleStick", out flit);
                                 cndlndxz = flit.GlobalIndex;
                                 Global.Instance.FeatureLitDict.TryGetValue("CandleShade", out flit);
-                                cndlndxz |= flit.GlobalIndex >> 16;
+                                cndlndxz |= flit.GlobalIndex << 16;
                             }
                             do
                             {
@@ -291,9 +299,11 @@ namespace ConsoleApplication1
                                 rgb.Pt = point + offset + repoffset;
 
                                 if (cirexp != null)
-                                {
                                     rgb.Circle = cirexp(rgb);
-                                }
+                                if (radexp != null)
+                                    rgb.Radius = radexp(rgb);
+                                if (theexp != null)
+                                    rgb.Theta = theexp(rgb);
 
                                 rgb.Row += rowoff;
                                 rgb.Column += coloff;

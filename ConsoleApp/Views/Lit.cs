@@ -24,6 +24,8 @@ namespace ConsoleApplication1
         public int Row { get; set; }
         public int Column { get; set; }
         public Point3D Pt { get; set; }
+        public float Radius { get; set; }
+        public float Theta { get; set; }
         public int Circle { get; set; }
         public Point Loc { get; set; }
         public int Index { get { return index; } set { index = value; setIndex(value); } }

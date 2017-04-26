@@ -4,7 +4,7 @@
     <Feature nm="Hidden" color="#202020"/>
     <Feature nm="Tree" color="DarkRed"/>
     <Feature nm="CandleStick" color="#505050"/>
-    <Feature nm="CandleShade" color="#101010"/>
+    <Feature nm="CandleShade" color="#181818"/>
     <Feature nm="Manger" color="#202020" />
   </Features>
   <Controllers>
@@ -525,7 +525,9 @@
       <rgb row="6" col="69" repeat="12" colinc="-1" pt="485,58,-2" ptoffset="-8,0,0" class="railing"/>
     </View>
 
-    <View nm="win" cirexp="Convert.ToInt32(Math.Sqrt((row-4)*(row-4) + (column-5)*(column-5)))" >
+    <View nm="win" cirexp="Convert.ToInt32(Math.Sqrt((row-4)*(row-4) + (column-5)*(column-5)))" 
+          radexp="Convert.ToSingle(Math.Sqrt((row-4)*(row-4) + (column-5)*(column-5)))"
+          theexp="Convert.ToSingle(((column==5) ? 90 : (180 / Math.Pi * Math.Atan((row-4)/Convert.ToSingle(column-5)))) + ((column &lt; 5) ? 180 : 0))">
       <rgb strandndx="0" row="0" col="10" repeat="9" rowinc="1"  pt="80,0,0" ptoffset="0,8,0" class="window"/>
       <rgb strandndx="0" row="8" col="9"  repeat="9" rowinc="-1" pt="72,64,0" ptoffset="0,-8,0" class="window"/>
       <rgb strandndx="0" row="0" col="8"  repeat="9" rowinc="1"  pt="64,0,0" ptoffset="0,8,0" class="window"/>
