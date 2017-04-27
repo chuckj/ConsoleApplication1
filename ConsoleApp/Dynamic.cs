@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading;
+using ConsoleApplication1;
 
 namespace System.Linq.Dynamic
 {
@@ -538,7 +539,8 @@ namespace System.Linq.Dynamic
             typeof(TimeSpan),
             typeof(Guid),
             typeof(Math),
-            typeof(Convert)
+            typeof(Convert),
+            typeof(MathEx)
         };
 
         static readonly Expression trueLiteral = Expression.Constant(true);

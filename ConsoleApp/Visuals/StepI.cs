@@ -355,10 +355,25 @@ namespace ConsoleApplication1
                     var fade = linear.Fade;
                     var backward = (mode & 1) > 0;
                     var climb = (mode & 2) > 0;
+                    var rotate = (mode & 4) > 0;
 
                     int ndx = 0;
                     int indx = 0;
-                    if (!climb)
+                    if (rotate)
+                    {
+                        do
+                        {
+                            for (ndx = 0; ndx < lits.Count(); ndx++)
+                            {
+                                foreach (var indy in lits[backward ? lits.Count() - 1 - ndx : ndx])
+                                    context[indy] = this.palet[ndx + indx];
+                            }
+                            indx += (backward) ? lits.Length - 1 : 1;
+
+                            yield return context.CurTime + 4 * 4;
+                        } while (context.CurTime < endTime);
+                    }
+                    else if (!climb)
                     {
                         do
                         {

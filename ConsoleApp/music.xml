@@ -159,6 +159,16 @@
     <stepi begin="3m1" end="4m4" color="white,red,white,green" text="" regex=":w3:" mode="2" transition="crawl" orderby="circle" groupby="circle"/>
     <stepi begin="3m1" end="4m4" color="white,red,white,green" text="" regex=":w4:" mode="3" transition="crawl" orderby="circle" groupby="circle"/>
 
+    <stepi begin="5m1" end="8m1" color="white,red,white,green" text="" regex=":w1:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(Theta/45))" groupby="Convert.ToInt32(Math.Floor(Theta/45))"/>
+    <stepi begin="5m2" end="8m2" color="white,red,white,green" text="" regex=":w2:" mode="5" transition="unrotate" orderby="Convert.ToInt32(Math.Floor(Theta/45))" groupby="Convert.ToInt32(Math.Floor(Theta/45))"/>
+    <stepi begin="5m3" end="8m3" color="white,red,white,green" text="" regex=":w3:" mode="5" transition="unrotate" orderby="Convert.ToInt32(Math.Floor(Theta/45))" groupby="Convert.ToInt32(Math.Floor(Theta/45))"/>
+    <stepi begin="5m4" end="8m4" color="white,red,white,green" text="" regex=":w4:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(Theta/45))" groupby="Convert.ToInt32(Math.Floor(Theta/45))"/>
+
+    <stepi begin="9m1" end="12m1" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w1:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(Theta/30))" groupby="Convert.ToInt32(Math.Floor(Theta/30))"/>
+    <stepi begin="9m2" end="12m2" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w2:" mode="5" transition="unrotate" orderby="Convert.ToInt32(Math.Floor(Theta/30))" groupby="Convert.ToInt32(Math.Floor(Theta/30))"/>
+    <stepi begin="9m3" end="12m3" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w3:" mode="5" transition="unrotate" orderby="Convert.ToInt32(Math.Floor(Theta/30))" groupby="Convert.ToInt32(Math.Floor(Theta/30))"/>
+    <stepi begin="9m4" end="12m4" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w4:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(Theta/30))" groupby="Convert.ToInt32(Math.Floor(Theta/30))"/>
+
     <!--<stepi begin="1m1+4/4" end="2m1" color="white" text="" regex=":ar1:" mode="0" transition="crawl"/>-->
     <stepi begin="1m2" end="1m3" color="white" text="" regex=":ar2:" mode="0" transition="crawl"/>
     <stepi begin="1m3" end="1m4" color="green" text="" regex=":ar1:" mode="0" transition="crawl"/>

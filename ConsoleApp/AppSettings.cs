@@ -20,6 +20,7 @@ namespace ConsoleApplication1
         private Point _tspSearch;
         private int _splitterDistance;
         private ST.Timer timer;
+        private static bool ignoreChanges = false;
 
         public int WindowTop { get; set; }
         public int WindowLeft { get; set; }
@@ -119,7 +120,8 @@ namespace ConsoleApplication1
 
         void Changed()
         {
-            timer.Change(2000, ST.Timeout.Infinite);
+            if (!ignoreChanges)
+                timer.Change(2000, ST.Timeout.Infinite);
         }
 
         void SaveSettings(object sender)
@@ -162,6 +164,7 @@ namespace ConsoleApplication1
                 // If the config file exists, open it.
                 if (fi.Exists)
                 {
+                    ignoreChanges = true;
                     using (var myFileStream = fi.OpenRead())
                     {
                         // Create a new instance of the ApplicationSettings by
@@ -171,6 +174,7 @@ namespace ConsoleApplication1
                         // Assign the property values to this instance of the ApplicationSettings class.
                         myFileStream.Close();
                     }
+                    ignoreChanges = false;
                 }
             }
             catch (Exception)
@@ -182,6 +186,8 @@ namespace ConsoleApplication1
 
         public void SaveAppSettings()
         {
+            timer.Change(ST.Timeout.Infinite, ST.Timeout.Infinite);
+
             if (true) //changed)
             {
                 try

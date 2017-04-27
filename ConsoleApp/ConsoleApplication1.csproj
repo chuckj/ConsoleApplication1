@@ -136,6 +136,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="IHasRegex.cs" />
     <Compile Include="IPixelSource.cs" />
+    <Compile Include="MathEx.cs" />
     <Compile Include="PixelBMP.cs" />
     <Compile Include="PixelList.cs" />
     <Compile Include="PixSrc\IPixSrc.cs" />

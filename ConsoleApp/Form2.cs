@@ -456,7 +456,7 @@ namespace ConsoleApplication1
             this.splitContainer1.Panel2.BackColor = System.Drawing.Color.Black;
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(1087, 611);
-            this.splitContainer1.SplitterDistance = 490;
+            this.splitContainer1.SplitterDistance = 492;
             this.splitContainer1.SplitterWidth = 2;
             this.splitContainer1.TabIndex = 7;
             this.splitContainer1.SizeChanged += new System.EventHandler(this.splitContainer1_SizeChanged);
@@ -469,7 +469,7 @@ namespace ConsoleApplication1
             this.rc1.BackColor = System.Drawing.Color.Black;
             this.rc1.Location = new System.Drawing.Point(0, 0);
             this.rc1.Name = "rc1";
-            this.rc1.Size = new System.Drawing.Size(1087, 495);
+            this.rc1.Size = new System.Drawing.Size(1087, 497);
             this.rc1.TabIndex = 4;
             this.rc1.TabStop = false;
             // 
@@ -490,7 +490,7 @@ namespace ConsoleApplication1
             // 
             this.splitContainer2.Panel2.BackColor = System.Drawing.Color.Black;
             this.splitContainer2.Panel2.Controls.Add(this.rc2);
-            this.splitContainer2.Size = new System.Drawing.Size(1087, 119);
+            this.splitContainer2.Size = new System.Drawing.Size(1087, 117);
             this.splitContainer2.SplitterDistance = 100;
             this.splitContainer2.SplitterWidth = 2;
             this.splitContainer2.TabIndex = 0;
@@ -502,7 +502,7 @@ namespace ConsoleApplication1
             this.rc2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rc2.Location = new System.Drawing.Point(0, 0);
             this.rc2.Name = "rc2";
-            this.rc2.Size = new System.Drawing.Size(985, 119);
+            this.rc2.Size = new System.Drawing.Size(985, 117);
             this.rc2.TabIndex = 5;
             this.rc2.TabStop = false;
             // 
@@ -518,7 +518,7 @@ namespace ConsoleApplication1
             this.tspsSearch});
             this.tspSearch.Location = new System.Drawing.Point(3, 0);
             this.tspSearch.Name = "tspSearch";
-            this.tspSearch.Size = new System.Drawing.Size(363, 25);
+            this.tspSearch.Size = new System.Drawing.Size(332, 25);
             this.tspSearch.TabIndex = 4;
             // 
             // tspsLabel1
@@ -788,6 +788,7 @@ namespace ConsoleApplication1
             this.Controls.Add(this.statusStrip1);
             this.Name = "Form2";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form2_FormClosing);
+            this.SizeChanged += new System.EventHandler(this.Form2_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form2_KeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form2_KeyPress);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form2_KeyUp);
@@ -1264,6 +1265,20 @@ namespace ConsoleApplication1
             }
             tspsRegex.ForeColor = SD.Color.White;
             tspsSelector.ForeColor = SD.Color.White;
+        }
+
+        private void Form2_SizeChanged(object sender, EventArgs e)
+        {
+            saveWindowSize();
+        }
+
+        private void saveWindowSize()
+        {
+            var settings = Global.Instance.Settings;
+            settings.WindowTop = this.Top;
+            settings.WindowLeft = this.Left;
+            settings.WindowWidth = this.Width;
+            settings.WindowHeight = this.Height;
         }
     }
 }
