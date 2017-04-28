@@ -95,7 +95,8 @@
     <!--<stepi begin="0m1" end="0m1" color="white" text="" regex="tree" mode="0" transition="immediate"/>-->
     <stepi begin="0m2" end="0m4" color="orange" text="" regex="cdl" mode="0" transition="crossfade"/>
     <!--<stepi begin="0m1" end="0m1" color="white" text="" regex="^(?!.*dmx)" mode="0" transition="immediate"/>-->
-    
+    <stepi begin="0m2" end="0m4" color="black" text="" regex=":w[0123]" mode="0" transition="crossfade"/>
+
     <!--<repeat tm1="0" tm2="2" tm3="4" tm4="6" tm5="8" tm6="10">
 
       <stepi begin="1m1" end="1m1" color="white" text="" regex=":dmx:" mode="0" transition="flash"/>
@@ -143,28 +144,32 @@
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm2:" mode="0" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm3:" mode="2" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm4:" mode="3" transition="crawl" orderby="row" groupby="row"/>
-    
+
+    <stepi begin="2m1" end="3m1" color="blue,red,white" text="" regex=":mm1:" mode="5" transition="rotate" orderby="row" groupby="row"/>
+
     <stepi begin="3m1" end="4m4" color="white,red,white,green" text="" regex=":mm1:" mode="1" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="3m1" end="4m4" color="white,red,white,green" text="" regex=":mm2:" mode="0" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="3m1" end="4m4" color="white,red,white,green" text="" regex=":mm3:" mode="2" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="3m1" end="4m4" color="white,red,white,green" text="" regex=":mm4:" mode="3" transition="crawl" orderby="row" groupby="row"/>
 
-    <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w1:" mode="1" transition="crawl" orderby="circle" groupby="circle"/>
-    <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w2:" mode="0" transition="crawl" orderby="circle" groupby="circle"/>
-    <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w3:" mode="2" transition="crawl" orderby="circle" groupby="circle"/>
-    <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w4:" mode="3" transition="crawl" orderby="circle" groupby="circle"/>
+    <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w1:" mode="1" transition="crawl"  orderby="circle" groupby="circle"/>
+    <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w2:" mode="0" transition="crawl"  orderby="circle" groupby="circle"/>
+    <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w3:" mode="2" transition="crawl"  orderby="circle" groupby="circle"/>
+    <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w4:" mode="3" transition="crawl"  orderby="circle" groupby="circle"/>
+
+    <stepi begin="2m1" end="3m1" color="red,green" text="" regex=":w1:" mode="5" transition="rotate" orderby="circle" groupby="circle"/>
 
     <stepi begin="3m1" end="4m4" color="white,red,white,green" text="" regex=":w1:" mode="1" transition="crawl" orderby="circle" groupby="circle"/>
     <stepi begin="3m1" end="4m4" color="white,red,white,green" text="" regex=":w2:" mode="0" transition="crawl" orderby="circle" groupby="circle"/>
     <stepi begin="3m1" end="4m4" color="white,red,white,green" text="" regex=":w3:" mode="2" transition="crawl" orderby="circle" groupby="circle"/>
     <stepi begin="3m1" end="4m4" color="white,red,white,green" text="" regex=":w4:" mode="3" transition="crawl" orderby="circle" groupby="circle"/>
 
-    <stepi begin="5m1" end="8m1" color="white,red,white,green" text="" regex=":w1:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(Theta/45))" groupby="Convert.ToInt32(Math.Floor(Theta/45))"/>
+    <stepi begin="5m1" end="8m1" color="white,red,blue,green" text="" regex=":w1:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(((Theta+22.5)/45)%8))" groupby="Convert.ToInt32(Math.Floor(((Theta+22.5)/45)%8))"/>
     <stepi begin="5m2" end="8m2" color="white,red,white,green" text="" regex=":w2:" mode="5" transition="unrotate" orderby="Convert.ToInt32(Math.Floor(Theta/45))" groupby="Convert.ToInt32(Math.Floor(Theta/45))"/>
     <stepi begin="5m3" end="8m3" color="white,red,white,green" text="" regex=":w3:" mode="5" transition="unrotate" orderby="Convert.ToInt32(Math.Floor(Theta/45))" groupby="Convert.ToInt32(Math.Floor(Theta/45))"/>
     <stepi begin="5m4" end="8m4" color="white,red,white,green" text="" regex=":w4:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(Theta/45))" groupby="Convert.ToInt32(Math.Floor(Theta/45))"/>
 
-    <stepi begin="9m1" end="12m1" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w1:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(Theta/30))" groupby="Convert.ToInt32(Math.Floor(Theta/30))"/>
+    <stepi begin="9m1" end="12m1" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w1:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(((Theta + 15)/30)%12))" groupby="Convert.ToInt32(Math.Floor(((Theta + 15)/30)%12))"/>
     <stepi begin="9m2" end="12m2" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w2:" mode="5" transition="unrotate" orderby="Convert.ToInt32(Math.Floor(Theta/30))" groupby="Convert.ToInt32(Math.Floor(Theta/30))"/>
     <stepi begin="9m3" end="12m3" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w3:" mode="5" transition="unrotate" orderby="Convert.ToInt32(Math.Floor(Theta/30))" groupby="Convert.ToInt32(Math.Floor(Theta/30))"/>
     <stepi begin="9m4" end="12m4" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w4:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(Theta/30))" groupby="Convert.ToInt32(Math.Floor(Theta/30))"/>
@@ -199,21 +204,21 @@
     <stepi begin="2m1" end="2m3" text="" regex="^hm:w3" mode="1" />
     <stepi begin="2m1" end="4m3" text="" regex="^hm:w4" mode="1" />
     <stepi begin="3m1" end="3m3" text="" regex="^hm:w1" mode="1" />-->
-    <stepi begin="1m1" end="1m3" text="" regex="^hm:w4" mode="2" img="greenball1.bmp" transition="bounce"/>
-    <stepi begin="1m1+0.600" end="2m3" text="" regex="^hm:w3" mode="2" img="greenball1.bmp" transition="bounce"/>
-    <stepi begin="1m1+1.200" end="3m3" text="" regex="^hm:w2" mode="2" img="greenball1.bmp" transition="bounce"/>
-    <stepi begin="1m1+1.800" end="4m3" text="" regex="^hm:w1" mode="4" img="greenball1.bmp" transition="enterfromright"/>
+    <stepi begin="14m1" end="14m3" text="" regex="^hm:w4" mode="2" img="greenball1.bmp" transition="bounce"/>
+    <stepi begin="14m1+0.600" end="15m3" text="" regex="^hm:w3" mode="2" img="greenball1.bmp" transition="bounce"/>
+    <stepi begin="14m1+1.200" end="16m3" text="" regex="^hm:w2" mode="2" img="greenball1.bmp" transition="bounce"/>
+    <stepi begin="14m1+1.800" end="17m3" text="" regex="^hm:w1" mode="4" img="greenball1.bmp" transition="enterfromright"/>
     <!--<stepi begin="1m1+2.400" end="4m3" text="" regex="^hm:w1" mode="1" img="greenball1.bmp"/>
     <stepi begin="1m1+3.000" end="4m3" text="" regex="^hm:w1" mode="1" img="greenball1.bmp"/>-->
 
-    <stepi begin="2m1" end="1m3" text="" regex="^hm:w4" mode="2" img="redball1.bmp" transition="passthru"/>
-    <stepi begin="2m1+0.600" end="2m3" text="" regex="^hm:w3" mode="2" img="redball1.bmp" transition="passthru"/>
-    <stepi begin="2m1+1.200" end="3m3" text="" regex="^hm:w2" mode="4" img="redball1.bmp" transition="enterfromright"/>
+    <stepi begin="15m1" end="15m3" text="" regex="^hm:w4" mode="2" img="redball1.bmp" transition="passthru"/>
+    <stepi begin="15m1+0.600" end="16m3" text="" regex="^hm:w3" mode="2" img="redball1.bmp" transition="passthru"/>
+    <stepi begin="15m1+1.200" end="17m3" text="" regex="^hm:w2" mode="4" img="redball1.bmp" transition="enterfromright"/>
 
-    <stepi begin="3m1" end="1m3" text="" regex="^hm:w4" mode="2" img="blueball1.bmp" transition="passthru"/>
-    <stepi begin="3m1+0.700" end="2m3" text="" regex="^hm:w3" mode="4" img="blueball1.bmp" transition="enterfromright"/>
+    <stepi begin="17m1" end="17m3" text="" regex="^hm:w4" mode="2" img="blueball1.bmp" transition="passthru"/>
+    <stepi begin="17m1+0.700" end="17m3" text="" regex="^hm:w3" mode="4" img="blueball1.bmp" transition="enterfromright"/>
     
-    <stepi begin="4m1" end="8m3" text="" regex="^hm:w4" mode="4"  img="tree.bmp" transition="enterfromright"/>
+    <stepi begin="18m1" end="19m3" text="" regex="^hm:w4" mode="4"  img="tree.bmp" transition="enterfromright"/>
   </steps>
   <loop begin="100" end="300" />
 </song>
