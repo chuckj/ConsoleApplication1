@@ -525,9 +525,7 @@
       <rgb row="6" col="69" repeat="12" colinc="-1" pt="485,58,-2" ptoffset="-8,0,0" class="railing"/>
     </View>
 
-    <View nm="win" cirexp="Convert.ToInt32(MathEx.Length(column-5, row-4))" 
-          radexp="MathEx.Length(column-5, row-4)"
-          theexp="MathEx.Atan(column-5, row-4)">
+    <View nm="win" cirexp="MathEx.Length(column-5, row-4)" theexp="MathEx.Atan(column-5, row-4)">
       <rgb strandndx="0" row="0" col="10" repeat="9" rowinc="1"  pt="80,0,0" ptoffset="0,8,0" class="window"/>
       <rgb strandndx="0" row="8" col="9"  repeat="9" rowinc="-1" pt="72,64,0" ptoffset="0,-8,0" class="window"/>
       <rgb strandndx="0" row="0" col="8"  repeat="9" rowinc="1"  pt="64,0,0" ptoffset="0,8,0" class="window"/>
