@@ -22,10 +22,8 @@ namespace ConsoleApplication1
         private ST.Timer timer;
         private static bool ignoreChanges = false;
 
-        public int WindowTop { get; set; }
-        public int WindowLeft { get; set; }
-        public int WindowWidth { get; set; }
-        public int WindowHeight { get; set; }
+        public Rectangle WindowPosition { get; set; }
+        public FormWindowState WindowState { get; set; }
 
         public AppSettings()
         {

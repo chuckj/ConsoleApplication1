@@ -77,27 +77,33 @@ namespace ConsoleApplication1
             var settings = Global.Instance.Settings;
             Global.Instance.PropertyChanged += globalPropertyChanged;
 
-            var windowTop = settings.WindowTop;
-            var windowLeft = settings.WindowLeft;
-            var windowWidth = settings.WindowWidth;
-            var windowHeight = settings.WindowHeight;
 
-            if ((windowWidth > 0) && (windowHeight > 0))
+            // this is the default
+            this.WindowState = FormWindowState.Normal;
+            this.StartPosition = FormStartPosition.WindowsDefaultBounds;
+
+            // check if the saved bounds are nonzero and visible on any screen
+            if (settings.WindowPosition != SD.Rectangle.Empty &&
+                IsVisibleOnAnyScreen(settings.WindowPosition))
             {
+                // first set the bounds
+                this.StartPosition = FormStartPosition.Manual;
+                this.DesktopBounds = settings.WindowPosition;
 
-                SD.Rectangle window = new SD.Rectangle(windowLeft, windowTop, windowWidth, windowHeight);
-
-                var screen = Screen.AllScreens.FirstOrDefault(s => s.WorkingArea.Contains(window));
-                if (screen == null)
-                {
-                    screen = Screen.AllScreens.First(s => s.Primary);
-                    windowLeft = screen.WorkingArea.Left;
-                    windowTop = screen.WorkingArea.Top;
-                }
-
-                User32Support.MoveWindow(this.Handle, windowLeft, windowTop, windowWidth, windowHeight, false);
+                // afterwards set the window state to the saved value (which could be Maximized)
+                this.WindowState = settings.WindowState;
             }
+            else
+            {
+                // this resets the upper left corner of the window to windows standards
+                this.StartPosition = FormStartPosition.WindowsDefaultLocation;
 
+                // we can still apply the saved size
+                this.Size = new SD.Size(this.Width, this.Height);
+            }
+        
+
+ 
             this.statusStrip1.Renderer = new CustomStripRenderer();
             this.tspMenu.Renderer = new CustomMenuStripRenderer();
 
@@ -200,6 +206,16 @@ namespace ConsoleApplication1
                 }
             });
             RunTime.Progress(progress);
+        }
+
+        private bool IsVisibleOnAnyScreen(SD.Rectangle rect)
+        {
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                if (screen.WorkingArea.IntersectsWith(rect))
+                    return true;
+            }
+            return false;
         }
 
         private void globalPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -456,7 +472,7 @@ namespace ConsoleApplication1
             this.splitContainer1.Panel2.BackColor = System.Drawing.Color.Black;
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(1087, 611);
-            this.splitContainer1.SplitterDistance = 492;
+            this.splitContainer1.SplitterDistance = 494;
             this.splitContainer1.SplitterWidth = 2;
             this.splitContainer1.TabIndex = 7;
             this.splitContainer1.SizeChanged += new System.EventHandler(this.splitContainer1_SizeChanged);
@@ -469,7 +485,7 @@ namespace ConsoleApplication1
             this.rc1.BackColor = System.Drawing.Color.Black;
             this.rc1.Location = new System.Drawing.Point(0, 0);
             this.rc1.Name = "rc1";
-            this.rc1.Size = new System.Drawing.Size(1087, 497);
+            this.rc1.Size = new System.Drawing.Size(1087, 499);
             this.rc1.TabIndex = 4;
             this.rc1.TabStop = false;
             // 
@@ -490,7 +506,7 @@ namespace ConsoleApplication1
             // 
             this.splitContainer2.Panel2.BackColor = System.Drawing.Color.Black;
             this.splitContainer2.Panel2.Controls.Add(this.rc2);
-            this.splitContainer2.Size = new System.Drawing.Size(1087, 117);
+            this.splitContainer2.Size = new System.Drawing.Size(1087, 115);
             this.splitContainer2.SplitterDistance = 100;
             this.splitContainer2.SplitterWidth = 2;
             this.splitContainer2.TabIndex = 0;
@@ -502,7 +518,7 @@ namespace ConsoleApplication1
             this.rc2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rc2.Location = new System.Drawing.Point(0, 0);
             this.rc2.Name = "rc2";
-            this.rc2.Size = new System.Drawing.Size(985, 117);
+            this.rc2.Size = new System.Drawing.Size(985, 115);
             this.rc2.TabIndex = 5;
             this.rc2.TabStop = false;
             // 
@@ -788,6 +804,7 @@ namespace ConsoleApplication1
             this.Controls.Add(this.statusStrip1);
             this.Name = "Form2";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form2_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form2_FormClosed);
             this.SizeChanged += new System.EventHandler(this.Form2_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form2_KeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form2_KeyPress);
@@ -841,14 +858,6 @@ namespace ConsoleApplication1
 
         private void exit()
         {
-            var settings = Global.Instance.Settings;
-            settings.WindowTop = this.Top;
-            settings.WindowLeft = this.Left;
-            settings.WindowWidth = this.Width;
-            settings.WindowHeight = this.Height;
-
-            Global.Instance.Settings.SaveAppSettings();
-
             this.Close();
         }
 
@@ -1269,16 +1278,39 @@ namespace ConsoleApplication1
 
         private void Form2_SizeChanged(object sender, EventArgs e)
         {
-            saveWindowSize();
         }
 
-        private void saveWindowSize()
+        bool firstClose = true;
+
+        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
         {
-            var settings = Global.Instance.Settings;
-            settings.WindowTop = this.Top;
-            settings.WindowLeft = this.Left;
-            settings.WindowWidth = this.Width;
-            settings.WindowHeight = this.Height;
+            
+            base.OnClosed(e);
+
+            if (firstClose)
+            {
+                var settings = Global.Instance.Settings;
+                // only save the WindowState if Normal or Maximized
+                switch (this.WindowState)
+                {
+                    case FormWindowState.Normal:
+                    case FormWindowState.Maximized:
+                        settings.WindowState = this.WindowState;
+                        break;
+
+                    default:
+                        settings.WindowState = FormWindowState.Normal;
+                        break;
+                }
+
+                // reset window state to normal to get the correct bounds
+                // also make the form invisible to prevent distracting the user
+                this.Visible = false;
+                this.WindowState = FormWindowState.Normal;
+
+                settings.WindowPosition = this.DesktopBounds;
+                settings.SaveAppSettings();
+            }
         }
     }
 }
