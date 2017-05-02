@@ -25,6 +25,8 @@ namespace ConsoleApplication1
         public Rectangle WindowPosition { get; set; }
         public FormWindowState WindowState { get; set; }
 
+        public string Form2Placement { get; set; }
+
         public AppSettings()
         {
             timer = new ST.Timer(SaveSettings, null, ST.Timeout.Infinite, ST.Timeout.Infinite);

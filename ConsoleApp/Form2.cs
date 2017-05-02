@@ -79,28 +79,28 @@ namespace ConsoleApplication1
 
 
             // this is the default
-            this.WindowState = FormWindowState.Normal;
-            this.StartPosition = FormStartPosition.WindowsDefaultBounds;
+            //this.WindowState = FormWindowState.Normal;
+            //this.StartPosition = FormStartPosition.WindowsDefaultBounds;
 
-            // check if the saved bounds are nonzero and visible on any screen
-            if (settings.WindowPosition != SD.Rectangle.Empty &&
-                IsVisibleOnAnyScreen(settings.WindowPosition))
-            {
-                // first set the bounds
-                this.StartPosition = FormStartPosition.Manual;
-                this.DesktopBounds = settings.WindowPosition;
+            //// check if the saved bounds are nonzero and visible on any screen
+            //if (settings.WindowPosition != SD.Rectangle.Empty &&
+            //    IsVisibleOnAnyScreen(settings.WindowPosition))
+            //{
+            //    // first set the bounds
+            //    this.StartPosition = FormStartPosition.Manual;
+            //    this.DesktopBounds = settings.WindowPosition;
 
-                // afterwards set the window state to the saved value (which could be Maximized)
-                this.WindowState = settings.WindowState;
-            }
-            else
-            {
-                // this resets the upper left corner of the window to windows standards
-                this.StartPosition = FormStartPosition.WindowsDefaultLocation;
+            //    // afterwards set the window state to the saved value (which could be Maximized)
+            //    this.WindowState = settings.WindowState;
+            //}
+            //else
+            //{
+            //    // this resets the upper left corner of the window to windows standards
+            //    this.StartPosition = FormStartPosition.WindowsDefaultLocation;
 
-                // we can still apply the saved size
-                this.Size = new SD.Size(this.Width, this.Height);
-            }
+            //    // we can still apply the saved size
+            //    this.Size = new SD.Size(this.Width, this.Height);
+            //}
         
 
  
@@ -254,9 +254,7 @@ namespace ConsoleApplication1
             this.toolTip1 = new TheArtOfDev.HtmlRenderer.WinForms.HtmlToolTip();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.rc1 = new ConsoleApplication1.RC1();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.rc2 = new ConsoleApplication1.RC2();
             this.tspSearch = new System.Windows.Forms.ToolStrip();
             this.tspsLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.tspsRegex = new System.Windows.Forms.ToolStripTextBox();
@@ -286,6 +284,8 @@ namespace ConsoleApplication1
             this.tsppBackToStart = new System.Windows.Forms.ToolStripButton();
             this.tsppReplay = new System.Windows.Forms.ToolStripButton();
             this.tsppTime = new System.Windows.Forms.ToolStripLabel();
+            this.rc1 = new ConsoleApplication1.RC1();
+            this.rc2 = new ConsoleApplication1.RC2();
             this.statusStrip1.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -477,18 +477,6 @@ namespace ConsoleApplication1
             this.splitContainer1.TabIndex = 7;
             this.splitContainer1.SizeChanged += new System.EventHandler(this.splitContainer1_SizeChanged);
             // 
-            // rc1
-            // 
-            this.rc1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.rc1.BackColor = System.Drawing.Color.Black;
-            this.rc1.Location = new System.Drawing.Point(0, 0);
-            this.rc1.Name = "rc1";
-            this.rc1.Size = new System.Drawing.Size(1087, 499);
-            this.rc1.TabIndex = 4;
-            this.rc1.TabStop = false;
-            // 
             // splitContainer2
             // 
             this.splitContainer2.BackColor = System.Drawing.Color.Purple;
@@ -510,17 +498,6 @@ namespace ConsoleApplication1
             this.splitContainer2.SplitterDistance = 100;
             this.splitContainer2.SplitterWidth = 2;
             this.splitContainer2.TabIndex = 0;
-            // 
-            // rc2
-            // 
-            this.rc2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.rc2.BackColor = System.Drawing.Color.Black;
-            this.rc2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rc2.Location = new System.Drawing.Point(0, 0);
-            this.rc2.Name = "rc2";
-            this.rc2.Size = new System.Drawing.Size(985, 115);
-            this.rc2.TabIndex = 5;
-            this.rc2.TabStop = false;
             // 
             // tspSearch
             // 
@@ -796,6 +773,29 @@ namespace ConsoleApplication1
             this.tsppTime.Size = new System.Drawing.Size(78, 22);
             this.tsppTime.Text = "00:00.0";
             // 
+            // rc1
+            // 
+            this.rc1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rc1.BackColor = System.Drawing.Color.Black;
+            this.rc1.Location = new System.Drawing.Point(0, 0);
+            this.rc1.Name = "rc1";
+            this.rc1.Size = new System.Drawing.Size(1087, 499);
+            this.rc1.TabIndex = 4;
+            this.rc1.TabStop = false;
+            // 
+            // rc2
+            // 
+            this.rc2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.rc2.BackColor = System.Drawing.Color.Black;
+            this.rc2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rc2.Location = new System.Drawing.Point(0, 0);
+            this.rc2.Name = "rc2";
+            this.rc2.Size = new System.Drawing.Size(985, 115);
+            this.rc2.TabIndex = 5;
+            this.rc2.TabStop = false;
+            // 
             // Form2
             // 
             this.BackColor = System.Drawing.Color.White;
@@ -804,7 +804,7 @@ namespace ConsoleApplication1
             this.Controls.Add(this.statusStrip1);
             this.Name = "Form2";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form2_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form2_FormClosed);
+            this.Load += new System.EventHandler(this.Form2_Load);
             this.SizeChanged += new System.EventHandler(this.Form2_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form2_KeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form2_KeyPress);
@@ -844,8 +844,18 @@ namespace ConsoleApplication1
             closing();
         }
 
+        bool firstClosing = true;
+
         private void closing()
         {
+            if (firstClosing)
+            {
+                var settings = Global.Instance.Settings;
+                settings.Form2Placement = WindowPlacementExample.WindowPlacement.GetPlacement(this.Handle);
+                settings.SaveAppSettings();
+            }
+            firstClosing = false;
+
             Application.Exit();
         }
 
@@ -1280,36 +1290,22 @@ namespace ConsoleApplication1
         {
         }
 
-        bool firstClose = true;
-
-        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
-        {
+        //private void Form2_FormClosed(object sender, FormClosedEventArgs e)
+        //{
             
-            base.OnClosed(e);
+        //    base.OnClosed(e);
+        //}
 
-            if (firstClose)
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            try
             {
                 var settings = Global.Instance.Settings;
-                // only save the WindowState if Normal or Maximized
-                switch (this.WindowState)
-                {
-                    case FormWindowState.Normal:
-                    case FormWindowState.Maximized:
-                        settings.WindowState = this.WindowState;
-                        break;
+                WindowPlacementExample.WindowPlacement.SetPlacement(this.Handle, settings.Form2Placement);
+            }
+            catch (Exception ex)
+            {
 
-                    default:
-                        settings.WindowState = FormWindowState.Normal;
-                        break;
-                }
-
-                // reset window state to normal to get the correct bounds
-                // also make the form invisible to prevent distracting the user
-                this.Visible = false;
-                this.WindowState = FormWindowState.Normal;
-
-                settings.WindowPosition = this.DesktopBounds;
-                settings.SaveAppSettings();
             }
         }
     }

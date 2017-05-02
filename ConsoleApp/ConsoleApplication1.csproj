@@ -254,6 +254,7 @@
     <Compile Include="Visuals\WaveRes.cs" />
     <Compile Include="WaveformSampler.cs" />
     <Compile Include="Win32Support.cs" />
+    <Compile Include="WindowPlacement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
