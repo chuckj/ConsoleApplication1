@@ -1,0 +1,28 @@
+set_z         test      $,#0  wz         'Instr = %01100010011111$$$$$$$$$000000000 z = result (instr & 0) == 0
+set_nz        test      $,#1  wz         'Instr = %01100010011111$$$$$$$$$000000001 z = result (instr & 1) == 1
+set_c         test      $,#1  wc         'Instr = %01100001011111$$$$$$$$$000000001 c = parity (instr & 1) == 1
+set_nc        test      $,#0  wc         'Instr = %01100001011111$$$$$$$$$000000000 c = parity (instr & 0) == 0
+
+set_z_c       shr       $,#31 wz,wc,nr   'Instr = %00101011011111$$$$$$$$$000011111 z = result (instr >> 31) == 0, c = instr.0  == 1
+set_z_nc      shr       $,#30 wz,wc,nr   'Instr = %00101011011111$$$$$$$$$000011110 z = result (instr >> 30) == 0, c = instr.0 == 0
+set_nz_c      shr       $,#1  wz,wc,nr   'Instr = %00101011011111$$$$$$$$$000000001 z = result (instr >> 1) <> 0, c = instr.0  == 1
+set_nz_nc     shr       $,#2  wz,wc,nr   'Instr = %00101011011111$$$$$$$$$000000010 z = result (instr >> 2) <> 0, c = instr.0  == 0
+
+
+
+set_z_c                 cmpsub  0, 0 wz,wc,nr
+set_z_nc                neg     0, #0 wz,wc,nr
+set_nz_nc               neg     0, #1 wz,wc,nr
+
+set_nz_c                cmp     reg, #1 wz,wc           ' reg holding NULL, e.g. par
+                        cmpsub  reg, #0 wz,wc           ' reg holding non-NULL value
+
+save_z        muxnz     restore_z,#1
+restore_z     test      $,#1 wz          'Instr = %01100010011111$$$$$$$$$00000000z z = result (instr & nz) == z
+
+save_c        muxc      restore_c,#1
+restore_c     test      $,#1 wc          'Instr = %01100001011111$$$$$$$$$00000000c c = parity (instr & c) == c
+
+save_z_c      'Left as an exercise for the reader.
+restore_z_c   'Left as an exercise for the reader.
+

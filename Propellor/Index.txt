@@ -1,0 +1,23 @@
+ColorEffect6
+	Protocol channel 1 has beginnings of buffer mgmt logic, working toward removing bufr mgr cogs
+
+ColorEffect5b:
+	???w/o nops in USB logic (based on earlier ver than 5a1?)
+
+ColorEffect5a1:
+	Latest changes, code for USB resync when 0xffs are received, nops in USB logic (perhaps can be removed)
+
+ColorEffect5a:
+	USB Production version, nops in USB logic (perhaps can be removed)
+
+ColorEffect5
+	Refinement of USB 
+
+ColorEffect4
+	Initial attempt at USB interface using FTDI USB FIFO chip and SparkFun break-out board
+
+ColorEffect3
+	Early Netburner interface
+
+ColorEffect2
+	Early Netburner interface
