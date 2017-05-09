@@ -4,7 +4,7 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace WindowPlacementExample
+namespace ConsoleApplication1
 {
     // RECT structure required by WINDOWPLACEMENT structure
     [Serializable]
@@ -106,7 +106,7 @@ namespace WindowPlacementExample
         private const int SW_SHOWNORMAL = 1;
         private const int SW_SHOWMINIMIZED = 2;
 
-        public static void SetPlacement(IntPtr windowHandle, string placementXml)
+        public static void SetPlacementFromXml(IntPtr windowHandle, string placementXml)
         {
             if (string.IsNullOrEmpty(placementXml))
             {
@@ -130,7 +130,7 @@ namespace WindowPlacementExample
             }
         }
 
-        public static string GetPlacement(IntPtr windowHandle)
+        public static string GetPlacementAsXml(IntPtr windowHandle)
         {
             WINDOWPLACEMENT placement;
             GetWindowPlacement(windowHandle, out placement);

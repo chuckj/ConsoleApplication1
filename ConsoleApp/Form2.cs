@@ -851,7 +851,7 @@ namespace ConsoleApplication1
             if (firstClosing)
             {
                 var settings = Global.Instance.Settings;
-                settings.Form2Placement = WindowPlacementExample.WindowPlacement.GetPlacement(this.Handle);
+                settings.Form2Placement = WindowPlacement.GetPlacementAsXml(this.Handle);
                 settings.SaveAppSettings();
             }
             firstClosing = false;
@@ -1301,7 +1301,7 @@ namespace ConsoleApplication1
             try
             {
                 var settings = Global.Instance.Settings;
-                WindowPlacementExample.WindowPlacement.SetPlacement(this.Handle, settings.Form2Placement);
+                WindowPlacement.SetPlacementFromXml(this.Handle, settings.Form2Placement);
             }
             catch (Exception ex)
             {
