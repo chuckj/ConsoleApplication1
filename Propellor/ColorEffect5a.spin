@@ -211,7 +211,7 @@ Pub Start
     coginit(BufferCog, @BfrMgrEntry, 0)                 'Buffer manager service
 
 ' Start timer cog
-    coginit(TimerCog, @TimerEntry, 0)                   'Time service                    
+    coginit(TimerCog, @DmxTimerEntry, 0)                   'Time service                    
 
 ' Start init & debug code                               'Start init last so it can clear memory
     coginit(0, @InitEntry, 0)                           'Init/Serial port service
@@ -620,11 +620,11 @@ dBfrEnd                 long    0
 
 DAT
 {{
-              TTTTT  IIIII  M   M  EEEEE  RRRR
-                T      I    MM MM  E      R   R
-                T      I    M M M  EEE    RRR
-                T      I    M   M  E      R  R
-                T    IIIII  M   M  EEEEE  R   R
+              DDDD   M   M  X   X      /  TTTTT  IIIII  M   M  EEEEE  RRRR
+              D   D  MM MM   X X      /     T      I    MM MM  E      R   R
+              D   D  M M M    X      /      T      I    M M M  EEE    RRR
+              D   D  M   M   X X    /       T      I    M   M  E      R  R
+              DDDD   M   M  X   X  /        T    IIIII  M   M  EEEEE  R   R
                 
 }}              
                         org     0
@@ -634,7 +634,7 @@ DAT
 '       Timer
 '
 
-TimerEntry
+DmxTimerEntry
 :init                   lockset tinitlock           wc
               if_c      jmp     #:init
                         lockclr tinitlock
@@ -653,6 +653,84 @@ TimerEntry
 '
 '       Everyone should be running
 '
+Dmx
+						or		outa,dmxmask			'Send break
+						mov		dmxbits,23				'Get l'BREAK (min 92 us / 4 us = 23 bit-times)
+						jmpret	dmxrtn,#dmxret			'Yield to Timer
+						djnz	dmxbits,#dmxret			' . & loop for 92 us
+
+						andn	outa,dmxmask			'Send mark (min 12 us / 4 us = 3 bit-times)
+						jmpret	dmxrtn,#dmxret			'Yield to Timer (this is the first, sencond below, last before start bit)
+
+dmxtop	
+						jmpret	dmxrtn,#dmxret			'Yield to Timer
+
+                        rdword  dmxbfr,dmxbusy		wz  'Load busy pointer - zero?   
+              if_z      jmp     #dmxret					'. Yes, == PAUSE ==
+
+                        add     dmxbfr,#BfrLeng			'Compute @'buffer length
+
+                        rdbyte  dmxlng,dmxbfr			'Load long count
+
+                        sub     dmxbfr,#BfrLeng			'Restore
+                        mov     dmxptr,dmxbfr			'. @'buffer
+                        
+                        add     dmxptr,#BfrData			'Compute @'data
+
+:xmit
+                        rdlong  dmxdata,dmxptr			'Load
+                        add     dmxptr,#4				'.  next data word
+
+                        sub     dmxlng,#1			wz  'All data sent?
+              if_z      wrlong  dmxbfr,dmxfree			'. Yes - Request next buffer
+
+                        rol     dmxdata,8
+						jmpret	dmxsrtn,#dmxsendr		'. first byte
+						rol     dmxdata,16
+						jmpret	dmxsrtn,#dmxsendr		'. second byte
+						ror     dmxdata,8
+						jmpret	dmxsrtn,#dmxsendr		'. third byte
+						jmpret	dmxsrtn,#dmxsendr		'. fourth & last byte
+
+                        tjnz    dmxlng,#:xmit			'Loop for all words in command
+                        jmp     #dmxtop					'Loop forever
+
+
+dmxsendr
+						jmpret  dmxrtn,#dmxret			'== PAUSE ==
+
+						or		outa,dmxmask			'Start bit
+                        mov     dmxbits,#8				'Get #'bits in word
+                                                
+:lup                        
+                        jmpret  dmxrtn,#dmxret			'== PAUSE ==
+
+                        ror     dmxdata,#1			wc	'Data bit                        
+              if_c	    or      outa,dmxmask
+			  if_nc		andn	outa,dmxmask
+                        djnz    dmxbits,#dmxret			'Loop for all data bits
+
+						andn	outa,dmxmask			'Stop bit
+						jmpret  dmxrtn,#dmxret			'== PAUSE ==
+						jmp		dmxsrtn					'return
+
+dmxsrtn					long	0
+dmxrtn					long	Dmx
+dmxbfr					long	0
+dmxptr					long	0
+dmxlng					long	0
+
+
+
+dmxret					jmp		timerrtn
+
+
+
+timerret				jmp		dmxrtn
+timerrtn				long	Timer
+
+
+
 
 Timer                                                              
                         add     timbas,cnt              'Adjust current time 
@@ -670,24 +748,23 @@ tStop
                         mov     tticker,t_CLKTICKS
                         wrbyte  tstate,tcogstate
 
-:lup
-                        waitcnt timbas,t_CLKCLKS        'Wait for time
+                        jmpret	timerrtn,#timerret        'Wait for time
 
                         rdbyte  tstate,#GblState
                         cmp     tstate,#StateStop   wz
-              if_z      jmp     #:lup
+              if_z      jmp     #timerret
                         jmp     #tNewState
 
 tRun
                         wrbyte  tstate,tcogstate
 
 :lup
-                        waitcnt timbas,t_CLKCLKS        'Wait for time
+                        jmpret	timerrtn,#timerret        'Wait for time
 
                         rdbyte  tstate,#GblState
                         cmp     tstate,#StateRun    wz
               if_nz     jmp     #tNewState
-                        djnz    tticker,#:lup
+                        djnz    tticker,#timerret
 
                         mov     tticker,t_CLKTICKS
                         
@@ -709,7 +786,7 @@ tPause
                         wrbyte  tstate,tcogstate
 
 :lup
-                        waitcnt timbas,t_CLKCLKS       'Wait for time
+                        jmpret	timerrtn,#timerret        'Wait for time
 
                         rdbyte  tstate,#GblState
                         cmp     tstate,#StatePause  wz
@@ -1980,6 +2057,9 @@ chan3ret
                         waitcnt btimbas,#ChanTimeSlice  'Sync to clock
                         jmp     chan4rtn                ' . & run channel 1
 
+chan4activ
+						tjz		chan4mask,#chan4ret
+
 chan4top
                         jmpret  chan4rtn,#chan4ret      '== PAUSE ==
 
@@ -2141,7 +2221,7 @@ chan4stat               long    StateStop
 chan4busy               long    ChanTblBusy
 chan4free               long    ChanTblFree
 chan4mask               long    ChanTblMask
-chan4rtn                long    chan4top
+chan4rtn                long    chan4activ
 chan4data               long    0
 chan4bits               long    0
 chan4bfr                long    0
