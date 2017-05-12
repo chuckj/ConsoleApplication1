@@ -648,12 +648,31 @@ DmxTimerEntry
 :spin
                         rdbyte  tstate,#GblState
                         cmp     tstate,#StateReady wz,wc
-              if_be     jmp     #:spin       
+              if_be     jmp     #:spin 
+			  
+			  
+
+
+
+			            rdword  dmxchan,bt2				'Load Cog tbl entry
+
+                        add     dmxmask,dmxchan
+                        rdlong  dmxmask,dmxmask			'Get fourth bit mask
+                        
+                        andn    outa,dmxmask			'Set to Zero
+                        or      dira,dmxmask			'Set as output
+                        
+                        add     dmxbusy,dmxchan			'Compute @'busy buffer
+                        add     dmxfree,dmxchan			'Compute @'free buffer
+
+
+
+      
                         
 '
 '       Everyone should be running
 '
-Dmx
+dmxtop
 						or		outa,dmxmask			'Send break
 						mov		dmxbits,23				'Get l'BREAK (min 92 us / 4 us = 23 bit-times)
 						jmpret	dmxrtn,#dmxret			'Yield to Timer
@@ -661,8 +680,7 @@ Dmx
 
 						andn	outa,dmxmask			'Send mark (min 12 us / 4 us = 3 bit-times)
 						jmpret	dmxrtn,#dmxret			'Yield to Timer (this is the first, sencond below, last before start bit)
-
-dmxtop	
+	
 						jmpret	dmxrtn,#dmxret			'Yield to Timer
 
                         rdword  dmxbfr,dmxbusy		wz  'Load busy pointer - zero?   
@@ -684,15 +702,17 @@ dmxtop
                         sub     dmxlng,#1			wz  'All data sent?
               if_z      wrlong  dmxbfr,dmxfree			'. Yes - Request next buffer
 
-                        rol     dmxdata,8
-						jmpret	dmxsrtn,#dmxsendr		'. first byte
-						rol     dmxdata,16
-						jmpret	dmxsrtn,#dmxsendr		'. second byte
-						ror     dmxdata,8
-						jmpret	dmxsrtn,#dmxsendr		'. third byte
-						jmpret	dmxsrtn,#dmxsendr		'. fourth & last byte
+                        rol     dmxdata,#8				'Send
+						call	#dmxsendr				'. first byte
+						rol     dmxdata,#16				'Send
+						call	#dmxsendr				'. second byte
+						rol     dmxdata,#16				'Send
+						call	#dmxsendr				'. third byte
+						rol     dmxdata,#16				'Send
+						call	#dmxsendr				'. fourth & last byte
 
                         tjnz    dmxlng,#:xmit			'Loop for all words in command
+						jmpret	dmxrtn,#dmxret			'Yield to Timer - final stop bit
                         jmp     #dmxtop					'Loop forever
 
 
@@ -712,14 +732,15 @@ dmxsendr
 
 						andn	outa,dmxmask			'Stop bit
 						jmpret  dmxrtn,#dmxret			'== PAUSE ==
-						jmp		dmxsrtn					'return
+
+dmxsendr_ret			ret								'return
 
 dmxsrtn					long	0
-dmxrtn					long	Dmx
+dmxrtn					long	dmxtop
 dmxbfr					long	0
 dmxptr					long	0
 dmxlng					long	0
-
+dmxfree					long    ChanTblFree
 
 
 dmxret					jmp		timerrtn
@@ -1656,11 +1677,11 @@ mbufr                   long    0
 DAT
 
 {{
-              PPPP   RRRR    OOO  TTTTT  OOO    CCC    OOO   L
-              P   P  R   R  O   O   T   O   O  C   C  O   O  L
-              PPPP   RRR    O   O   T   O   O  C      O   O  L
-              P      R  R   O   O   T   O   O  C   C  O   O  L
-              P      R   R   OOO    T    OOO    CCC    OOO   LLLLL
+               GGG   EEEEE   CCC   EEEEE         PPPP   RRRR    OOO  TTTTT  OOO    CCC    OOO   L
+              G   G  E      C   C  E             P   P  R   R  O   O   T   O   O  C   C  O   O  L
+              G      EEEE   C      EEEE          PPPP   RRR    O   O   T   O   O  C      O   O  L
+              G  GG  E      C   C  E             P      R  R   O   O   T   O   O  C   C  O   O  L
+               GGGG  EEEEE   CCC   EEEEE         P      R   R   OOO    T    OOO    CCC    OOO   LLLLL
 
 }}                      
                         org     0
