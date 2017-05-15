@@ -117,6 +117,9 @@ CON
         Chan15Bit = 26
         Chan16Bit = 27
 
+		DmxBitOn = 29
+		DmxBit = 28
+
 
         GblBase = $0
         GblTimer = GblBase + 0
@@ -153,7 +156,7 @@ CON
 
 
         
-        ChanTblCnt = 16
+        ChanTblCnt = 17
         ChanTblLng = 4
         ChanTblSiz = ChanTblLng * 4
         ChanTblShft = 4
@@ -211,7 +214,7 @@ Pub Start
     coginit(BufferCog, @BfrMgrEntry, 0)                 'Buffer manager service
 
 ' Start timer cog
-    coginit(TimerCog, @DmxTimerEntry, 0)                   'Time service                    
+    coginit(DmxTimerCog, @DmxTimerEntry, 0)             'DMX/Time service                    
 
 ' Start init & debug code                               'Start init last so it can clear memory
     coginit(0, @InitEntry, 0)                           'Init/Serial port service
@@ -249,7 +252,7 @@ InitEntry
                                                                         
                         mov     icogtab,iaddr
                         wrword  icogtab,#GblCogTbl
-                        add     iaddr,it3               '(Initial value = CogTblSiz * CogTblCnt)
+                        add     iaddr,it3               '(it3 Initial value = CogTblSiz * CogTblCnt)
 
 '
 '       Chan
@@ -260,8 +263,8 @@ InitEntry
 
 
                         mov     it1,ichntab
-                        mov     it2,icogtab             '(Initial value = ProtoCog * CogTblSiz + CogChanTab)
-                        add     it2,it4  
+                        mov     it2,icogtab             
+                        add     it2,it4					'(it4 Initial value = ProtoCog * CogTblSiz + CogChanTab)
                         
 '
 '       ChanTbl[0]
@@ -408,7 +411,17 @@ InitEntry
                         add     it1,#ChanTblMask
                         wrlong  ichan16msk,it1
                         add     it1,#ChanTblSiz-ChanTblMask
+                        add     it2,#2
                         
+'
+'       ChanTbl[16]		DMX
+'
+                        wrword  it1,   no - should be for DmxTimerCog
+                        add     it1,#ChanTblMask
+                        wrlong  idmxmsk,it1
+                        add     it1,#ChanTblSiz-ChanTblMask
+                        
+
                         wrword  it1,#GblFreeBgn         'End of allocated space - begin of buffer pool
 
 '                       
@@ -600,6 +613,8 @@ ichan14msk              long    1 << Chan14Bit
 ichan15msk              long    1 << Chan15Bit
 ichan16msk              long    1 << Chan16Bit
 
+idmxmsk					long    1 << DmxBit
+
 
 
 dtime                   long    0
@@ -630,20 +645,29 @@ DAT
                         org     0
                 
 
-'
-'       Timer
-'
 
 DmxTimerEntry
 :init                   lockset tinitlock           wc
               if_c      jmp     #:init
                         lockclr tinitlock
                         
-                        rdword  tcogtab,#GblCogTbl      'Get @'cog table
-                        add     tcogstate,tcogtab       '. & @'our cog state
+                        rdword  tcogtab,#GblCogTbl      'Get @'Cog table
 
-                        mov     tstate,#StateReady
-                        wrbyte  tstate,tcogstate
+                        cogid   bt1                     'Cogid
+                        shl     bt1,#CogTblShft         '. * 8
+                        add     tcogtab,bt1             '. is index to cogtab
+
+                        add     tcogstate,tcogtab       'Compute @'cog state
+                        mov     bt1,#StateInit          'Set
+                        wrbyte  bt1,tcogstate           '. cog state
+                        
+                        mov     bt2,tcogtab             'Copy @'cog tbl
+                        add     bt2,#CogChanTab
+                        
+
+
+
+
 
 :spin
                         rdbyte  tstate,#GblState
@@ -654,11 +678,12 @@ DmxTimerEntry
 
 
 
-			            rdword  dmxchan,bt2				'Load Cog tbl entry
+                        rdword  dmxchan,bt2				'Load Cog tbl entry
 
-                        add     dmxmask,dmxchan
-                        rdlong  dmxmask,dmxmask			'Get fourth bit mask
+                        add     dmxmask,dmxchan			'(dmxmask Initial = ChanTblMask)
+                        rdlong  dmxmask,dmxmask			'Get bit mask
                         
+                        or	    outa,#(1 << DmxBitOn)	'Set to ONE
                         andn    outa,dmxmask			'Set to Zero
                         or      dira,dmxmask			'Set as output
                         
@@ -672,9 +697,14 @@ DmxTimerEntry
 '
 '       Everyone should be running
 '
+
+'
+'       DMX protpcol
+'
+
 dmxtop
 						or		outa,dmxmask			'Send break
-						mov		dmxbits,23				'Get l'BREAK (min 92 us / 4 us = 23 bit-times)
+						mov		dmxbits,#23				'Get l'BREAK (min 92 us / 4 us = 23 bit-times)
 						jmpret	dmxrtn,#dmxret			'Yield to Timer
 						djnz	dmxbits,#dmxret			' . & loop for 92 us
 
@@ -741,10 +771,11 @@ dmxbfr					long	0
 dmxptr					long	0
 dmxlng					long	0
 dmxfree					long    ChanTblFree
-
-
+dmxchan					long	ChanTblMask
+dmxbusy					long    ChanTblBusy
+dmxfree					long    ChanTblFree
 dmxret					jmp		timerrtn
-
+dmxbits					long	0
 
 
 timerret				jmp		dmxrtn
@@ -752,6 +783,9 @@ timerrtn				long	Timer
 
 
 
+'
+'       Timer
+'
 
 Timer                                                              
                         add     timbas,cnt              'Adjust current time 
@@ -1081,9 +1115,9 @@ cmd85                   djnz    urcvwrk,#cmd90          'Not 85 (Reseq) - maybe 
                         jmp     #sndack                 '. & send ack
                         
 cmd90
-                        sub     urcvwrk,#$90-$85 wc,wz  '$90 - $9f
+                        sub     urcvwrk,#$90-$85 wc,wz  '$90 - $a0
               if_b      jmp     #sndnack_cmd1
-                        cmp     urcvwrk,#15      wc,wz
+                        cmp     urcvwrk,#$a0-$90 wc,wz
               if_a      jmp     #sndnack_cmd2
 
                         mov     ut1,urcvlastseq
@@ -1108,35 +1142,35 @@ cmd90
                         rdword  urcvbufr,#GblFreeChain wz   'load @'next buffer
               if_z      jmp     #:unlk
 
-                        rdword  ut1,urcvbufr             'unchain
+                        rdword  ut1,urcvbufr				'unchain
                         
-                        wrword  ut1,#GblFreeChain       '. the buffer
+                        wrword  ut1,#GblFreeChain			'. the buffer
 
-                        rdbyte  urcvfreecnt,#GblFreeCnt   'Decrement
-                        sub     urcvfreecnt,#1            '.
-                        wrbyte  urcvfreecnt,#GblFreeCnt   '. buffer count
+                        rdbyte  urcvfreecnt,#GblFreeCnt		'Decrement
+                        sub     urcvfreecnt,#1				'.
+                        wrbyte  urcvfreecnt,#GblFreeCnt		'. buffer count
 
 :unlk
-                        lockclr ufreelock               '. & clear the lock
+                        lockclr ufreelock					'. & clear the lock
                         
-              if_z      jmp     #sndnack_bfr            'no buffer - try again
+              if_z      jmp     #sndnack_bfr				'no buffer - try again
               
 '
 '       receive msg
 '
-                        mov     urcvptr,urcvbufr          'Copy @'              
+                        mov     urcvptr,urcvbufr			'Copy @'              
                         wrlong  uzero,urcvptr
-                        add     urcvptr,#BfrLeng          'Bump @'data area
+                        add     urcvptr,#BfrLeng			'Bump @'data area
                         wrword  urcvlng,urcvptr
-                        add     urcvptr,#BfrTimer-BfrLeng 'Bump @'data area
-                        add     urcvlng,#1                'increment l'
+                        add     urcvptr,#BfrTimer-BfrLeng	'Bump @'data area
+                        add     urcvlng,#1					'increment l'
                         
 :lup
-                        call    #urcvlong               'Get another long
+                        call    #urcvlong					'Get another long
                         
-                        wrlong  urcvdata,urcvptr        '. & write command there
-                        add     urcvptr,#4              'Bump @'data area
-                        djnz    urcvlng,#:lup           'Loop thru data
+                        wrlong  urcvdata,urcvptr			'. & write command there
+                        add     urcvptr,#4					'Bump @'data area
+                        djnz    urcvlng,#:lup				'Loop thru data
 
 '
 '       queue buffer on channel
