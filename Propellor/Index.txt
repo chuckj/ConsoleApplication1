@@ -21,3 +21,16 @@ ColorEffect3
 
 ColorEffect2
 	Early Netburner interface
+
+
+
+
+
+Gear: Parallax Inc. Propeller emulator
+https://github.com/davispuh/gear-emu
+
+Copyright 2007 - Robert Vandiver
+Copyright 2009 - mirror
+Copyright 2014 - Antonio Sanhueza
+
+

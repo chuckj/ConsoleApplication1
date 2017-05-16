@@ -117,8 +117,8 @@ CON
         Chan15Bit = 26
         Chan16Bit = 27
 
-		DmxBitOn = 29
-		DmxBit = 28
+        DmxBitOn = 29
+        DmxBit = 28
 
 
         GblBase = $0
@@ -678,17 +678,17 @@ DmxTimerEntry
 
 
 
-                        rdword  dmxchan,bt2				'Load Cog tbl entry
+                        rdword  dmxchan,bt2             'Load Cog tbl entry
 
-                        add     dmxmask,dmxchan			'(dmxmask Initial = ChanTblMask)
-                        rdlong  dmxmask,dmxmask			'Get bit mask
+                        add     dmxmask,dmxchan         '(dmxmask Initial = ChanTblMask)
+                        rdlong  dmxmask,dmxmask         'Get bit mask
                         
-                        or	    outa,#(1 << DmxBitOn)	'Set to ONE
-                        andn    outa,dmxmask			'Set to Zero
-                        or      dira,dmxmask			'Set as output
+                        or      outa,#(1 << DmxBitOn)   'Set to ONE
+                        andn    outa,dmxmask            'Set to Zero
+                        or      dira,dmxmask            'Set as output
                         
-                        add     dmxbusy,dmxchan			'Compute @'busy buffer
-                        add     dmxfree,dmxchan			'Compute @'free buffer
+                        add     dmxbusy,dmxchan         'Compute @'busy buffer
+                        add     dmxfree,dmxchan         'Compute @'free buffer
 
 
 
@@ -703,67 +703,67 @@ DmxTimerEntry
 '
 
 dmxtop
-						or		outa,dmxmask			'Send break
-						mov		dmxbits,#23				'Get l'BREAK (min 92 us / 4 us = 23 bit-times)
-						jmpret	dmxrtn,#dmxret			'Yield to Timer
-						djnz	dmxbits,#dmxret			' . & loop for 92 us
+                        or      outa,dmxmask			'Send break
+                        mov     dmxbits,#23				'Get l'BREAK (min 92 us / 4 us = 23 bit-times)
+                        jmpret  dmxrtn,#dmxret			'Yield to Timer
+                        djnz    dmxbits,#dmxret			'. & loop for 92 us
 
-						andn	outa,dmxmask			'Send mark (min 12 us / 4 us = 3 bit-times)
-						jmpret	dmxrtn,#dmxret			'Yield to Timer (this is the first, sencond below, last before start bit)
+                        andn    outa,dmxmask			'Send mark (min 12 us / 4 us = 3 bit-times)
+                        jmpret  dmxrtn,#dmxret			'Yield to Timer (this is the first, sencond below, last before start bit)
 	
-						jmpret	dmxrtn,#dmxret			'Yield to Timer
+                        jmpret  dmxrtn,#dmxret			'Yield to Timer
 
-                        rdword  dmxbfr,dmxbusy		wz  'Load busy pointer - zero?   
-              if_z      jmp     #dmxret					'. Yes, == PAUSE ==
+                        rdword  dmxbfr,dmxbusy  wz		'Load busy pointer - zero?   
+              if_z      jmp     #dmxret	                '. Yes, == PAUSE ==
 
-                        add     dmxbfr,#BfrLeng			'Compute @'buffer length
+                        add     dmxbfr,#BfrLeng         'Compute @'buffer length
 
-                        rdbyte  dmxlng,dmxbfr			'Load long count
+                        rdbyte  dmxlng,dmxbfr           'Load long count
 
-                        sub     dmxbfr,#BfrLeng			'Restore
-                        mov     dmxptr,dmxbfr			'. @'buffer
+                        sub     dmxbfr,#BfrLeng         'Restore
+                        mov     dmxptr,dmxbfr           '. @'buffer
                         
-                        add     dmxptr,#BfrData			'Compute @'data
+                        add     dmxptr,#BfrData         'Compute @'data
 
 :xmit
-                        rdlong  dmxdata,dmxptr			'Load
-                        add     dmxptr,#4				'.  next data word
+                        rdlong  dmxdata,dmxptr          'Load
+                        add     dmxptr,#4               '.  next data word
 
-                        sub     dmxlng,#1			wz  'All data sent?
-              if_z      wrlong  dmxbfr,dmxfree			'. Yes - Request next buffer
+                        sub     dmxlng,#1   wz          'All data sent?
+                if_z    wrlong  dmxbfr,dmxfree          '. Yes - Request next buffer
 
                         rol     dmxdata,#8				'Send
-						call	#dmxsendr				'. first byte
-						rol     dmxdata,#16				'Send
-						call	#dmxsendr				'. second byte
-						rol     dmxdata,#16				'Send
-						call	#dmxsendr				'. third byte
-						rol     dmxdata,#16				'Send
-						call	#dmxsendr				'. fourth & last byte
+                        call    #dmxsendr				'. first byte
+                        rol     dmxdata,#16             'Send
+                        call    #dmxsendr               '. second byte
+                        rol     dmxdata,#16             'Send
+                        call    #dmxsendr               '. third byte
+                        rol     dmxdata,#16             'Send
+                        call    #dmxsendr               '. fourth & last byte
 
-                        tjnz    dmxlng,#:xmit			'Loop for all words in command
-						jmpret	dmxrtn,#dmxret			'Yield to Timer - final stop bit
-                        jmp     #dmxtop					'Loop forever
+                        tjnz    dmxlng,#:xmit           'Loop for all words in command
+                        jmpret  dmxrtn,#dmxret          'Yield to Timer - final stop bit
+                        jmp     #dmxtop	                'Loop forever
 
 
 dmxsendr
-						jmpret  dmxrtn,#dmxret			'== PAUSE ==
+                        jmpret  dmxrtn,#dmxret          '== PAUSE ==
 
-						or		outa,dmxmask			'Start bit
-                        mov     dmxbits,#8				'Get #'bits in word
+                        or      outa,dmxmask            'Start bit
+                        mov     dmxbits,#8              'Get #'bits in word
                                                 
 :lup                        
-                        jmpret  dmxrtn,#dmxret			'== PAUSE ==
+                        jmpret  dmxrtn,#dmxret          '== PAUSE ==
 
-                        ror     dmxdata,#1			wc	'Data bit                        
-              if_c	    or      outa,dmxmask
-			  if_nc		andn	outa,dmxmask
-                        djnz    dmxbits,#dmxret			'Loop for all data bits
+                        ror     dmxdata,#1      wc      'Data bit                        
+            if_c		or      outa,dmxmask
+            if_nc       andn	outa,dmxmask
+                        djnz    dmxbits,#dmxret         'Loop for all data bits
 
-						andn	outa,dmxmask			'Stop bit
-						jmpret  dmxrtn,#dmxret			'== PAUSE ==
+                        andn    outa,dmxmask            'Stop bit
+                        jmpret  dmxrtn,#dmxret          '== PAUSE ==
 
-dmxsendr_ret			ret								'return
+dmxsendr_ret            ret                             'return
 
 dmxsrtn					long	0
 dmxrtn					long	dmxtop
