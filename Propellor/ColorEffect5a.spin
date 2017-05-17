@@ -152,7 +152,7 @@ CON
         ProtoCogCnt = 4                                
         USBCog = 1                                     'USB cog should be low - closer to P0-p7 for output
         BufferCog = 2
-        TimerCog = 3
+        DmxTimerCog = 3
 
 
         
@@ -167,6 +167,8 @@ CON
         ChanTblTail = 10
 
         ChanTimeSlice = 100                              'Ticks per Time Slice per channel
+		DmxTimerTimeSlice = 320                          'Ticks per Dmx/Timer time slice (4us)
+		TimerTicksPerMs = 1000 / 4
         ChanQuietBits = 19                               'Quiet bit times between words
         
         BufferLng = 68                                  'Longs
@@ -416,7 +418,9 @@ InitEntry
 '
 '       ChanTbl[16]		DMX
 '
-                        wrword  it1,   no - should be for DmxTimerCog
+						mov     it2,icogtab             
+                        add     it2,it7					'(it7 Initial value = DmxTimerCog * CogTblSiz + CogChanTab)
+                        wrword  it1,it2
                         add     it1,#ChanTblMask
                         wrlong  idmxmsk,it1
                         add     it1,#ChanTblSiz-ChanTblMask
@@ -449,7 +453,7 @@ InitEntry
 '       Now, stagger start the protocol cogs...
 '               
                         mov     it2,icogtab
-                        add     it2,it6
+                        add     it2,it6					' it6 = ProtoCog * CogTblSiz + CogTimBas
                         mov     it1,cnt
                         add     it1,#100
                         wrlong  it1,it2
@@ -588,6 +592,7 @@ it3                     long    CogTblSiz * CogTblCnt
 it4                     long    ProtoCog * CogTblSiz + CogChanTab
 it5                     long    ProtoCog * CogTblSiz + CogState
 it6                     long    ProtoCog * CogTblSiz + CogTimBas
+it7                     long    DmxTimerCog * CogTblSiz + CogChanTab
 
 iaddr                   long    $8000
 icogtab                 long    0
@@ -653,22 +658,17 @@ DmxTimerEntry
                         
                         rdword  tcogtab,#GblCogTbl      'Get @'Cog table
 
-                        cogid   bt1                     'Cogid
-                        shl     bt1,#CogTblShft         '. * 8
-                        add     tcogtab,bt1             '. is index to cogtab
+                        cogid   tt1                     'Cogid
+                        shl     tt1,#CogTblShft         '. * 8
+                        add     tcogtab,tt1             '. is index to cogtab
 
                         add     tcogstate,tcogtab       'Compute @'cog state
-                        mov     bt1,#StateInit          'Set
-                        wrbyte  bt1,tcogstate           '. cog state
+                        mov     tt1,#StateInit          'Set
+                        wrbyte  tt1,tcogstate           '. cog state
                         
-                        mov     bt2,tcogtab             'Copy @'cog tbl
-                        add     bt2,#CogChanTab
+                        mov     tt2,tcogtab             'Copy @'cog tbl
+                        add     tt2,#CogChanTab
                         
-
-
-
-
-
 :spin
                         rdbyte  tstate,#GblState
                         cmp     tstate,#StateReady wz,wc
@@ -683,14 +683,16 @@ DmxTimerEntry
                         add     dmxmask,dmxchan         '(dmxmask Initial = ChanTblMask)
                         rdlong  dmxmask,dmxmask         'Get bit mask
                         
-                        or      outa,#(1 << DmxBitOn)   'Set to ONE
+						or		dira,dmxmskON			'Set to ONE and output
+                        or      outa,dmxmskON
                         andn    outa,dmxmask            'Set to Zero
                         or      dira,dmxmask            'Set as output
                         
                         add     dmxbusy,dmxchan         'Compute @'busy buffer
                         add     dmxfree,dmxchan         'Compute @'free buffer
 
-
+						mov		ttimbas,cnt				'Set
+						add		ttimbas,#DmxTimerTimeSlice	'. timer
 
       
                         
@@ -699,22 +701,26 @@ DmxTimerEntry
 '
 
 '
-'       DMX protpcol
+'       DMX protocol
 '
+timerret
+						waitcnt ttimbas,#DmxTimerTimeSlice  'Sync to clock
+						jmp		dmxrtn
+
 
 dmxtop
                         or      outa,dmxmask			'Send break
-                        mov     dmxbits,#23				'Get l'BREAK (min 92 us / 4 us = 23 bit-times)
-                        jmpret  dmxrtn,#dmxret			'Yield to Timer
-                        djnz    dmxbits,#dmxret			'. & loop for 92 us
+                        mov     dmxdata,#23				'Get l'BREAK (min 92 us / 4 us = 23 bit-times)
+                        jmpret  dmxrtn,timerrtn			'Yield to Timer
+                        djnz    dmxdata,timerrtn		'. & loop for 92 us
 
                         andn    outa,dmxmask			'Send mark (min 12 us / 4 us = 3 bit-times)
-                        jmpret  dmxrtn,#dmxret			'Yield to Timer (this is the first, sencond below, last before start bit)
+                        jmpret  dmxrtn,timerrtn			'Yield to Timer (this is the first, sencond below, last before start bit)
 	
-                        jmpret  dmxrtn,#dmxret			'Yield to Timer
+                        jmpret  dmxrtn,timerrtn			'Yield to Timer
 
                         rdword  dmxbfr,dmxbusy  wz		'Load busy pointer - zero?   
-              if_z      jmp     #dmxret	                '. Yes, == PAUSE ==
+              if_z      jmp     timerrtn	            '. Yes, == PAUSE ==
 
                         add     dmxbfr,#BfrLeng         'Compute @'buffer length
 
@@ -742,26 +748,26 @@ dmxtop
                         call    #dmxsendr               '. fourth & last byte
 
                         tjnz    dmxlng,#:xmit           'Loop for all words in command
-                        jmpret  dmxrtn,#dmxret          'Yield to Timer - final stop bit
+                        jmpret  dmxrtn,timerrtn         'Yield to Timer - final stop bit
                         jmp     #dmxtop	                'Loop forever
 
 
 dmxsendr
-                        jmpret  dmxrtn,#dmxret          '== PAUSE ==
+                        jmpret  dmxrtn,timerrtn         '== PAUSE ==
 
                         or      outa,dmxmask            'Start bit
-                        mov     dmxbits,#8              'Get #'bits in word
+                        mov     dmxdata,#8              'Get #'bits in word
                                                 
 :lup                        
-                        jmpret  dmxrtn,#dmxret          '== PAUSE ==
+                        jmpret  dmxrtn,timerrtn         '== PAUSE ==
 
                         ror     dmxdata,#1      wc      'Data bit                        
             if_c		or      outa,dmxmask
             if_nc       andn	outa,dmxmask
-                        djnz    dmxbits,#dmxret         'Loop for all data bits
+                        djnz    dmxdata,timerrtn         'Loop for all data bits
 
                         andn    outa,dmxmask            'Stop bit
-                        jmpret  dmxrtn,#dmxret          '== PAUSE ==
+                        jmpret  dmxrtn,timerrtn         '== PAUSE ==
 
 dmxsendr_ret            ret                             'return
 
@@ -770,16 +776,13 @@ dmxrtn					long	dmxtop
 dmxbfr					long	0
 dmxptr					long	0
 dmxlng					long	0
-dmxfree					long    ChanTblFree
-dmxchan					long	ChanTblMask
+dmxchan					long	0
+dmxmask					long	ChanTblMask
 dmxbusy					long    ChanTblBusy
 dmxfree					long    ChanTblFree
-dmxret					jmp		timerrtn
-dmxbits					long	0
+dmxdata					long	0
+dmxmskON				long	1 << DmxBitOn
 
-
-timerret				jmp		dmxrtn
-timerrtn				long	Timer
 
 
 
@@ -788,10 +791,6 @@ timerrtn				long	Timer
 '
 
 Timer                                                              
-                        add     timbas,cnt              'Adjust current time 
-
-                        wrbyte  tstate,tcogstate
-
 tNewState
                         cmp     tstate,#StateRun    wz
               if_z      jmp     #tRun
@@ -848,13 +847,13 @@ tPause
               if_z      jmp     #:lup
                         jmp     #tNewState
 
-
-
-                                       
+     
+timerrtn				long	Timer
+	                                   
 tinitlock               long    InitLock
 
 tcogtab                 long    0
-tcogstate               long    TimerCog*CogTblSiz+CogState
+tcogstate               long    DmxTimerCog*CogTblSiz+CogState
 tstate                  long    StateReady
 
 tticker                 long    0
@@ -865,7 +864,7 @@ t1000                   long    1000
 tword                   long    $0ffff
 tsecint                 long    $10000-1000
 tonesec                 long    $10000
-timbas                  long    320
+ttimbas                  long    320
 t_CLKCLKS               long    _CLKCLKS
 t_CLKTICKS              long    _CLKTICKS
 
