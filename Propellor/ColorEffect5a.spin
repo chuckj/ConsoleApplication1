@@ -24,7 +24,7 @@
 '             84 - stop
 '             85 - Resequence
 '             ...
-'             90-9f - port data
+'             90-a0 - port data
 '  <seq> - sequential number assigned to message (0-255)
 '  <length> - number of longs in message - including header
 '  <time> - seconds and milliseconds
@@ -54,6 +54,18 @@
 '  <cnt> - number of commands to send (1-63)
 '  <increment> - value added to command each iteration
 '       msb of iteraction must be set
+'
+' |          |          |          |          |
+' +----------+----------+----------+----------+
+' |          |          |          |          |
+' |                  <data>                   |
+' |          |          |          |          |
+' +----------+----------+----------+----------+
+' |          |          |          |          |
+' |          |   < dmx command >   |          |
+' |   <01>   |   <02>   |   <03>   |   <04 >  |
+' +----------+----------+----------+----------+
+' |          |          |          |          |
 '
 '
 ' USB acknowledge message format (Prop to Host)
@@ -726,10 +738,12 @@ dmxtop
 
                         rdbyte  dmxlng,dmxbfr           'Load long count
 
-                        sub     dmxbfr,#BfrLeng         'Restore
-                        mov     dmxptr,dmxbfr           '. @'buffer
-                        
-                        add     dmxptr,#BfrData         'Compute @'data
+                        sub     dmxbfr,#BfrLeng         'Restore @'buffer
+                        mov     dmxptr,dmxbfr           'Compute 
+                        add     dmxptr,#BfrData         '. @'data
+
+						mov		dmxdata,#0				'Initial byte
+						call	#dmxsendr				'. of zeros
 
 :xmit
                         rdlong  dmxdata,dmxptr          'Load
@@ -757,8 +771,7 @@ dmxsendr
 
                         or      outa,dmxmask            'Start bit
                         mov     dmxdata,#8              'Get #'bits in word
-                                                
-:lup                        
+                                                                       
                         jmpret  dmxrtn,timerrtn         '== PAUSE ==
 
                         ror     dmxdata,#1      wc      'Data bit                        
@@ -803,48 +816,47 @@ tStop
                         wrbyte  tstate,tcogstate
 
                         jmpret	timerrtn,#timerret        'Wait for time
-
+:lup
                         rdbyte  tstate,#GblState
                         cmp     tstate,#StateStop   wz
-              if_z      jmp     #timerret
+              if_z      jmp     #timerret                 ':lup
                         jmp     #tNewState
 
 tRun
                         wrbyte  tstate,tcogstate
 
-:lup
-                        jmpret	timerrtn,#timerret        'Wait for time
 
+                        jmpret	timerrtn,#timerret        'Wait for time
+:lup
                         rdbyte  tstate,#GblState
                         cmp     tstate,#StateRun    wz
               if_nz     jmp     #tNewState
-                        djnz    tticker,#timerret
+                        djnz    tticker,#timerret         ':lup
 
                         mov     tticker,t_CLKTICKS
                         
-                        rdlong  tt1,#GblTimer           'Load current time value
+                        rdlong  tt1,#GblTimer             'Load current time value
 
-                        add     tt1,#1                  'Increment the lo-order (ms) part
-                        mov     tt2,tt1                 '. &
-                        and     tt2,tword               '.   isolate it
-                        cmp     tt2,t1000           wz  '1000ms?
-              if_z      add     tt1,tsecint             '. Yes, adjust time to next second
+                        add     tt1,#1                    'Increment the lo-order (ms) part
+                        mov     tt2,tt1                   '. &
+                        and     tt2,tword                 '.   isolate it
+                        cmp     tt2,t1000           wz    '1000ms?
+              if_z      add     tt1,tsecint               '. Yes, adjust time to next second
                         mov     tsbuff,#"."
               if_z      call    #tsender
                         
-                        wrlong  tt1,#GblTimer           'Store current time value
+                        wrlong  tt1,#GblTimer             'Store current time value
                         
-                        jmp     #:lup                   'Loop
+                        jmp     #timerret                 ':lup
 
 tPause
                         wrbyte  tstate,tcogstate
 
-:lup
                         jmpret	timerrtn,#timerret        'Wait for time
-
+:lup
                         rdbyte  tstate,#GblState
                         cmp     tstate,#StatePause  wz
-              if_z      jmp     #:lup
+              if_z      jmp     #timerret                 ':lup
                         jmp     #tNewState
 
      
@@ -864,9 +876,8 @@ t1000                   long    1000
 tword                   long    $0ffff
 tsecint                 long    $10000-1000
 tonesec                 long    $10000
-ttimbas                  long    320
-t_CLKCLKS               long    _CLKCLKS
-t_CLKTICKS              long    _CLKTICKS
+ttimbas                 long    320
+t_CLKTICKS              long    250
 
 
 

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.IO.Ports;
+using System.Windows.Forms;
 
 namespace WindowsFormsDMXTest
 {
@@ -68,7 +68,7 @@ namespace WindowsFormsDMXTest
                     mmTimer.Start();
 
                     loop++;
-                    label5.Invoke((MethodInvoker)(() => label5.Text = loop.ToString()));
+                    label5.Invoke(() => label5.Text = loop.ToString());
 
                     step++;
                     break;
@@ -90,7 +90,7 @@ namespace WindowsFormsDMXTest
                     //serialPort1.BreakState = false;
                     byte[] msg = null;
 
-                    this.Invoke((MethodInvoker)(() => { msg = sendit(); }));
+                    this.Invoke(() => msg = sendit());
                     serialPort1.Write(msg, 0, msg.Length);
 
                     serialPort1.BreakState = false;

@@ -1,6 +1,7 @@
 ﻿using SharpDX;
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 //using System.Drawing;
 using SD = System.Drawing;
 
@@ -44,5 +45,7 @@ namespace ConsoleApplication1
 
         public static SD.Color Cross(this SD.Color left, SD.Color right) =>
             SD.Color.FromArgb(left.A * right.A / 255, left.R * right.R / 255, left.G * right.G / 255, left.B * right.B / 255);
+
+        public static void Invoke(this Control control, Action action) => control.Invoke((Delegate)action);
     }
 }
