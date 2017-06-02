@@ -17,6 +17,7 @@
 ' +----------+----------+----------+----------+
 ' |          |          |          |          |
 '
+'
 '  <msgtyp> - 80 - echo
 '             81 - set timer
 '             82 - run
@@ -27,7 +28,7 @@
 '             90-a0 - port data
 '  <seq> - sequential number assigned to message (0-255)
 '  <length> - number of longs in message - including header
-'  <time> - seconds and milliseconds
+'  <time> - seconds and millisecondss
 '  <data> - command dependent
 '
 ' |          |          |          |          |
@@ -165,7 +166,6 @@ CON
         USBCog = 1                                     'USB cog should be low - closer to P0-p7 for output
         BufferCog = 2
         DmxTimerCog = 3
-
 
         
         ChanTblCnt = 17
@@ -1362,6 +1362,22 @@ utxmtop
                         
 
 urcvlong
+'
+'			Load Test Data
+'
+                        mov     urcvrtn,#$+1
+                        tjz     xrcvdtacnt,#urcvtmo
+
+                        movs    :lod,xrcvdtaadr
+                        add     xrcvdtaadr,#1
+                        sub     xrcvdtacnt,#1
+:lod                    mov     urcvdata,$-$
+                        jmp     #urcvlong_ret
+'
+'			End Test Data Load
+'
+
+
                         mov     urcvtrys,#0              
                         mov     urcvrtn,#:byt1
 
@@ -1569,6 +1585,73 @@ xsBfrPtr                long    0
 xsCogDbgHead            long    0
 
 xsbuff                  long    0
+
+
+
+xrcvdtaadr    long      xrcvdtabgn
+xrcvdtacnt    long      xrcvdtaend-xrcvdtabgn
+
+xrcvdtabgn
+              long		$ff0301a0		' DMX, Seq 1, 3 words, No chksum
+              long		$0				' Time 0
+              long		$12340678		' Sends lo-order byte first
+
+'             long		$ff030190
+'             long		$0
+'             long		$12340678
+'             long		$ff030291
+'             long		$0
+'             long		$12340678
+'             long		$ff030392
+'             long		$0
+'             long		$12340678
+'             long		$ff030493
+'             long		$0
+'             long		$12340678
+'             long		$ff030594
+'             long		$0
+'             long		$12340678
+'             long		$ff030698
+'             long		$0
+'             long		$12340678
+'             long		$ff03079c
+'             long		$0
+'             long		$12340678
+'             long		$ff03089f
+'             long		$0
+'             long		$12340678
+                        
+'             long		$ff030990
+'             long		$1
+'             long		$00340678
+'             long		$ff030a91
+'             long		$1
+'             long		$00340678
+'             long		$ff030b92
+'             long		$1
+'             long		$00340678
+'             long		$ff030c93
+'             long		$1
+'             long		$00340678
+'             long		$ff030d94
+'             long		$2
+'             long		$00340678
+'             long		$ff030e98
+'             long		$2
+'             long		$00340678
+'             long		$ff030f9c
+'             long		$2
+'             long		$00340678
+'             long		$ff03109f
+'             long		$2
+'             long		$00340678
+                        
+'             long		$ff010082
+'             long		$ff030990
+'             long		$0
+'             long		$12340678
+xrcvdtaend
+
 
 
                         fit     496
