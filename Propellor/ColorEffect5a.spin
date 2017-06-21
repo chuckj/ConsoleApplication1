@@ -430,7 +430,7 @@ InitEntry
 '
 '       ChanTbl[16]		DMX
 '
-						mov     it2,icogtab             
+		    mov     it2,icogtab             
                         add     it2,it7					'(it7 Initial value = DmxTimerCog * CogTblSiz + CogChanTab)
                         wrword  it1,it2
                         add     it1,#ChanTblMask
@@ -671,7 +671,7 @@ DmxTimerEntry
                         rdword  tcogtab,#GblCogTbl      'Get @'Cog table
 
                         cogid   tt1                     'Cogid
-                        shl     tt1,#CogTblShft         '. * 8
+                        shl     tt1,#CogTblShft         '. * CogTblSiz
                         add     tcogtab,tt1             '. is index to cogtab
 
                         add     tcogstate,tcogtab       'Compute @'cog state
@@ -681,16 +681,11 @@ DmxTimerEntry
                         mov     tt2,tcogtab             'Copy @'cog tbl
                         add     tt2,#CogChanTab
                         
-:spin
-                        rdbyte  tstate,#GblState
-                        cmp     tstate,#StateReady wz,wc
-              if_be     jmp     #:spin 
-			  
 			  
 
 
 
-                        rdword  dmxchan,bt2             'Load Cog tbl entry
+                        rdword  dmxchan,tt2             'Load Cog tbl entry
 
                         add     dmxmask,dmxchan         '(dmxmask Initial = ChanTblMask)
                         rdlong  dmxmask,dmxmask         'Get bit mask
@@ -702,6 +697,20 @@ DmxTimerEntry
                         
                         add     dmxbusy,dmxchan         'Compute @'busy buffer
                         add     dmxfree,dmxchan         'Compute @'free buffer
+
+                        mov     tt1,#StateReady
+                        wrbyte  tt1,tcogstate
+
+
+						mov     tt2,#StateReady
+                        wrbyte  tt2,tcogstate
+
+
+:spin
+                        rdbyte  tstate,#GblState
+                        cmp     tstate,#StateReady wz,wc
+              if_b		jmp     #:spin 
+			  
 
 						mov		ttimbas,cnt				'Set
 						add		ttimbas,#DmxTimerTimeSlice	'. timer
@@ -865,7 +874,7 @@ timerrtn				long	Timer
 tinitlock               long    InitLock
 
 tcogtab                 long    0
-tcogstate               long    DmxTimerCog*CogTblSiz+CogState
+tcogstate               long    CogState
 tstate                  long    StateReady
 
 tticker                 long    0
@@ -1050,7 +1059,7 @@ urcvtop
                         and     urcvcmd,urcvwrk         '
                         mov     urcvseq,#$ff             '
                         ror     urcvwrk,#8              '
-                        and     urcvseq,urcvwrk         '
+                        and     urcvseq,urcvwrk         's
                         mov     urcvlng,#$ff             '
                         ror     urcvwrk,#8              '
                         and     urcvlng,urcvwrk          '
@@ -1177,7 +1186,7 @@ cmd90
                         
 :lup
                         call    #urcvlong					'Get another long
-                        
+'76                        
                         wrlong  urcvdata,urcvptr			'. & write command there
                         add     urcvptr,#4					'Bump @'data area
                         djnz    urcvlng,#:lup				'Loop thru data
@@ -1192,7 +1201,7 @@ cmd90
                         mov     urcvlock,urcvwrk
                         shr     urcvlock,#2
 
-                        
+'7e                        
 :spin2                  lockset urcvlock            wc  'Lock   
               if_c      jmp     #:spin2                 '. the cog (channel head/tail)
 
