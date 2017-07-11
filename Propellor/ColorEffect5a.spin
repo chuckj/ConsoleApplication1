@@ -179,8 +179,8 @@ CON
         ChanTblTail = 10
 
         ChanTimeSlice = 100                              'Ticks per Time Slice per channel
-		DmxTimerTimeSlice = 320                          'Ticks per Dmx/Timer time slice (4us)
-		TimerTicksPerMs = 1000 / 4
+        DmxTimerTimeSlice = 320                          'Ticks per Dmx/Timer time slice (4us)
+        TimerTicksPerMs = 1000 / 4
         ChanQuietBits = 19                               'Quiet bit times between words
         
         BufferLng = 68                                  'Longs
@@ -194,10 +194,10 @@ CON
         StatePause = 6
 
 
-        QueueLock = 0                                   '0 through 3
-        QueueLockCnt = 4                                '1 for each protocol cog
-        InitLock = 7
+        QueueLock = 0                                   '0 through 4
+        QueueLockCnt = 5                                '1 for each protocol cog
         FreeLock = 6
+        InitLock = 7
 
 
         BfrLink = 0
@@ -278,7 +278,7 @@ InitEntry
 
                         mov     it1,ichntab
                         mov     it2,icogtab             
-                        add     it2,it4					'(it4 Initial value = ProtoCog * CogTblSiz + CogChanTab)
+                        add     it2,it4                                 '(it4 Initial value = ProtoCog * CogTblSiz + CogChanTab)
                         
 '
 '       ChanTbl[0]
@@ -428,10 +428,10 @@ InitEntry
                         add     it2,#2
                         
 '
-'       ChanTbl[16]		DMX
+'       ChanTbl[16]             DMX
 '
-		    mov     it2,icogtab             
-                        add     it2,it7					'(it7 Initial value = DmxTimerCog * CogTblSiz + CogChanTab)
+                    mov     it2,icogtab             
+                        add     it2,it7                                 '(it7 Initial value = DmxTimerCog * CogTblSiz + CogChanTab)
                         wrword  it1,it2
                         add     it1,#ChanTblMask
                         wrlong  idmxmsk,it1
@@ -465,7 +465,7 @@ InitEntry
 '       Now, stagger start the protocol cogs...
 '               
                         mov     it2,icogtab
-                        add     it2,it6					' it6 = ProtoCog * CogTblSiz + CogTimBas
+                        add     it2,it6                                 ' it6 = ProtoCog * CogTblSiz + CogTimBas
                         mov     it1,cnt
                         add     it1,#100
                         wrlong  it1,it2
@@ -630,7 +630,7 @@ ichan14msk              long    1 << Chan14Bit
 ichan15msk              long    1 << Chan15Bit
 ichan16msk              long    1 << Chan16Bit
 
-idmxmsk					long    1 << DmxBit
+idmxmsk                                 long    1 << DmxBit
 
 
 
@@ -681,7 +681,7 @@ DmxTimerEntry
                         mov     tt2,tcogtab             'Copy @'cog tbl
                         add     tt2,#CogChanTab
                         
-			  
+                          
 
 
 
@@ -690,7 +690,7 @@ DmxTimerEntry
                         add     dmxmask,dmxchan         '(dmxmask Initial = ChanTblMask)
                         rdlong  dmxmask,dmxmask         'Get bit mask
                         
-						or		dira,dmxmskON			'Set to ONE and output
+                        or      dira,dmxmskON           'Set to ONE and output
                         or      outa,dmxmskON
                         andn    outa,dmxmask            'Set to Zero
                         or      dira,dmxmask            'Set as output
@@ -702,18 +702,18 @@ DmxTimerEntry
                         wrbyte  tt1,tcogstate
 
 
-						mov     tt2,#StateReady
+                        mov     tt2,#StateReady
                         wrbyte  tt2,tcogstate
 
 
 :spin
                         rdbyte  tstate,#GblState
                         cmp     tstate,#StateReady wz,wc
-              if_b		jmp     #:spin 
-			  
+              if_b      jmp     #:spin 
+                          
 
-						mov		ttimbas,cnt				'Set
-						add		ttimbas,#DmxTimerTimeSlice	'. timer
+                        mov      ttimbas,cnt                     'Set
+                        add      ttimbas,#DmxTimerTimeSlice      '. timer
 
       
                         
@@ -725,23 +725,23 @@ DmxTimerEntry
 '       DMX protocol
 '
 timerret
-						waitcnt ttimbas,#DmxTimerTimeSlice  'Sync to clock
-						jmp		dmxrtn
+                        waitcnt ttimbas,#DmxTimerTimeSlice  'Sync to clock
+                        jmp     dmxrtn
 
 
 dmxtop
-                        or      outa,dmxmask			'Send break
-                        mov     dmxdata,#23				'Get l'BREAK (min 92 us / 4 us = 23 bit-times)
-                        jmpret  dmxrtn,timerrtn			'Yield to Timer
-                        djnz    dmxdata,timerrtn		'. & loop for 92 us
+                        or      outa,dmxmask            'Send break
+                        mov     dmxdata,#23             'Get l'BREAK (min 92 us / 4 us = 23 bit-times)
+                        jmpret  dmxrtn,timerrtn         'Yield to Timer
+                        djnz    dmxdata,timerrtn        '. & loop for 92 us
 
-                        andn    outa,dmxmask			'Send mark (min 12 us / 4 us = 3 bit-times)
-                        jmpret  dmxrtn,timerrtn			'Yield to Timer (this is the first, sencond below, last before start bit)
-	
-                        jmpret  dmxrtn,timerrtn			'Yield to Timer
+                        andn    outa,dmxmask            'Send mark (min 12 us / 4 us = 3 bit-times)
+                        jmpret  dmxrtn,timerrtn         'Yield to Timer (this is the first, sencond below, last before start bit)
+        
+                        jmpret  dmxrtn,timerrtn         'Yield to Timer
 
-                        rdword  dmxbfr,dmxbusy  wz		'Load busy pointer - zero?   
-              if_z      jmp     timerrtn	            '. Yes, == PAUSE ==
+                        rdword  dmxbfr,dmxbusy  wz      'Load busy pointer - zero?   
+              if_z      jmp     timerrtn                '. Yes, == PAUSE ==
 
                         add     dmxbfr,#BfrLeng         'Compute @'buffer length
 
@@ -751,8 +751,8 @@ dmxtop
                         mov     dmxptr,dmxbfr           'Compute 
                         add     dmxptr,#BfrData         '. @'data
 
-						mov		dmxdata,#0				'Initial byte
-						call	#dmxsendr				'. of zeros
+                        mov     dmxdata,#0              'Initial byte
+                        call    #dmxsendr               '. of zeros
 
 :xmit
                         rdlong  dmxdata,dmxptr          'Load
@@ -761,8 +761,8 @@ dmxtop
                         sub     dmxlng,#1   wz          'All data sent?
                 if_z    wrlong  dmxbfr,dmxfree          '. Yes - Request next buffer
 
-                        rol     dmxdata,#8				'Send
-                        call    #dmxsendr				'. first byte
+                        rol     dmxdata,#8              'Send
+                        call    #dmxsendr               '. first byte
                         rol     dmxdata,#16             'Send
                         call    #dmxsendr               '. second byte
                         rol     dmxdata,#16             'Send
@@ -772,38 +772,39 @@ dmxtop
 
                         tjnz    dmxlng,#:xmit           'Loop for all words in command
                         jmpret  dmxrtn,timerrtn         'Yield to Timer - final stop bit
-                        jmp     #dmxtop	                'Loop forever
+                        jmp     #dmxtop                 'Loop forever
 
 
 dmxsendr
                         jmpret  dmxrtn,timerrtn         '== PAUSE ==
 
                         or      outa,dmxmask            'Start bit
-                        mov     dmxdata,#8              'Get #'bits in word
+                        mov     dmxbits,#8              'Get #'bits in word
                                                                        
                         jmpret  dmxrtn,timerrtn         '== PAUSE ==
 
                         ror     dmxdata,#1      wc      'Data bit                        
-            if_c		or      outa,dmxmask
-            if_nc       andn	outa,dmxmask
-                        djnz    dmxdata,timerrtn         'Loop for all data bits
+            if_c        or      outa,dmxmask
+            if_nc       andn    outa,dmxmask
+                        djnz    dmxbits,timerrtn         'Loop for all data bits
 
                         andn    outa,dmxmask            'Stop bit
                         jmpret  dmxrtn,timerrtn         '== PAUSE ==
 
 dmxsendr_ret            ret                             'return
 
-dmxsrtn					long	0
-dmxrtn					long	dmxtop
-dmxbfr					long	0
-dmxptr					long	0
-dmxlng					long	0
-dmxchan					long	0
-dmxmask					long	ChanTblMask
-dmxbusy					long    ChanTblBusy
-dmxfree					long    ChanTblFree
-dmxdata					long	0
-dmxmskON				long	1 << DmxBitOn
+dmxsrtn                 long    0
+dmxrtn                  long    dmxtop
+dmxbfr                  long    0
+dmxptr                  long    0
+dmxlng                  long    0
+dmxchan                 long    0
+dmxmask                 long    ChanTblMask
+dmxbusy                 long    ChanTblBusy
+dmxfree                 long    ChanTblFree
+dmxdata                 long    0
+dmxmskON                long    1 << DmxBitOn
+dmxbits                 long    0
 
 
 
@@ -824,7 +825,7 @@ tStop
                         mov     tticker,t_CLKTICKS
                         wrbyte  tstate,tcogstate
 
-                        jmpret	timerrtn,#timerret        'Wait for time
+                        jmpret  timerrtn,#timerret        'Wait for time
 :lup
                         rdbyte  tstate,#GblState
                         cmp     tstate,#StateStop   wz
@@ -835,7 +836,7 @@ tRun
                         wrbyte  tstate,tcogstate
 
 
-                        jmpret	timerrtn,#timerret        'Wait for time
+                        jmpret  timerrtn,#timerret        'Wait for time
 :lup
                         rdbyte  tstate,#GblState
                         cmp     tstate,#StateRun    wz
@@ -861,7 +862,7 @@ tRun
 tPause
                         wrbyte  tstate,tcogstate
 
-                        jmpret	timerrtn,#timerret        'Wait for time
+                        jmpret  timerrtn,#timerret        'Wait for time
 :lup
                         rdbyte  tstate,#GblState
                         cmp     tstate,#StatePause  wz
@@ -869,8 +870,8 @@ tPause
                         jmp     #tNewState
 
      
-timerrtn				long	Timer
-	                                   
+timerrtn                                long    Timer
+                                           
 tinitlock               long    InitLock
 
 tcogtab                 long    0
@@ -1161,35 +1162,35 @@ cmd90
                         rdword  urcvbufr,#GblFreeChain wz   'load @'next buffer
               if_z      jmp     #:unlk
 
-                        rdword  ut1,urcvbufr				'unchain
+                        rdword  ut1,urcvbufr                            'unchain
                         
-                        wrword  ut1,#GblFreeChain			'. the buffer
+                        wrword  ut1,#GblFreeChain                       '. the buffer
 
-                        rdbyte  urcvfreecnt,#GblFreeCnt		'Decrement
-                        sub     urcvfreecnt,#1				'.
-                        wrbyte  urcvfreecnt,#GblFreeCnt		'. buffer count
+                        rdbyte  urcvfreecnt,#GblFreeCnt         'Decrement
+                        sub     urcvfreecnt,#1                          '.
+                        wrbyte  urcvfreecnt,#GblFreeCnt         '. buffer count
 
 :unlk
-                        lockclr ufreelock					'. & clear the lock
+                        lockclr ufreelock                                       '. & clear the lock
                         
-              if_z      jmp     #sndnack_bfr				'no buffer - try again
+              if_z      jmp     #sndnack_bfr                            'no buffer - try again
               
 '
 '       receive msg
 '
-                        mov     urcvptr,urcvbufr			'Copy @'              
+                        mov     urcvptr,urcvbufr                        'Copy @'              
                         wrlong  uzero,urcvptr
-                        add     urcvptr,#BfrLeng			'Bump @'data area
+                        add     urcvptr,#BfrLeng                        'Bump @'data area
                         wrword  urcvlng,urcvptr
-                        add     urcvptr,#BfrTimer-BfrLeng	'Bump @'data area
-                        add     urcvlng,#1					'increment l'
+                        add     urcvptr,#BfrTimer-BfrLeng       'Bump @'data area
+                        add     urcvlng,#1                      'increment l'
                         
 :lup
-                        call    #urcvlong					'Get another long
+                        call    #urcvlong                       'Get another long
 '76                        
-                        wrlong  urcvdata,urcvptr			'. & write command there
-                        add     urcvptr,#4					'Bump @'data area
-                        djnz    urcvlng,#:lup				'Loop thru data
+                        wrlong  urcvdata,urcvptr                '. & write command there
+                        add     urcvptr,#4                      'Bump @'data area
+                        djnz    urcvlng,#:lup                   'Loop thru data
 
 '
 '       queue buffer on channel
@@ -1279,10 +1280,10 @@ utxmtop
                         mov     utxmrtn,#:tst
 
 :tst                        
-                        tjnz    utxmxack,#:sndxack
+                        tjnz    utxmxack,#:sndxack 
                         tjnz    urcvecho,urcvrtn
 
-                        rdbyte  ut1,#GblFreeCnt
+                        rdbyte  ut1,#GblFreeCnt    
                         cmp     ut1,urcvfreecnt       wz,wc
               if_be     jmp     urcvrtn
 
@@ -1372,7 +1373,7 @@ utxmtop
 
 urcvlong
 '
-'			Load Test Data
+'                       Load Test Data
 '
                         mov     urcvrtn,#$+1
                         tjz     xrcvdtacnt,#urcvtmo
@@ -1383,7 +1384,7 @@ urcvlong
 :lod                    mov     urcvdata,$-$
                         jmp     #urcvlong_ret
 '
-'			End Test Data Load
+'                       End Test Data Load
 '
 
 
@@ -1601,64 +1602,71 @@ xrcvdtaadr    long      xrcvdtabgn
 xrcvdtacnt    long      xrcvdtaend-xrcvdtabgn
 
 xrcvdtabgn
-              long		$ff0301a0		' DMX, Seq 1, 3 words, No chksum
-              long		$0				' Time 0
-              long		$12340678		' Sends lo-order byte first
+              long              $ff0301a0               ' DMX, Seq 1, 3 words, No chksum
+              long              $0                      ' Time 0
+              long              $12340678               ' Sends hi-order byte first
 
-'             long		$ff030190
-'             long		$0
-'             long		$12340678
-'             long		$ff030291
-'             long		$0
-'             long		$12340678
-'             long		$ff030392
-'             long		$0
-'             long		$12340678
-'             long		$ff030493
-'             long		$0
-'             long		$12340678
-'             long		$ff030594
-'             long		$0
-'             long		$12340678
-'             long		$ff030698
-'             long		$0
-'             long		$12340678
-'             long		$ff03079c
-'             long		$0
-'             long		$12340678
-'             long		$ff03089f
-'             long		$0
-'             long		$12340678
+              long              $ff0302a0               ' DMX, Seq 1, 3 words, No chksum
+              long              $1                      ' Time 0
+              long              $0f0f0f0f               ' Sends hi-order byte first
+
+              long              $ff010082               ' Runs
+
+              
+'             long              $ff030190
+'             long              $0
+'             long              $12340678
+'             long              $ff030291
+'             long              $0
+'             long              $12340678
+'             long              $ff030392
+'             long              $0
+'             long              $12340678
+'             long              $ff030493
+'             long              $0
+'             long              $12340678
+'             long              $ff030594
+'             long              $0
+'             long              $12340678
+'             long              $ff030698
+'             long              $0
+'             long              $12340678
+'             long              $ff03079c
+'             long              $0
+'             long              $12340678
+'             long              $ff03089f
+'             long              $0
+'             long              $12340678
                         
-'             long		$ff030990
-'             long		$1
-'             long		$00340678
-'             long		$ff030a91
-'             long		$1
-'             long		$00340678
-'             long		$ff030b92
-'             long		$1
-'             long		$00340678
-'             long		$ff030c93
-'             long		$1
-'             long		$00340678
-'             long		$ff030d94
-'             long		$2
-'             long		$00340678
-'             long		$ff030e98
-'             long		$2
-'             long		$00340678
-'             long		$ff030f9c
-'             long		$2
-'             long		$00340678
-'             long		$ff03109f
-'             long		$2
-'             long		$00340678
+'             long              $ff030990
+'             long              $1
+'             long              $00340678
+'             long              $ff030a91
+'             long              $1
+'             long              $00340678
+'             long              $ff030b92
+'             long              $1
+'             long              $00340678
+'             long              $ff030c93
+'             long              $1
+'             long              $00340678
+'             long              $ff030d94
+'             long              $2
+'             long              $00340678
+'             long              $ff030e98
+'             long              $2
+'             long              $00340678
+'             long              $ff030f9c
+'             long              $2
+'             long              $00340678
+'             long              $ff03109f
+'             long              $2
+'             long              $00340678
                         
-'             long		$ff010082
-'             long		$ff030990
-'             long		$0
-'             long		$12340678
+'             long              $ff010082
+'             long              $ff030990
+'             long              $0
+'             long              $12340678
 xrcvdtaend
 
 
@@ -2215,7 +2223,7 @@ chan3ret
                         jmp     chan4rtn                ' . & run channel 1
 
 chan4activ
-						tjz		chan4mask,#chan4ret
+                                                tjz             chan4mask,#chan4ret
 
 chan4top
                         jmpret  chan4rtn,#chan4ret      '== PAUSE ==
