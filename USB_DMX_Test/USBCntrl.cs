@@ -38,6 +38,12 @@ namespace USB_DMX_Test
         {
             this.Name = name;
 
+            cts = new CancellationTokenSource();
+            tkn = cts.Token;
+
+            rxTsk = Task.Run(async () => await ShowRxData(), tkn);
+            txTsk = Task.Run(async () => await SendTxData(), tkn);
+
             do
             {
                 // Open first device by serial number
@@ -120,10 +126,6 @@ namespace USB_DMX_Test
                 ftStatus = myFtdiDevice.Write(dataToWrite, dataToWrite.Length, ref numBytesWritten);
 
 
-                cts = new CancellationTokenSource();
-                tkn = cts.Token;
-                rxTsk = Task.Factory.StartNew(() => ShowRxData(), tkn);
-                txTsk = Task.Factory.StartNew(() => SendTxData(), tkn);
 
                 state = 0;
 
@@ -131,6 +133,12 @@ namespace USB_DMX_Test
 
             for (int ndx = 0; ndx < bufrPool.BoundedCapacity; ndx++)
                 bufrPool.Add(new USBMsg());
+
+            logger.Info("Waiting for tasks to complete.");
+            cts.CancelAfter(1000);
+
+            Task.WhenAll(new[] { txTsk, rxTsk });
+            logger.Error("Done.");
         }
 
         ~USBCntrl()
@@ -208,7 +216,7 @@ namespace USB_DMX_Test
         }
 
 
-        private void SendTxData()
+        private async Task SendTxData()
         {
             logger.Info(">SendTx Ready:" + Name);
 
@@ -241,13 +249,15 @@ namespace USB_DMX_Test
                     }
                 }
                 else
-                    Thread.Sleep(5);
+                    await Task.Delay(5);
             }
             logger.Info(">SendTx Closed:" + Name);
+
+            tkn.ThrowIfCancellationRequested();
         }
 
 
-        private void ShowRxData()
+        private async Task ShowRxData()
         {
             logger.Info(">ShowRx Ready: " + Name);
 
@@ -272,7 +282,7 @@ namespace USB_DMX_Test
                     {
                         // Wait for a key press
                         logger.Error("Failed to get number of bytes available to read:" + Name + " (error " + ftStatus.ToString() + ")");
-                        return;
+                        throw new InvalidOperationException("Failed to get number of bytes available to read");
                     }
 
                     if (numBytesAvailable > 3)
@@ -324,13 +334,15 @@ namespace USB_DMX_Test
                         hdl.Reset();
                         //myFtdiDevice.SetEventNotification(FTD2XX_NET.FTDI.FT_EVENTS.FT_EVENT_RXCHAR, hdl.WaitHandle);
                         hdl.Wait(-1, tkn);
-                        WaitHandle.WaitAny(new WaitHandle[] { hdl.WaitHandle, tkn.WaitHandle }, -1);
+                        //WaitHandle.WaitAny(new WaitHandle[] { hdl.WaitHandle, tkn.WaitHandle }, -1);
+                        await hdl.WaitHandle.WaitOneAsync(tkn);
                     }
                 }
             }
             finally
             {
             }
+            tkn.ThrowIfCancellationRequested();
         }
     }
 
