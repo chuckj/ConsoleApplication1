@@ -304,8 +304,14 @@ namespace ConsoleApplication1
 
                         case 0:
                             {
-                                bgnColor[] initClr = Global.Instance.LitDict.Values.OfType<Lit>()
-                                   .Where(v => regex.IsMatch(v.Name))
+                                var litx = Global.Instance.LitDict.Values.OfType<Lit>()
+                                   .Where(v => regex.IsMatch(v.Name));
+                                if (selector != null)
+                                    litx = litx.Where(lit => selector(lit));
+                                if (orderby != null)
+                                    litx = litx.OrderBy(lit => orderby(lit));
+
+                                bgnColor[] initClr = litx
                                    .Select(l => new bgnColor() { clr = context[l.GlobalIndex], Ndx = l.GlobalIndex })
                                    .ToArray();
 

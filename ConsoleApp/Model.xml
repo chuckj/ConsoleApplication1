@@ -1455,5 +1455,6 @@
       </transition>
       <transition name="unrotate">
         <linear steps="5" fade="5" />
-      </transition>    </steptransitions>
+      </transition>
+    </steptransitions>
   </root>

@@ -303,6 +303,11 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="Resources\Play.bmp" />
+    <Content Include="music\carol.xml" />
+    <Content Include="music\rudolph.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="music\wizards.xml" />
     <Content Include="textfont.dds" />
     <Content Include="Tree.txt" />
     <Content Include="Model.xml">

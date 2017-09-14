@@ -169,9 +169,30 @@
     <!--<stepi begin="1m1+3/4" end="1m1+4/4" color="white" text="" regex=":ar1:" mode="0" transition="crawl"/>-->
     <stepi begin="1m1+4/4" end="1m2" color="blue" text="" regex=":ar1:" mode="1" transition="crawl"/>
 
-    <stepi begin="1m1" end="2m1" color="green,white,red,white" text="" regex=":mm" mode="4" transition="rotate" orderby="row" groupby="row"/>
+    <!--<stepi begin="1m1" end="2m1" color="green,white,red,white" text="" regex=":mm" mode="4" transition="rotate" orderby="row" groupby="row"/>-->
     <stepi begin="1m1" end="2m1" color="green,white,red,white" text="" regex=":pl" mode="4" transition="rotate" orderby="row" groupby="row"/>
-    
+
+    <stepi begin="1m1" end="1m1" color="red" text="" regex=":mm[57]" mode="0" selector="(Row/2)==0" transition="immediate"/>
+    <stepi begin="1m2" end="1m2" color="red" text="" regex=":mm[57]" mode="0" selector="(Row/2)==1" transition="immediate"/>
+    <stepi begin="1m3" end="1m3" color="red" text="" regex=":mm[57]" mode="0" selector="(Row/2)==2" transition="immediate"/>
+    <stepi begin="1m4" end="1m4" color="red" text="" regex=":mm[57]" mode="0" selector="Row>5" transition="immediate"/>
+
+    <stepi begin="2m1" end="2m1" color="red" text="" regex=":mm[46]" mode="0" selector="(Row/2)==0" transition="immediate"/>
+    <stepi begin="2m2" end="2m2" color="red" text="" regex=":mm[46]" mode="0" selector="(Row/2)==1" transition="immediate"/>
+    <stepi begin="2m3" end="2m3" color="red" text="" regex=":mm[46]" mode="0" selector="(Row/2)==2" transition="immediate"/>
+    <stepi begin="2m4" end="2m4" color="red" text="" regex=":mm[46]" mode="0" selector="Row>5" transition="immediate"/>
+
+    <stepi begin="3m1" end="3m1" color="red" text="" regex=":mm[31]" mode="0" selector="(Row/2)==0" transition="immediate"/>
+    <stepi begin="3m2" end="3m2" color="red" text="" regex=":mm[31]" mode="0" selector="(Row/2)==1" transition="immediate"/>
+    <stepi begin="3m3" end="3m3" color="red" text="" regex=":mm[31]" mode="0" selector="(Row/2)==2" transition="immediate"/>
+    <stepi begin="3m4" end="3m4" color="red" text="" regex=":mm[31]" mode="0" selector="Row>5" transition="immediate"/>
+
+    <stepi begin="4m1" end="4m1" color="red" text="" regex=":mm2" mode="0" selector="(Row/2)==0" transition="immediate"/>
+    <stepi begin="4m2" end="4m2" color="red" text="" regex=":mm2" mode="0" selector="(Row/2)==1" transition="immediate"/>
+    <stepi begin="4m3" end="4m3" color="red" text="" regex=":mm2" mode="0" selector="(Row/2)==2" transition="immediate"/>
+    <stepi begin="4m4" end="4m4" color="red" text="" regex=":mm2" mode="0" selector="Row>5" transition="immediate"/>
+
+
     <!--<stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm1:" mode="1" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm2:" mode="0" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm3:" mode="2" transition="crawl" orderby="row" groupby="row"/>
