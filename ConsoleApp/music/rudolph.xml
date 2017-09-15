@@ -193,6 +193,28 @@
     <stepi begin="4m4" end="4m4" color="red" text="" regex=":mm2" mode="0" selector="Row>5" transition="immediate"/>
 
 
+    <stepi begin="5m1" end="5m1" color="white" text="" regex=":mm[57]" mode="0" selector="Column==0||Column==8" transition="immediate"/>
+    <stepi begin="5m2" end="5m2" color="white" text="" regex=":mm[57]" mode="0" selector="Column==1||Column==7" transition="immediate"/>
+    <stepi begin="5m3" end="5m3" color="white" text="" regex=":mm[57]" mode="0" selector="Column==2||Column==6" transition="immediate"/>
+    <stepi begin="5m4" end="5m4" color="white" text="" regex=":mm[57]" mode="0" selector="Column==3||Column==4||Column==5" transition="immediate"/>
+
+    <stepi begin="6m1" end="6m1" color="white" text="" regex=":mm[46]" mode="0" selector="Column==0||Column==8" transition="immediate"/>
+    <stepi begin="6m2" end="6m2" color="white" text="" regex=":mm[46]" mode="0" selector="Column==1||Column==7" transition="immediate"/>
+    <stepi begin="6m3" end="6m3" color="white" text="" regex=":mm[46]" mode="0" selector="Column==2||Column==6" transition="immediate"/>
+    <stepi begin="6m4" end="6m4" color="white" text="" regex=":mm[46]" mode="0" selector="Column==3||Column==4||Column==5" transition="immediate"/>
+
+    <stepi begin="7m1" end="7m1" color="white" text="" regex=":mm[31]" mode="0" selector="Column==0||Column==8" transition="immediate"/>
+    <stepi begin="7m2" end="7m2" color="white" text="" regex=":mm[31]" mode="0" selector="Column==1||Column==7" transition="immediate"/>
+    <stepi begin="7m3" end="7m3" color="white" text="" regex=":mm[31]" mode="0" selector="Column==2||Column==6" transition="immediate"/>
+    <stepi begin="7m4" end="7m4" color="white" text="" regex=":mm[31]" mode="0" selector="Column==3||Column==4||Column==5" transition="immediate"/>
+
+    <stepi begin="8m1" end="8m1" color="white" text="" regex=":mm2" mode="0" selector="Column==0||Column==8" transition="immediate"/>
+    <stepi begin="8m2" end="8m2" color="white" text="" regex=":mm2" mode="0" selector="Column==1||Column==7" transition="immediate"/>
+    <stepi begin="8m3" end="8m3" color="white" text="" regex=":mm2" mode="0" selector="Column==2||Column==6" transition="immediate"/>
+    <stepi begin="8m4" end="8m4" color="white" text="" regex=":mm2" mode="0" selector="Column==3||Column==4||Column==5" transition="immediate"/>
+
+
+
     <!--<stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm1:" mode="1" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm2:" mode="0" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm3:" mode="2" transition="crawl" orderby="row" groupby="row"/>
