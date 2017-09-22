@@ -249,7 +249,47 @@
     <stepi begin="12m3" end="12m3" color="green" text="" regex=":pl2" mode="0" selector="Row>=25&amp;&amp;Row&lt;=36" transition="immediate"/>
     <stepi begin="12m4" end="12m4" color="green" text="" regex=":pl2" mode="0" selector="Row>=37&amp;&amp;Row&lt;=49" transition="immediate"/>
 
+    
+    <stepi begin="9m1" end="9m1" color="green" text="" regex=":ar1" mode="0" selector="Row>=00&amp;&amp;Row&lt;=11" transition="immediate"/>
+    <stepi begin="9m2" end="9m2" color="green" text="" regex=":ar1" mode="0" selector="Row>=12&amp;&amp;Row&lt;=24" transition="immediate"/>
+    <stepi begin="9m3" end="9m3" color="green" text="" regex=":ar1" mode="0" selector="Row>=25&amp;&amp;Row&lt;=36" transition="immediate"/>
+    <stepi begin="9m4" end="9m4" color="green" text="" regex=":ar1" mode="0" selector="Row>=37&amp;&amp;Row&lt;=49" transition="immediate"/>
 
+    <stepi begin="10m1" end="10m1" color="white" text="" regex=":ar1" mode="0" selector="Row>=00&amp;&amp;Row&lt;=11" transition="immediate"/>
+    <stepi begin="10m2" end="10m2" color="white" text="" regex=":ar1" mode="0" selector="Row>=12&amp;&amp;Row&lt;=24" transition="immediate"/>
+    <stepi begin="10m3" end="10m3" color="white" text="" regex=":ar1" mode="0" selector="Row>=25&amp;&amp;Row&lt;=36" transition="immediate"/>
+    <stepi begin="10m4" end="10m4" color="white" text="" regex=":ar1" mode="0" selector="Row>=37&amp;&amp;Row&lt;=49" transition="immediate"/>
+    <stepi begin="10m1" end="10m1" color="green" text="" regex=":ar2" mode="0" selector="Row>=00&amp;&amp;Row&lt;=11" transition="immediate"/>
+    <stepi begin="10m2" end="10m2" color="green" text="" regex=":ar2" mode="0" selector="Row>=12&amp;&amp;Row&lt;=24" transition="immediate"/>
+    <stepi begin="10m3" end="10m3" color="green" text="" regex=":ar2" mode="0" selector="Row>=25&amp;&amp;Row&lt;=36" transition="immediate"/>
+    <stepi begin="10m4" end="10m4" color="green" text="" regex=":ar2" mode="0" selector="Row>=37&amp;&amp;Row&lt;=49" transition="immediate"/>
+
+    <stepi begin="11m1" end="11m1" color="red" text="" regex=":ar1" mode="0" selector="Row>=00&amp;&amp;Row&lt;=11" transition="immediate"/>
+    <stepi begin="11m2" end="11m2" color="red" text="" regex=":ar1" mode="0" selector="Row>=12&amp;&amp;Row&lt;=24" transition="immediate"/>
+    <stepi begin="11m3" end="11m3" color="red" text="" regex=":ar1" mode="0" selector="Row>=25&amp;&amp;Row&lt;=36" transition="immediate"/>
+    <stepi begin="11m4" end="11m4" color="red" text="" regex=":ar1" mode="0" selector="Row>=37&amp;&amp;Row&lt;=49" transition="immediate"/>
+    <stepi begin="11m1" end="11m1" color="white" text="" regex=":ar2" mode="0" selector="Row>=00&amp;&amp;Row&lt;=11" transition="immediate"/>
+    <stepi begin="11m2" end="11m2" color="white" text="" regex=":ar2" mode="0" selector="Row>=12&amp;&amp;Row&lt;=24" transition="immediate"/>
+    <stepi begin="11m3" end="11m3" color="white" text="" regex=":ar2" mode="0" selector="Row>=25&amp;&amp;Row&lt;=36" transition="immediate"/>
+    <stepi begin="11m4" end="11m4" color="white" text="" regex=":ar2" mode="0" selector="Row>=37&amp;&amp;Row&lt;=49" transition="immediate"/>
+
+    <stepi begin="11m1" end="11m1" color="red" text="" regex=":ar1" mode="0" selector="Row>=00&amp;&amp;Row&lt;=11" transition="immediate"/>
+    <stepi begin="11m2" end="11m2" color="red" text="" regex=":ar1" mode="0" selector="Row>=12&amp;&amp;Row&lt;=24" transition="immediate"/>
+    <stepi begin="11m3" end="11m3" color="red" text="" regex=":ar1" mode="0" selector="Row>=25&amp;&amp;Row&lt;=36" transition="immediate"/>
+    <stepi begin="11m4" end="11m4" color="red" text="" regex=":ar1" mode="0" selector="Row>=37&amp;&amp;Row&lt;=49" transition="immediate"/>
+    <stepi begin="11m1" end="11m1" color="white" text="" regex=":ar2" mode="0" selector="Row>=00&amp;&amp;Row&lt;=11" transition="immediate"/>
+    <stepi begin="11m2" end="11m2" color="white" text="" regex=":ar2" mode="0" selector="Row>=12&amp;&amp;Row&lt;=24" transition="immediate"/>
+    <stepi begin="11m3" end="11m3" color="white" text="" regex=":ar2" mode="0" selector="Row>=25&amp;&amp;Row&lt;=36" transition="immediate"/>
+    <stepi begin="11m4" end="11m4" color="white" text="" regex=":ar2" mode="0" selector="Row>=37&amp;&amp;Row&lt;=49" transition="immediate"/>
+
+    <stepi begin="12m1" end="12m1" color="red" text="" regex=":ar2" mode="0" selector="Row>=00&amp;&amp;Row&lt;=11" transition="immediate"/>
+    <stepi begin="12m2" end="12m2" color="red" text="" regex=":ar2" mode="0" selector="Row>=12&amp;&amp;Row&lt;=24" transition="immediate"/>
+    <stepi begin="12m3" end="12m3" color="red" text="" regex=":ar2" mode="0" selector="Row>=25&amp;&amp;Row&lt;=36" transition="immediate"/>
+    <stepi begin="12m4" end="12m4" color="red" text="" regex=":ar2" mode="0" selector="Row>=37&amp;&amp;Row&lt;=49" transition="immediate"/>
+
+
+
+    
     <!--<stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm1:" mode="1" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm2:" mode="0" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm3:" mode="2" transition="crawl" orderby="row" groupby="row"/>
