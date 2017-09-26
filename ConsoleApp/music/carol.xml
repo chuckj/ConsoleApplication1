@@ -2,102 +2,29 @@
 <song filename="@@path@@\Repos\SoundVisualizationLibrary\Sample_NAudio\timing\David Foster - Carol of the Bells.mp3"
       displayFile="@@path@@\Repos\SoundVisualizationLibrary\Sample_NAudio\timing\David Foster - Carol of the Bells.dsp">
   <keyframes>
-    <keyframe measure="0" beatspermeasure="4" time="0"/>
-    <keyframe measure="1" beatspermeasure="4" time=".300"/>
+    <keyframe measure="0" beatspermeasure="3" time="0"/>
+    <keyframe measure="1" beatspermeasure="3" time=".250"/>
+    <keyframe measure="25" beatspermeasure="3" time="22.87"/>
+    <keyframe measure="49" beatspermeasure="3" time="45.49"/>
+    <keyframe measure="73" beatspermeasure="3" time="68.21"/>
+    <keyframe measure="97" beatspermeasure="3" time="90.93"/>
+    <keyframe measure="121" beatspermeasure="3" time="113.65"/>
+    <keyframe measure="145" beatspermeasure="3" time="136.37"/>
     <keyframe measure="161" time="149.0"/>
   </keyframes>
   <lyrics>
-    <lyric text="Ru" time="1m1" />
-    <lyric text="-dolph" time="1m1+2/2" />
-    <lyric text="the" time="1m2+2/2+.04" />
-    <lyric text="red" time="1m3" />
-    <lyric text="nosed" time="1m4" />
-    <lyric text="rein" time="2m1" />
-    <lyric text="-deer" time="2m2" />
-
-    <lyric text="Ru" time="13m1" />
-    <lyric text="-dolph" time="13m1+2/2" />
-    <lyric text="the" time="13m2+2/2" />
-    <lyric text="red" time="13m3" />
-    <lyric text="nosed" time="13m4" />
-    <lyric text="rein" time="14m1" />
-    <lyric text="-deer" time="14m2" />
-
-    <lyric text="Had" time="17m1" />
-    <lyric text="a" time="17m1+2/2" />
-    <lyric text="ver" time="17m2" />
-    <lyric text="-y" time="17m2+2/2" />
-    <lyric text="shine" time="17m3" />
-    <lyric text="-y" time="17m4" />
-    <lyric text="nose" time="18m1" />
-
-    <lyric text="And" time="21m1" />
-    <lyric text="if" time="21m1+2/2" />
-    <lyric text="you" time="21m2+2/2" />
-    <lyric text="ev" time="21m3" />
-    <lyric text="-er" time="21m4" />
-    <lyric text="saw" time="22m1" />
-    <lyric text="it" time="22m2" />
-
-    <lyric text="You" time="25m1" />
-    <lyric text="would" time="25m1+2/2" />
-    <lyric text="ev" time="25m2" />
-    <lyric text="-en" time="25m2+2/2" />
-    <lyric text="say" time="25m3" />
-    <lyric text="it" time="25m4" />
-    <lyric text="glows" time="26m1" />
-
-    <lyric text="Then" time="34m1" />
-    <lyric text="one" time="34m2" />
-    <lyric text="fog" time="34m3" />
-    <lyric text="-gy" time="34m4" />
-    <lyric text="Christ" time="35m1" />
-    <lyric text="-mas" time="35m2" />
-    <lyric text="Eve" time="35m3" />
-
-    <lyric text="San" time="36m1" />
-    <lyric text="-ta" time="36m2" />
-    <lyric text="came" time="36m3" />
-    <lyric text="to" time="36m4" />
-    <lyric text="say" time="36m4+2/2" />
-
-    <lyric text="Ru" time="38m1" />
-    <lyric text="-dolph" time="38m2" />
-    <lyric text="with" time="38m3" />
-    <lyric text="your" time="38m4" />
-    <lyric text="nose" time="39m1" />
-    <lyric text="so" time="39m1+3/3" />
-    <lyric text="bright" time="39m2+2/3" />
-
-    <lyric text="Won't" time="40m1" />
-    <lyric text="you" time="40m2" />
-    <lyric text="guide" time="40m3" />
-    <lyric text="my" time="40m4" />
-    <lyric text="sleigh" time="41m1" />
-    <lyric text="to-" time="41m1+3/3" />
-    <lyric text="-night" time="41m2+2/3" />
-
-
-    <lyric text="Then" time="50m1" />
-    <lyric text="one" time="50m1+2/2" />
-    <lyric text="foggy" time="50m2+2/2" />
-    <lyric text="Chris" time="50m3" />
-    <lyric text="-mas" time="50m4" />
-    <lyric text="Eve" time="51m1" />
-
   </lyrics>
  
   <steps>
-    <stepi begin="0m2" end="0m4" color="black" text="" regex=":dmx:" mode="0" transition="crossfade"/>
-    <stepi begin="0m2" end="0m4" color="black" text="" regex=":ar1:" mode="0" transition="crossfade"/>
-    <stepi begin="0m2" end="0m4" color="black" text="" regex=":ar2:" mode="0" transition="crossfade"/>
+    <stepi begin="0m2" end="0m3" color="black" text="" regex=":dmx:" mode="0" transition="crossfade"/>
+    <stepi begin="0m2" end="0m3" color="black" text="" regex=":ar[12]:" mode="0" transition="crossfade"/>
     <!--<stepi begin="0m1" end="0m1" color="yellow" text="" regex="^((?!(:dmx:|:tree:|:cdl)).)*$" mode="0" transition="immediate"/>-->
     <!--<stepi begin="0m1" end="0m1" color="white" text="" regex="tree" mode="0" transition="immediate"/>-->
-    <stepi begin="0m2" end="0m4" color="orange" text="" regex="cdl" mode="0" transition="crossfade"/>
+    <stepi begin="0m2" end="0m3" color="orange" text="" regex="cdl" mode="0" transition="crossfade"/>
     <!--<stepi begin="0m1" end="0m1" color="white" text="" regex="^(?!.*dmx)" mode="0" transition="immediate"/>-->
-    <stepi begin="0m2" end="0m4" color="black" text="" regex=":w[0123]" mode="0" transition="crossfade"/>
-    <stepi begin="0m2" end="0m4" color="black" text="" regex=":mm" mode="0" transition="crossfade"/>
-    <stepi begin="0m2" end="0m4" color="black" text="" regex=":pl" mode="0" transition="crossfade"/>
+    <stepi begin="0m2" end="0m3" color="black" text="" regex=":w[1234]" mode="0" transition="crossfade"/>
+    <stepi begin="0m2" end="0m3" color="black" text="" regex=":mm" mode="0" transition="crossfade"/>
+    <stepi begin="0m2" end="0m3" color="black" text="" regex=":pl[123]:" mode="0" transition="crossfade"/>
 
     <!--<repeat tm1="0" tm2="2" tm3="4" tm4="6" tm5="8" tm6="10">
 
@@ -134,7 +61,7 @@
 
       <stepi begin="2m4" end="2m4" color="green" text="" regex=":dmx:" mode="0" transition="flash"/>
     </repeat>-->
-    <repeat tm1="0" tm2="1" tm3="2" tm4="3" >
+    <!--<repeat tm1="0" tm2="1" tm3="2" tm4="3" >
       <stepi begin="1m1" end="1m1" color="red" text="" regex=":prf:dmx:(0|1|2|3|9|10|11|12)$" mode="0" transition="immediate"/>
       <stepi begin="1m3" end="1m3" color="black" text="" regex=":prf:dmx:(0|1|2|3|9|10|11|12)$" mode="0" transition="immediate"/>
       <stepi begin="1m1" end="1m1" color="black" text="" regex="(:prf:dmx:(4|5|6|7|8|13|14|15)|:urf:dmx:(0|1|2))$" mode="0" transition="immediate"/>
@@ -166,11 +93,11 @@
     <stepi begin="1m1" end="1m1+2/4" color="red" text="" regex=":ar1:" selector="(Circle%2)==1" orderby="-Circle" mode="0" transition="crawl"/>
     <stepi begin="1m1+3/4" end="1m1+4/4" color="green" text="" regex=":ar1:" selector="(Circle%2)==0" mode="0" transition="crawl"/>
     <stepi begin="1m1+3/4" end="1m1+4/4" color="white" text="" regex=":ar1:" selector="(Circle%2)==1" orderby="-Circle" mode="0" transition="crawl"/>
-    <!--<stepi begin="1m1+3/4" end="1m1+4/4" color="white" text="" regex=":ar1:" mode="0" transition="crawl"/>-->
+    --><!--<stepi begin="1m1+3/4" end="1m1+4/4" color="white" text="" regex=":ar1:" mode="0" transition="crawl"/>--><!--
     <stepi begin="1m1+4/4" end="1m2" color="blue" text="" regex=":ar1:" mode="1" transition="crawl"/>
 
     <stepi begin="1m1" end="2m1" color="green,white,red,white" text="" regex=":mm" mode="4" transition="rotate" orderby="row" groupby="row"/>
-    <stepi begin="1m1" end="2m1" color="green,white,red,white" text="" regex=":pl" mode="4" transition="rotate" orderby="row" groupby="row"/>
+    <stepi begin="1m1" end="2m1" color="green,white,red,white" text="" regex=":pl" mode="4" transition="rotate" orderby="row" groupby="row"/>-->
     
     <!--<stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm1:" mode="1" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":mm2:" mode="0" transition="crawl" orderby="row" groupby="row"/>
@@ -184,7 +111,82 @@
     <stepi begin="3m1" end="4m4" color="white,red,white,green" text="" regex=":mm3:" mode="2" transition="crawl" orderby="row" groupby="row"/>
     <stepi begin="3m1" end="4m4" color="white,red,white,green" text="" regex=":mm4:" mode="3" transition="crawl" orderby="row" groupby="row"/>-->
 
-    <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w1:" mode="1" transition="crawl"  orderby="circle" groupby="circle"/>
+    <stepi begin="9m1" end="9m1"            color="blue" text="" regex=":w\d:" mode="0" transition="immediate"/>
+    <stepi begin="10m1" end="10m1"          color="yellow" text="" regex=":w\d:" mode="0" transition="immediate"/>
+    <stepi begin="11m1" end="11m1"          color="cyan" text="" regex=":w\d:" mode="0" transition="immediate"/>
+    <stepi begin="12m1" end="12m1"          color="magenta" text="" regex=":w\d:" mode="0" transition="immediate" orderby="circle" groupby="circle"/>
+    <stepi begin="13m1" end="13m1"          color="pink" text="" regex=":w\d:" mode="0" transition="immediate" orderby="circle" groupby="circle"/>
+    <stepi begin="14m1" end="14m1"          color="green" text="" regex=":w\d:" mode="0" transition="immediate" orderby="circle" groupby="circle"/>
+    <stepi begin="15m1" end="15m1"          color="red" text="" regex=":w\d:" mode="0" transition="immediate" orderby="circle" groupby="circle"/>
+    <stepi begin="16m1" end="16m1"          color="white" text="" regex=":w\d:" mode="0" transition="immediate" orderby="circle" groupby="circle"/>
+
+    <stepi begin="17m1"     end="17m1"       color="blue" text="" regex=":w1:" mode="0" transition="immediate"/>
+    <stepi begin="17m2"     end="17m2"       color="blue" text="" regex=":w2:" mode="0" transition="immediate"/>
+    <stepi begin="17m2+2/2" end="17m2+2/2"   color="blue" text="" regex=":w3:" mode="0" transition="immediate"/>
+    <stepi begin="17m3"     end="17m3"       color="blue" text="" regex=":w4:" mode="0" transition="immediate"/>
+
+    <stepi begin="18m1"     end="18m1"      color="yellow" text="" regex=":w1:" mode="0" transition="immediate"/>
+    <stepi begin="18m2"     end="18m2"      color="yellow" text="" regex=":w2:" mode="0" transition="immediate"/>
+    <stepi begin="18m2+2/2" end="18m2+2/2"  color="yellow" text="" regex=":w3:" mode="0" transition="immediate"/>
+    <stepi begin="18m3"     end="18m3"      color="yellow" text="" regex=":w4:" mode="0" transition="immediate"/>
+
+    <stepi begin="19m1"     end="19m1"      color="cyan" text="" regex=":w1:" mode="0" transition="immediate"/>
+    <stepi begin="19m2"     end="19m2"      color="cyan" text="" regex=":w2:" mode="0" transition="immediate"/>
+    <stepi begin="19m2+2/2" end="19m2+2/2"  color="cyan" text="" regex=":w3:" mode="0" transition="immediate"/>
+    <stepi begin="19m3"     end="19m3"      color="cyan" text="" regex=":w4:" mode="0" transition="immediate"/>
+
+    <stepi begin="20m1"     end="20m1"      color="magenta" text="" regex=":w1:" mode="0" transition="immediate" />
+    <stepi begin="20m2"     end="20m2"      color="magenta" text="" regex=":w2:" mode="0" transition="immediate" />
+    <stepi begin="20m2+2/2" end="20m2+2/2"  color="magenta" text="" regex=":w3:" mode="0" transition="immediate" />
+    <stepi begin="20m3"     end="20m3"      color="magenta" text="" regex=":w4:" mode="0" transition="immediate" />
+
+    <stepi begin="21m1"     end="21m1"       color="pink" text="" regex=":w1:" mode="0" transition="immediate"/>
+    <stepi begin="21m2"     end="21m2"       color="pink" text="" regex=":w2:" mode="0" transition="immediate"/>
+    <stepi begin="21m2+2/2" end="21m2+2/2"   color="pink" text="" regex=":w3:" mode="0" transition="immediate"/>
+    <stepi begin="21m3"     end="21m3"       color="pink" text="" regex=":w4:" mode="0" transition="immediate"/>
+
+    <stepi begin="22m1"     end="22m1"      color="red" text="" regex=":w1:" mode="0" transition="immediate"/>
+    <stepi begin="22m2"     end="22m2"      color="red" text="" regex=":w2:" mode="0" transition="immediate"/>
+    <stepi begin="22m2+2/2" end="22m2+2/2"  color="red" text="" regex=":w3:" mode="0" transition="immediate"/>
+    <stepi begin="22m3"     end="22m3"      color="red" text="" regex=":w4:" mode="0" transition="immediate"/>
+
+    <stepi begin="23m1"     end="23m1"      color="green" text="" regex=":w1:" mode="0" transition="immediate"/>
+    <stepi begin="23m2"     end="23m2"      color="green" text="" regex=":w2:" mode="0" transition="immediate"/>
+    <stepi begin="23m2+2/2" end="23m2+2/2"  color="green" text="" regex=":w3:" mode="0" transition="immediate"/>
+    <stepi begin="23m3"     end="23m3"      color="green" text="" regex=":w4:" mode="0" transition="immediate"/>
+
+    <stepi begin="24m1"     end="24m1"      color="white" text="" regex=":w1:" mode="0" transition="immediate" />
+    <stepi begin="24m2"     end="24m2"      color="white" text="" regex=":w2:" mode="0" transition="immediate" />
+    <stepi begin="24m2+2/2" end="24m2+2/2"  color="white" text="" regex=":w3:" mode="0" transition="immediate" />
+    <stepi begin="24m3"     end="24m3"      color="white" text="" regex=":w4:" mode="0" transition="immediate" />
+
+    <stepi begin="25m1"     end="25m1"      color="blue" text="" regex=":w4:" mode="0" transition="immediate"/>
+    <stepi begin="25m2"     end="25m2"      color="blue" text="" regex=":w3:" mode="0" transition="immediate"/>
+    <stepi begin="25m2+2/2" end="25m2+2/2"  color="blue" text="" regex=":w2:" mode="0" transition="immediate"/>
+    <stepi begin="25m3"     end="25m3"      color="blue" text="" regex=":w1:" mode="0" transition="immediate"/>
+
+    <stepi begin="26m1"     end="26m1"      color="red" text="" regex=":w1:" mode="0" transition="immediate" />
+    <stepi begin="26m2"     end="26m2"      color="red" text="" regex=":w2:" mode="0" transition="immediate" />
+    <stepi begin="26m2+2/2" end="26m2+2/2"  color="red" text="" regex=":w3:" mode="0" transition="immediate" />
+    <stepi begin="26m3"     end="26m3"      color="red" text="" regex=":w4:" mode="0" transition="immediate" />
+
+    <stepi begin="27m1"     end="27m1"       color="green" text="" regex=":w4:" mode="0" transition="immediate"/>
+    <stepi begin="27m2"     end="27m2"       color="green" text="" regex=":w[23]:" mode="0" transition="immediate"/>
+    <!--<stepi begin="27m2+2/2" end="27m2+2/2"   color="green" text="" regex=":w2:" mode="0" transition="immediate"/>-->
+    <stepi begin="27m3"     end="27m3"       color="green" text="" regex=":w1:" mode="0" transition="immediate"/>
+
+    <stepi begin="28m1"     end="28m1"      color="white" text="" regex=":w1:" mode="0" transition="immediate"/>
+    <stepi begin="28m2"     end="28m2"      color="white" text="" regex=":w[23]:" mode="0" transition="immediate"/>
+    <!--<stepi begin="28m2+2/2" end="28m2+2/2"  color="white" text="" regex=":w3:" mode="0" transition="immediate"/>-->
+    <stepi begin="28m3"     end="28m3"      color="white" text="" regex=":w4:" mode="0" transition="immediate"/>
+
+    <!--<stepi begin="29m1"     end="29m1"      color="green" text="" regex=":w1:" mode="0" transition="immediate"/>
+    <stepi begin="29m2"     end="29m2"      color="red" text="" regex=":w[23]:" mode="0" transition="immediate"/>
+    --><!--<stepi begin="29m2+2/2" end="29m2+2/2"  color="blue" text="" regex=":w3:" mode="0" transition="immediate"/>--><!--
+    <stepi begin="29m3"     end="29m3"      color="yellow" text="" regex=":w4:" mode="0" transition="immediate"/>-->
+
+    <!-- 30 -->
+    <!--<stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w1:" mode="1" transition="crawl"  orderby="circle" groupby="circle"/>
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w2:" mode="0" transition="crawl"  orderby="circle" groupby="circle"/>
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w3:" mode="2" transition="crawl"  orderby="circle" groupby="circle"/>
     <stepi begin="1m1" end="2m1" color="blue,red,white" text="" regex=":w4:" mode="3" transition="crawl"  orderby="circle" groupby="circle"/>
@@ -204,24 +206,24 @@
     <stepi begin="9m1" end="12m1" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w1:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(((Theta + 15)/30)%12))" groupby="Convert.ToInt32(Math.Floor(((Theta + 15)/30)%12))"/>
     <stepi begin="9m2" end="12m2" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w2:" mode="5" transition="unrotate" orderby="Convert.ToInt32(Math.Floor(Theta/30))" groupby="Convert.ToInt32(Math.Floor(Theta/30))"/>
     <stepi begin="9m3" end="12m3" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w3:" mode="5" transition="unrotate" orderby="Convert.ToInt32(Math.Floor(Theta/30))" groupby="Convert.ToInt32(Math.Floor(Theta/30))"/>
-    <stepi begin="9m4" end="12m4" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w4:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(Theta/30))" groupby="Convert.ToInt32(Math.Floor(Theta/30))"/>
+    <stepi begin="9m4" end="12m4" color="white,red,cyan,green,blue,magenta,yellow,navy" text="" regex=":w4:" mode="4" transition="rotate" orderby="Convert.ToInt32(Math.Floor(Theta/30))" groupby="Convert.ToInt32(Math.Floor(Theta/30))"/>-->
 
     <!--<stepi begin="1m1+4/4" end="2m1" color="white" text="" regex=":ar1:" mode="0" transition="crawl"/>-->
-    <stepi begin="1m2" end="1m3" color="white" text="" regex=":ar2:" mode="0" transition="crawl"/>
+    <!--<stepi begin="1m2" end="1m3" color="white" text="" regex=":ar2:" mode="0" transition="crawl"/>
     <stepi begin="1m3" end="1m4" color="green" text="" regex=":ar1:" mode="0" transition="crawl"/>
     <stepi begin="1m4" end="2m1" color="red" text="" regex=":ar2:" mode="0" transition="crawl"/>
 
-    <!--<stepi begin="2m1" end="2m1" color="red" text="" regex=":dmx:" mode="0" transition="immediate"/>-->
+    --><!--<stepi begin="2m1" end="2m1" color="red" text="" regex=":dmx:" mode="0" transition="immediate"/>--><!--
     <stepi begin="2m1" end="2m2" color="white,red,red,red" text="" regex=":ar1:" mode="0" transition="crawl"/>
     <stepi begin="2m2" end="2m3" color="white,green,green,green" text="" regex=":ar2:" mode="0" transition="crawl"/>
     <stepi begin="2m3" end="2m4" color="green" text="" regex=":ar2:" mode="1" transition="crawl"/>
     <stepi begin="2m4" end="3m1" color="red" text="" regex=":ar1:" mode="1" transition="crawl"/>
 
-    <!--<stepi begin="3m1" end="3m1" color="green" text="" regex=":dmx:" mode="0" transition="immediate"/>-->
+    --><!--<stepi begin="3m1" end="3m1" color="green" text="" regex=":dmx:" mode="0" transition="immediate"/>--><!--
     <stepi begin="3m1" end="3m2" color="green" text="" regex=":ar1:" mode="0" transition="crawl"/>
     <stepi begin="3m2" end="3m3" color="red" text="" regex=":ar1:" mode="1" transition="crawl"/>
     <stepi begin="3m3" end="3m4" color="green" text="" regex=":ar1:" mode="0" transition="crawl"/>
-    <stepi begin="3m4" end="4m1" color="red" text="" regex=":ar1:" mode="1" transition="crawl"/>
+    <stepi begin="3m4" end="4m1" color="red" text="" regex=":ar1:" mode="1" transition="crawl"/>-->
 
     <!--<stepi begin="4m1" end="4m1" color="red,green" text="" regex=":dmx:" mode="0" transition="immediate"/>-->
     
@@ -229,28 +231,28 @@
     <stepi begin="1m1" end="2m1" color="white" text="" regex=":pl2:" mode="0" transition="crawl"/>
     <stepi begin="1m1" end="2m1" color="white" text="" regex=":pl3:" mode="0" transition="crawl"/>-->
 
-    <stepmsg begin="1m1" end="8m3" msg="RUDOLPH, THE RED NOSED REINEER " />
+    <!--<stepmsg begin="1m1" end="8m3" msg="RUDOLPH, THE RED NOSED REINEER " />-->
     
     <!--<stepi begin="1m1" end="1m3" text="" regex="^hm:w1" mode="1"/>
     <stepi begin="1m1" end="2m3" text="" regex="^hm:w2" mode="1" />
     <stepi begin="2m1" end="2m3" text="" regex="^hm:w3" mode="1" />
     <stepi begin="2m1" end="4m3" text="" regex="^hm:w4" mode="1" />
     <stepi begin="3m1" end="3m3" text="" regex="^hm:w1" mode="1" />-->
-    <stepi begin="14m1" end="14m3" text="" regex="^hm:w4" mode="2" img="greenball1.bmp" transition="bounce"/>
+    <!--<stepi begin="14m1" end="14m3" text="" regex="^hm:w4" mode="2" img="greenball1.bmp" transition="bounce"/>
     <stepi begin="14m1+0.600" end="15m3" text="" regex="^hm:w3" mode="2" img="greenball1.bmp" transition="bounce"/>
     <stepi begin="14m1+1.200" end="16m3" text="" regex="^hm:w2" mode="2" img="greenball1.bmp" transition="bounce"/>
-    <stepi begin="14m1+1.800" end="17m3" text="" regex="^hm:w1" mode="4" img="greenball1.bmp" transition="enterfromright"/>
+    <stepi begin="14m1+1.800" end="17m3" text="" regex="^hm:w1" mode="4" img="greenball1.bmp" transition="enterfromright"/>-->
     <!--<stepi begin="1m1+2.400" end="4m3" text="" regex="^hm:w1" mode="1" img="greenball1.bmp"/>
     <stepi begin="1m1+3.000" end="4m3" text="" regex="^hm:w1" mode="1" img="greenball1.bmp"/>-->
 
-    <stepi begin="15m1" end="15m3" text="" regex="^hm:w4" mode="2" img="redball1.bmp" transition="passthru"/>
+    <!--<stepi begin="15m1" end="15m3" text="" regex="^hm:w4" mode="2" img="redball1.bmp" transition="passthru"/>
     <stepi begin="15m1+0.600" end="16m3" text="" regex="^hm:w3" mode="2" img="redball1.bmp" transition="passthru"/>
     <stepi begin="15m1+1.200" end="17m3" text="" regex="^hm:w2" mode="4" img="redball1.bmp" transition="enterfromright"/>
 
     <stepi begin="17m1" end="17m3" text="" regex="^hm:w4" mode="2" img="blueball1.bmp" transition="passthru"/>
     <stepi begin="17m1+0.700" end="17m3" text="" regex="^hm:w3" mode="4" img="blueball1.bmp" transition="enterfromright"/>
     
-    <stepi begin="18m1" end="19m3" text="" regex="^hm:w4" mode="4"  img="tree.bmp" transition="enterfromright"/>
+    <stepi begin="18m1" end="19m3" text="" regex="^hm:w4" mode="4"  img="tree.bmp" transition="enterfromright"/>-->
   </steps>
   <loop begin="100" end="300" />
 </song>
