@@ -24,7 +24,8 @@
     <!--<stepi begin="0m1" end="0m1" color="white" text="" regex="^(?!.*dmx)" mode="0" transition="immediate"/>-->
     <stepi begin="0m2" end="0m3" color="black" text="" regex=":w[1234]" mode="0" transition="crossfade"/>
     <stepi begin="0m2" end="0m3" color="black" text="" regex=":mm" mode="0" transition="crossfade"/>
-    <stepi begin="0m2" end="0m3" color="black" text="" regex=":pl[123]:" mode="0" transition="crossfade"/>
+    <stepi begin="0m2" end="0m3" color="black" text="" regex=":pl[123]:msdn.com
+           " mode="0" transition="crossfade"/>
 
     <!--<repeat tm1="0" tm2="2" tm3="4" tm4="6" tm5="8" tm6="10">
 

@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-//using System.Drawing;
-
-
 using System.Xml.Linq;
 using SD = System.Drawing;
 
@@ -18,29 +15,19 @@ namespace ConsoleApplication1
         [STAThread]
         static void Main(string[] args)
         {
-
             logger.Info("Loading settings...");
-
-            var settings = AppSettings.LoadAppSettings();
-            if (settings == null)
-            {
-                settings = new AppSettings()
-                {
-                };
-            }
-            Global.Instance.Settings = settings;
+            var settings = Global.Instance.Settings = AppSettings.LoadAppSettings() ?? new AppSettings();
 
             logger.Info("Loading bitmaps...");
             var imgs = Directory.EnumerateFiles(Path.Combine(Directory.GetCurrentDirectory(), ".\\..\\..\\BitMapImgs"));
             foreach (var img in imgs)
             {
-                using (SD.Bitmap bitmap = (SD.Bitmap)SD.Image.FromFile(img))
+                using (var bitmap = (SD.Bitmap)SD.Image.FromFile(img))
                 {
                     Global.Instance.BitMapImgs.Add(Path.GetFileNameWithoutExtension(img), AccessBitmap.ToArray(bitmap));
                 }
             }
-            logger.Info($"{Global.Instance.BitMapImgs.Count()} bitmaps loaded.");
-
+            logger.Info($"Bitmaps loaded: {Global.Instance.BitMapImgs.Count()}");
 
 
             logger.Info("Loading model...");
@@ -69,25 +56,26 @@ namespace ConsoleApplication1
             Global.Instance.TreeTransitionDict = new Dictionary<string, TreeTransition>()
                 { {"topdown", TreeTransition.FromEnumerable(Global.Instance.dta.Select(x => (short)x.Row)) } };
 
-            foreach (XElement trans in root.Descendants("transitions").Descendants("transition"))
+            foreach (var trans in root.Descendants("transitions").Descendants("transition"))
             {
                 Global.Instance.TreeTransitionDict.Add((string)trans.Attribute("name"), TreeTransition.FromString((string)trans.Attribute("value")));
             }
 
             //  Font
 
-            foreach (XElement felm in root.Descendants("fonts").Descendants("font"))
+            foreach (var felm in root.Descendants("fonts").Descendants("font"))
             {
                 Global.Instance.FontDict.Add(((string)felm.Attribute("char"))[0], FontUpdate.FromString((string)felm.Attribute("value")));
             }
 
-            foreach (XElement tran in root.Descendants("steptransitions").Descendants("transition"))
+            //  Step Transitions
+
+            foreach (var tran in root.Descendants("steptransitions").Descendants("transition"))
             {
                 var name = (string)tran.Attribute("name");
                 if (string.IsNullOrEmpty(name))
                     throw new Exception($"transition must have name.");
-                var newtran = StepTransition.Factory(tran.Elements());
-                Global.Instance.StepTransitionDict.Add(name, newtran);
+                Global.Instance.StepTransitionDict.Add(name, StepTransition.Factory(tran.Elements()));
             }
 
             logger.Info("Loading main window...");

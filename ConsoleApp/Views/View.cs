@@ -53,7 +53,7 @@ namespace ConsoleApplication1
         {
             XElement vu = root.Element("Views").Elements("View").Where(x => (string)x.Attribute("nm") == nm).FirstOrDefault();
             if (vu == null)
-                throw new ArgumentException("View not found: " + nm);
+                throw new ArgumentException($"View not found: {nm}");
 
             return Load(root, vu);
         }
@@ -186,7 +186,7 @@ namespace ConsoleApplication1
                                 {
                                     GECEStrand strand;
                                     if (!Global.Instance.StrandDict.TryGetValue(strndnm, out strand))
-                                        throw new Exception("Strand does not exist: " + strndnm);
+                                        throw new Exception($"Strand does not exist: {strndnm}");
                                     strndnu.Add(strand);
                                 }
                             }
@@ -199,7 +199,7 @@ namespace ConsoleApplication1
                     case "rgb":
                         {
                             if (strndlst == null)
-                                throw new Exception("Strand is required before lite: " + nm + ":" + blb.ToString());
+                                throw new Exception($"Strand is required before lite: {nm}:{blb.ToString()}");
 
                             bool hasexp = (xexp != null) && (yexp != null) && (zexp != null);
                             int cnt = 0, rowinc = 0, colinc = 0, cirinc = 0;
@@ -267,8 +267,7 @@ namespace ConsoleApplication1
                             bool candlesticks = (lit.Attribute("candlestick") != null);
                             if (candlesticks)
                             {
-                                FeatureLit flit;
-                                Global.Instance.FeatureLitDict.TryGetValue("CandleStick", out flit);
+                                Global.Instance.FeatureLitDict.TryGetValue("CandleStick", out FeatureLit flit);
                                 cndlndxz = flit.GlobalIndex;
                                 Global.Instance.FeatureLitDict.TryGetValue("CandleShade", out flit);
                                 cndlndxz |= flit.GlobalIndex << 16;
@@ -369,9 +368,7 @@ namespace ConsoleApplication1
 
                     case "line":
                         {
-
-                            XAttribute attrb;
-                            attrb = lit.Attribute("color");
+                            XAttribute attrb = lit.Attribute("color");
                             var clr = FeatureLit.FromName(string.IsNullOrEmpty((string)attrb) ? "Red" : (string)attrb);
 
                             int repeat = 1;
@@ -418,8 +415,7 @@ namespace ConsoleApplication1
 
                     case "triangle":
                         {
-                            XAttribute attrb;
-                            attrb = lit.Attribute("color");
+                            XAttribute attrb = lit.Attribute("color");
                             var clr = FeatureLit.FromName(string.IsNullOrEmpty((string)attrb) ? "Red" : (string)attrb);
 
                             for (int ndx = 1; ; ndx++)
@@ -456,11 +452,10 @@ namespace ConsoleApplication1
                                 {
                                     case "triangle":
                                         {
-                                            XAttribute attrb;
                                             bool alldark = ((string)trig.Attribute("alldark")) != null;
                                             for (int ndx = 1; ; ndx++)
                                             {
-                                                attrb = trig.Attribute("pt" + ndx);
+                                                XAttribute attrb = trig.Attribute("pt" + ndx);
                                                 if (string.IsNullOrEmpty((string)attrb)) break;
                                                 Point3D pt = (Point3D)attrb + offset;
                                                 dmx.AddPoint(pt);

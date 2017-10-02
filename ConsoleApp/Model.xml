@@ -195,12 +195,12 @@
     </View>-->
     
     <View nm="manger" offset="250,-30,-250" main="true" strand="USB2_13">
-      <dmx>
+      <!--<dmx>-->
         <triangle pt1="0,0,0" pt2="0,36,0" pt3="24,0,0" pt4="24,48,0" color="Manger"/> <!--back lt inside-->
         <triangle pt1="24,48,0" pt2="48,36,0" pt3="24,0,0" pt4="48,0,0" color="Manger"/> <!--back rt inside-->
         <triangle pt2="-12,30,-18" pt1="-12,30,0" pt4="24,48,-18" pt3="24,48,0" color="Black" alldark=""/> <!--roof lt btm-->
         <triangle pt2="24,48,-18" pt1="24,48,0" pt4="60,30,-18" pt3="60,30,0" color="Black" alldark=""/> <!--roof rt btm-->
-      </dmx>
+      <!--</dmx>-->
       <triangle pt2="0,0,0" pt1="0,36,0" pt4="24,0,0" pt3="24,48,0" color="Black"/> <!--back lt outside-->
       <triangle pt2="24,48,0" pt1="48,36,0" pt4="24,0,0" pt3="48,0,0" color="Black"/> <!--back rt outside-->
 
@@ -265,8 +265,8 @@
 
     <View nm="candlesleft" offset="0,0,0">
       <!--  candles left along driveway  -->
-      <rgb row="0" col="0" repeat="15" colinc="1" pt="-84, 24,-104" ptoffset="0,-3.47826,-36" class="candle" candlestick=""/>
-      <rgb row="0" col="0" repeat="3" colinc="1" pt="-71.23, -28.2,-644" ptoffset="36,-3.47826, -36" class="candle" candlestick=""/>
+      <!--<rgb row="0" col="0" repeat="15" colinc="1" pt="-84, 24,-104" ptoffset="0,-3.47826,-36" class="candle" candlestick=""/>
+      <rgb row="0" col="0" repeat="3" colinc="1" pt="-71.23, -28.2,-644" ptoffset="36,-3.47826, -36" class="candle" candlestick=""/>-->
 
       <!--  candles left of driveway along road -->
       <rgb row="0" col="0" repeat="10" colinc="1" pt="-14,-38.7,-756" ptoffset="-36,0,0" class="candle" candlestick=""/>
@@ -274,7 +274,7 @@
 
     <View nm="candlesright" offset="0,0,0">
       <!--  candles right along driveway  -->
-      <rgb row="0" col="0" repeat="17" colinc="1" pt="252, 21.5, -140.5" ptoffset="0,-3.47826,-36" class="candle" candlestick=""/>
+      <!--<rgb row="0" col="0" repeat="17" colinc="1" pt="252, 21.5, -140.5" ptoffset="0,-3.47826,-36" class="candle" candlestick=""/>-->
 
       <!--  candles right of driveway along road -->
       <rgb row="0" col="0" repeat="20" colinc="1" pt="278, -38.7,-756" ptoffset="36,0,0" class="candle" candlestick=""/>
@@ -288,13 +288,13 @@
       <triangle pt1="132.5,324,0" pt2="132.5,324,-12" pt3="277,232,0" pt4="277,232,-12" color="black" /> <!-- right soffet -->
       <triangle pt1="-12,236,0" pt2="132.5,324,0" pt3="132.5,236,0" pt4="277,236,0" color="black" /> <!-- gable -->
       
-      <dmx class="dmx gable lt">
+      <!--<dmx class="dmx gable lt">
         <triangle pt1="-12,236,-1" pt2="132.5,324,-1" pt3="84,250,-1" pt4="132.5,236,-1" pt5="-12,236,-1"/>
       </dmx>
 
       <dmx class="dmx gable rt">
         <triangle pt1="132.5,236,-1"  pt2="132.5,324,-1" pt3="184,250,-1" pt4="277,236,-1" pt5="132.5,236,-1"/>
-      </dmx>
+      </dmx>-->
 
 
       <!-- garage front-->
@@ -305,7 +305,7 @@
                 pt10="232.5,82,0" pt11="232.5,10,8" pt12="232.5,10,0" color="black" />
       <triangle pt1="34.5,97,8" pt2="232.5,97,8"  pt3="34.5,10,8" pt4="232.5,10,8" color="black" />
 
-      <dmx class="dmx gargae door lt">
+      <!--<dmx class="dmx gargae door lt">
         <triangle pt1="34.5,10,7" pt2="34.5,82,7" pt3="84.5,46,7" pt4="49.5,97,7" pt5="133.5,97,7" />
         <triangle pt1="133.5,97,7" pt2="133.5,10,7" pt3="84.5,46,7" pt4="34.5,10,7" />
       </dmx>
@@ -313,7 +313,7 @@
       <dmx class="dmx garage door rt">
         <triangle pt1="133.5,10,7"  pt2="133.5,97,7" pt3="182.5,46,7" pt4="217.5,97,7" pt5="232.5,82,7"/>
         <triangle pt1="232.5,82,7" pt2="232.5,10,7" pt3="182.5,46,7" pt4="133.5,10,7"  />
-      </dmx>
+      </dmx>-->
 
       <!-- garage side-->
       <triangle pt1="-.1,236,36" pt2="0,236,0" pt3="-.1,10,36" pt4="0,10,0" color="black" />
@@ -336,7 +336,7 @@
       <triangle pt1="603,232,48" pt2="603,232,386" pt3="603,128,48" pt4="603,128,386" color="black"/> <!-- upper-->
       <triangle pt1="603,128,60" pt2="603,128,374" pt3="603,0,60" pt4="603,0,374" color="black"/> <!-- lower-->
 
-      <dmx class="dmx rightside">
+      <!--<dmx class="dmx rightside">
         <triangle pt1="604,64,60"   pt2="604,196,60" pt3="604,128,114" pt4="604,196,168" />
         <triangle pt1="604,196,168" pt2="604,64,168" pt3="604,128,114" pt4="604,64,60"   />
       </dmx>
@@ -359,13 +359,13 @@
       <dmx class="dmx rightside">
         <triangle pt1="604,196,222" pt2="604,324,222" pt3="604,238,304" pt4="604,238,386" />
         <triangle pt1="604,238,386" pt2="604,196,386" pt3="604,238,304" pt4="604,196,222" />
-      </dmx>
+      </dmx>-->
 
 
       <!-- left side -->
       <triangle pt1="0,236,217" pt2="0,236,0" pt3="0,0,217" pt4="0,0,0" color="black"/> <!-- side-->
 
-      <dmx class="dmx leftside">
+      <!--<dmx class="dmx leftside">
         <triangle pt1="-1,0,0"     pt2="-1,0,108" pt3="-1,59,54" pt4="-1,118,108" />
         <triangle pt1="-1,118,108" pt2="-1,118,0" pt3="-1,59,54" pt4="-1,0,0"     />
       </dmx>
@@ -383,7 +383,7 @@
       <dmx class="dmx leftside">
         <triangle pt1="-1,118,108" pt2="-1,118,217" pt3="-1,177,162" pt4="-1,236,217" />
         <triangle pt1="-1,236,217" pt2="-1,236,108" pt3="-1,177,162" pt4="-1,118,108" />
-      </dmx>
+      </dmx>-->
 
       <!-- door -->
       <line pt1="330.5,32,60" pt2="387.5,32,60" pt3="387.5,110,60" pt4="372.5,110,60" pt5="372.5,32,60" color="Hidden"/>
@@ -406,22 +406,22 @@
 
 
       <!-- porch - left corner -->
-      <dmx class="dmx porch">
+      <!--<dmx class="dmx porch">
         <triangle pt1="265,26,0" pt2="265,128,0" pt3="265,26,60" pt4="265,128,60"  />
         <triangle pt1="265,128,60" pt2="315,128,60" pt3="265,26,60" pt4="315,26,60" />
       </dmx>
 
-      <!-- porch - center -->
+      --><!-- porch - center --><!--
       <dmx class="dmx porch">      
         <triangle pt1="388,26,60" pt2="388,128,60" pt3="432,26,60" pt4="432,128,60" />
         <triangle pt1="432,128,60" pt2="476,128,60" pt3="432,26,60" pt4="476,26,60" />
       </dmx>
 
-      <!-- porch - right -->
+      --><!-- porch - right --><!--
       <dmx class="dmx porch">      
         <triangle pt1="555,26,60" pt2="555,128,60" pt3="579,26,60" pt4="579,128,60" />
         <triangle pt1="579,128,60" pt2="603,128,60" pt3="579,26,60" pt4="603,26,60" />
-      </dmx>
+      </dmx>-->
       
       <!-- porch column - left -->
       <triangle pt1="313.5,26,0" pt2="313.5,128,0" pt3="317.5,26,0" pt4="317.5,128,0" color="black" />
@@ -464,11 +464,11 @@
       <line pt1="-12.5,234,-8" pt2="-12.5,234,224" color="Hidden" />
       <line pt1="611.5,237.5,37" pt2="611.5,327.5,212" color="Hidden" />
 
-      <rgb row="0" col="0" repeat="28" rowinc="1" pt="132.5,330,-4" ptoffset="0,0,8" class="ridge roof"/> <!-- addition -->
-      <rgb row="0" col="0" repeat="61" rowinc="1" pt="613,330,217" ptoffset="-8,0,0" class="ridge roof"/> <!-- main -->
-      <rgb row="0" col="0" repeat="32" rowinc="1" pt="275,238,38" ptoffset="-4.475,3,5.6" class="valley roof"/> <!-- valley -->
-      <rgb row="0" col="0" repeat="30" rowinc="1" pt="-14,234,-8" ptoffset="0,0,8" class="facia leftside"/> <!-- addition - left side -->
-      <rgb row="0" col="0" repeat="26" rowinc="1" pt="613,237.5,37" ptoffset="0,3.6,7" class="facia rightside"/> <!-- main roof - right edge -->
+      <!--<rgb row="0" col="0" repeat="28" rowinc="1" pt="132.5,330,-4" ptoffset="0,0,8" class="ridge roof"/> --><!-- addition --><!--
+      <rgb row="0" col="0" repeat="61" rowinc="1" pt="613,330,217" ptoffset="-8,0,0" class="ridge roof"/> --><!-- main --><!--
+      <rgb row="0" col="0" repeat="32" rowinc="1" pt="275,238,38" ptoffset="-4.475,3,5.6" class="valley roof"/> --><!-- valley --><!--
+      <rgb row="0" col="0" repeat="30" rowinc="1" pt="-14,234,-8" ptoffset="0,0,8" class="facia leftside"/> --><!-- addition - left side --><!--
+      <rgb row="0" col="0" repeat="26" rowinc="1" pt="613,237.5,37" ptoffset="0,3.6,7" class="facia rightside"/> --><!-- main roof - right edge -->
     </View>
 
     <View nm="upperroof" offset="0,0,0">
@@ -476,23 +476,23 @@
       <line pt1="601,162,47.5" pt2="601,226,47.5" color="Hidden" />
       <line pt1="613,234,35.5" pt2="285,234,35.5" color="Hidden" />
 
-      <!-- porch roof - left corner -->
+      <!-- porch roof - left corner --><!--
       <dmx class="dmx ">
         <triangle pt1="265,132,0" pt2="265,230,0" pt3="265,160,48" pt4="265,230,48" color="darkred"/>
         <triangle pt1="265,230,48" pt2="316,230,48" pt3="265,160,48" pt4="316,160,48" color="darkred"/>
       </dmx>
 
-      <!-- porch roof - center -->
+      --><!-- porch roof - center --><!--
       <dmx class="dmx ">
         <triangle pt1="400,160,48" pt2="400,230,48" pt3="434,160,48" pt4="434,230,48" color="darkred"/>
         <triangle pt1="434,230,48" pt2="468,230,48" pt3="434,160,48" pt4="468,160,48" color="darkred"/>
       </dmx>
 
-      <!-- porch roof - right end -->
+      --><!-- porch roof - right end --><!--
       <dmx class="dmx ">
         <triangle pt1="552,160,48" pt2="552,230,48" pt3="577,160,48" pt4="577,230,48" color="darkgreen"/>
         <triangle pt1="577,230,48" pt2="603,230,48" pt3="577,160,48" pt4="603,160,48" color="darkgreen"/>
-      </dmx>
+      </dmx>-->
 
       <rgb row="19" col="83" repeat="9" rowinc="1" pt="601,162,46" ptoffset="0,8,0" class="corner rightside"/>
       <rgb row="28" col="84" repeat="42" colinc="-1" pt="613,234,34" ptoffset="-8,0,0" class="facia roof "/>

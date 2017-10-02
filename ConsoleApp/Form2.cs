@@ -68,11 +68,14 @@ namespace ConsoleApplication1
         private ToolStripTextBox tspsSelector;
         private SWF.Timer progbartimer;
 
+        private readonly SynchronizationContext synchronizationContext;
+
         public Form2()
         {
-            logger.Info($"FormThreadId:{Thread.CurrentThread.ManagedThreadId} OS:{AppDomain.GetCurrentThreadId() }");
+            logger.Info($"FormThreadId:{Thread.CurrentThread.ManagedThreadId}");
 
             InitializeComponent();
+            synchronizationContext = SynchronizationContext.Current;
 
             var settings = Global.Instance.Settings;
             Global.Instance.PropertyChanged += globalPropertyChanged;
