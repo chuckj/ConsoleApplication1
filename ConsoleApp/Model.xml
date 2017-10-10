@@ -572,6 +572,7 @@
           xexp="Single(Math.Sin(Math.PI * (Column - 4) / 35) * 8 * (8 - Row))"
           yexp="Single(Math.Cos(Math.PI * (Column - 4) / 35) * -8 * (8 - Row))"
           zexp="0">
+      <rgb row="0" col="4" cir="0" repeat="9" rowinc="1"/>
       <rgb row="7" col="0" cir="0" repeat="8" rowinc="-1"/>
       <rgb row="0" col="1" cir="0" repeat="3" rowinc="1"/>
       <rgb row="2" col="3" cir="0" repeat="3" rowinc="-1"/>
@@ -580,7 +581,6 @@
       <rgb row="0" col="5" cir="0" repeat="3" rowinc="1"/>
       <rgb row="2" col="7" cir="0" repeat="3" rowinc="-1"/>
       <rgb row="0" col="8" cir="0" repeat="8" rowinc="1"/>
-      <rgb row="8" col="4" cir="0" repeat="9" rowinc="-1"/>
       <Groups>
         <Group nm="$all"/>
         <Group nm="$r#" row="0-8"/>

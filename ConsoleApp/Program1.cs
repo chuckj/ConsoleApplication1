@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using SD = System.Drawing;
@@ -12,8 +14,7 @@ namespace ConsoleApplication1
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(nameof(Program));
 
-        [STAThread]
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             logger.Info("Loading settings...");
             var settings = Global.Instance.Settings = AppSettings.LoadAppSettings() ?? new AppSettings();
@@ -29,10 +30,11 @@ namespace ConsoleApplication1
             }
             logger.Info($"Bitmaps loaded: {Global.Instance.BitMapImgs.Count()}");
 
+            XElement root = null;
 
             logger.Info("Loading model...");
 
-            XElement root = Global.Instance.Model = XDocument.Load(@".\\..\\..\\Model.xml").Element("root");
+            root = Global.Instance.Model = XDocument.Load(@".\\..\\..\\Model.xml").Element("root");
 
             Feature.Load(root);
 
@@ -81,18 +83,40 @@ namespace ConsoleApplication1
             logger.Info("Loading main window...");
 
             //Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            var frm = new Form2();
+            
+            
             //try
             //{
-               Application.Run(frm);
+            await StartSTATask(() => {
+                Application.SetCompatibleTextRenderingDefault(false);
+                var frm = new Form2();
+                Application.Run(frm);
+            });
             //}
             //catch (Exception e)
             //{
             //    logger.Info($"Unhandled exception: {e}");
             //}
+        }
 
-            return;
+        public static Task StartSTATask(Action func)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    func();
+                    tcs.SetResult(null);
+                }
+                catch (Exception e)
+                {
+                    tcs.SetException(e);
+                }
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            return tcs.Task;
         }
     }
 }
