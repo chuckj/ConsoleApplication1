@@ -179,7 +179,7 @@ CON
         ChanTblTail = 10
 
         ChanTimeSlice = 100                              'Ticks per Time Slice per channel
-        DmxTimerTimeSlice = 320                          'Ticks per Dmx/Timer time slice (4us)
+        DmxTimerTimeSlice = _CLKFREQ / 250000            'Ticks per Dmx/Timer time slice (4us)
         TimerTicksPerMs = 1000 / 4
         ChanQuietBits = 19                               'Quiet bit times between words
         
@@ -778,7 +778,7 @@ dmxtop
 dmxsendr
                         jmpret  dmxrtn,timerrtn         '== PAUSE ==
 
-                        or      outa,dmxmask            'Start bit
+                        andn    outa,dmxmask            'Start bit
                         mov     dmxbits,#8              'Get #'bits in word
                                                                        
                         jmpret  dmxrtn,timerrtn         '== PAUSE ==
@@ -786,9 +786,9 @@ dmxsendr
                         ror     dmxdata,#1      wc      'Data bit                        
             if_c        or      outa,dmxmask
             if_nc       andn    outa,dmxmask
-                        djnz    dmxbits,timerrtn         'Loop for all data bits
+                        djnz    dmxbits,timerrtn        'Loop for all data bits
 
-                        andn    outa,dmxmask            'Stop bit
+                        or      outa,dmxmask            'Stop bit
                         jmpret  dmxrtn,timerrtn         '== PAUSE ==
 
 dmxsendr_ret            ret                             'return
@@ -870,7 +870,7 @@ tPause
                         jmp     #tNewState
 
      
-timerrtn                                long    Timer
+timerrtn                long    Timer
                                            
 tinitlock               long    InitLock
 
@@ -886,8 +886,8 @@ t1000                   long    1000
 tword                   long    $0ffff
 tsecint                 long    $10000-1000
 tonesec                 long    $10000
-ttimbas                 long    320
-t_CLKTICKS              long    250
+ttimbas                 long    0
+t_CLKTICKS              long    TimerTicksPerMs
 
 
 
