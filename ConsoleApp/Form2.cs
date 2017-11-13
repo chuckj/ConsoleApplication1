@@ -18,9 +18,9 @@ namespace ConsoleApplication1
     {
         private static log4net.ILog logger = log4net.LogManager.GetLogger(nameof(Form2));
         private StatusStrip statusStrip1;
-        private ToolStripStatusLabel ssLabel1;
-        private ToolStripStatusLabel ssLabel2;
-        private ToolStripStatusLabel ssLabel3;
+        private ToolStripStatusLabel ssFps;
+        private ToolStripStatusLabel ssCamera;
+        private ToolStripStatusLabel ssViewing;
         private ToolStripStatusLabel ssLabel4;
         private ToolStripStatusLabel ssSpring;
         private ToolStripStatusLabel ssHoverSep;
@@ -163,13 +163,13 @@ namespace ConsoleApplication1
 
             //  r1c init
 
-            var rc1Prog = new Progress<Tuple<string, string, string>>((parms) =>
+            var rc1Prog = new Progress<(string Fps, string Camera, string Viewing)>((parms) =>
             {
-                ssLabel1.Text = parms.Item1;
-                ssLabel2.Text = parms.Item2;
-                ssLabel3.Text = parms.Item3;
+                ssFps.Text = parms.Fps;
+                ssCamera.Text = parms.Camera;
+                ssViewing.Text = parms.Viewing;
             });
-            rc1.WinInit(rc1Prog);
+            rc1.ViewWinInit(rc1Prog);
 
             var rc1ClickOn = new Progress<string>((parms) =>
             {
@@ -243,9 +243,9 @@ namespace ConsoleApplication1
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.ssLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.ssLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.ssLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ssFps = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ssCamera = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ssViewing = new System.Windows.Forms.ToolStripStatusLabel();
             this.ssLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.ssProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.ssSpring = new System.Windows.Forms.ToolStripStatusLabel();
@@ -310,9 +310,9 @@ namespace ConsoleApplication1
             // 
             this.statusStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(1)))), ((int)(((byte)(1)))));
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ssLabel1,
-            this.ssLabel2,
-            this.ssLabel3,
+            this.ssFps,
+            this.ssCamera,
+            this.ssViewing,
             this.ssLabel4,
             this.ssProgressBar1,
             this.ssSpring,
@@ -328,28 +328,28 @@ namespace ConsoleApplication1
             // 
             // ssLabel1
             // 
-            this.ssLabel1.BackColor = System.Drawing.Color.Black;
-            this.ssLabel1.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.ssLabel1.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.ssLabel1.ForeColor = System.Drawing.Color.White;
-            this.ssLabel1.Name = "ssLabel1";
-            this.ssLabel1.Size = new System.Drawing.Size(4, 19);
+            this.ssFps.BackColor = System.Drawing.Color.Black;
+            this.ssFps.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.ssFps.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.ssFps.ForeColor = System.Drawing.Color.White;
+            this.ssFps.Name = "ssLabel1";
+            this.ssFps.Size = new System.Drawing.Size(4, 19);
             // 
             // ssLabel2
             // 
-            this.ssLabel2.BackColor = System.Drawing.Color.Black;
-            this.ssLabel2.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.ssLabel2.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
-            this.ssLabel2.ForeColor = System.Drawing.Color.White;
-            this.ssLabel2.Name = "ssLabel2";
-            this.ssLabel2.Size = new System.Drawing.Size(4, 19);
+            this.ssCamera.BackColor = System.Drawing.Color.Black;
+            this.ssCamera.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.ssCamera.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
+            this.ssCamera.ForeColor = System.Drawing.Color.White;
+            this.ssCamera.Name = "ssLabel2";
+            this.ssCamera.Size = new System.Drawing.Size(4, 19);
             // 
             // ssLabel3
             // 
-            this.ssLabel3.BackColor = System.Drawing.Color.Black;
-            this.ssLabel3.ForeColor = System.Drawing.Color.White;
-            this.ssLabel3.Name = "ssLabel3";
-            this.ssLabel3.Size = new System.Drawing.Size(0, 19);
+            this.ssViewing.BackColor = System.Drawing.Color.Black;
+            this.ssViewing.ForeColor = System.Drawing.Color.White;
+            this.ssViewing.Name = "ssLabel3";
+            this.ssViewing.Size = new System.Drawing.Size(0, 19);
             // 
             // ssLabel4
             // 

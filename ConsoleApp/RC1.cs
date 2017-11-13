@@ -43,7 +43,7 @@ namespace ConsoleApplication1
         private short[] lineIndices = null;
         private short[] triIndices = null;
         private int[] candleIndices = null;
-        private IProgress<Tuple<string, string, string>> progress;
+        private IProgress<(string Fps, string Camera, string Viewing)> progress;
 
         private bool projectionUpdated = true;
 
@@ -62,9 +62,12 @@ namespace ConsoleApplication1
         {
             this.MouseWheel += rc1_MouseWheel;
             this.MouseClick += rc1_MouseClick;
+            //this.MouseMove += rc1_MouseMove;
+            //this.MouseDown += rc1_MouseDown;
+            //this.MouseUp += rc1_MouseUp;
         }
 
-        public void WinInit(IProgress<Tuple<string, string, string>> progress )
+        public void ViewWinInit(IProgress<(string Fps, string Camera, string Viewing)> progress )
         {
             this.progress = progress;
         }
@@ -326,10 +329,10 @@ namespace ConsoleApplication1
                 if (fps < 59)
                     Markers.WriteFlag(Importance.Critical, "fps:" + fps);
 #endif
-                string tssLbl1Text = $"FPS:{fps}:{Global.Instance.RealTime}  Updates:{updateds}";
-                string tssLbl2Text = $"Camera: {-Global.Instance.Settings.GetViewPort(0)}° up, {-Global.Instance.Settings.GetViewPort(1)}° rt, {Global.Instance.Settings.GetViewPort(2)}";
-                string tssLbl3Text = $"Viewing: ({-Global.Instance.Settings.GetViewPort(4)}, {-Global.Instance.Settings.GetViewPort(3)}, {Global.Instance.Settings.GetViewPort(5)})";
-                progress.Report(Tuple.Create(tssLbl1Text, tssLbl2Text, tssLbl3Text));
+                var vt = (FPS: $"FPS:{fps}:{Global.Instance.RealTime}  Updates:{updateds}",
+                    Camera: $"Camera: {-Global.Instance.Settings.GetViewPort(0)}° up, {-Global.Instance.Settings.GetViewPort(1)}° rt, {Global.Instance.Settings.GetViewPort(2)}",
+                    Viewing: $"Viewing: ({-Global.Instance.Settings.GetViewPort(4)}, {-Global.Instance.Settings.GetViewPort(3)}, {Global.Instance.Settings.GetViewPort(5)})");
+                progress.Report(vt);
 
 #if (MARKERS)
                 span.Leave();
@@ -415,7 +418,7 @@ namespace ConsoleApplication1
             Lit hit = null;
             var list = Global.Instance.LitArray.OfType<GECELit>().Select(rgb => rgb.Hit(hd)).Where(rgb => rgb != null).ToList();
             if (list.Count == 0)
-                 list = Global.Instance.LitArray.OfType<DMXLit>().Select(rgb => rgb.Hit(hd)).Where(rgb => rgb != null).ToList();
+                 list = Global.Instance.LitArray.OfType<DMXLit>().Select(dmx => dmx.Hit(hd)).Where(dmx => dmx != null).ToList();
             if (list.Count > 0)
             {
                 hit = list.Aggregate((agg, item) => item.Distance < agg.Distance ? item : agg).Lit;
@@ -428,6 +431,31 @@ namespace ConsoleApplication1
             clickOn.Report(report);
         }
 
+        SD.Point dragStart = new SD.Point(0, 0);
+        SD.Point dragStop = new SD.Point(0, 0);
+        bool dragging = false;
+
+        private void rc1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (dragging)
+            {
+                dragStop = e.Location;
+
+                string report = $"({dragStart.X},{dragStart.Y}) - ({dragStop.X},{dragStop.Y}) ";
+                clickOn.Report(report);
+            }
+        }
+
+        private void rc1_MouseDown(object sender, MouseEventArgs e)
+        {
+            dragStart = e.Location;
+            dragging = true;
+        }
+
+        private void rc1_MouseUp(object sender, MouseEventArgs e)
+        {
+            dragging = false;
+        }
 
         #region IDispose
         bool disposed = false;
