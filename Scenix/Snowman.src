@@ -1,0 +1,777 @@
+DEVICE SX28L, TURBO, STACKX, OSCHS2, OPTIONX
+IRC_CAL IRC_FAST
+FREQ 50_000_000
+RESET start
+
+Speed		equ	16
+Ticks		equ	51
+INTERVALRULE	equ	$33
+INTERVALRULE2	equ	$3f
+REPSRULE	equ	$33
+
+LongWait	equ	30
+RepeatWait	equ	30
+
+modTRIS		equ	$0f
+modPULLUP 	equ	$0e
+modLEVEL	equ	$0d
+modSCHMITT	equ	$0c
+
+FLAGS		equ	$0a
+flgFRAME	equ	FLAGS.0
+flgMD		equ	RA.0
+
+randomno	equ	$0b
+oprndsav	equ	$0c
+
+fsrsav		equ	$0d
+rtccTIKR	equ	$0e
+
+oprnd		equ	$0f
+
+Wait		equ	$10
+PC0		equ	$11
+PC1		equ	$12
+reps		equ	$13
+
+LA		equ	$14
+LB		equ	$15
+LC		equ	$16
+LD		equ	$17
+
+wrk		equ	$18
+interval	equ	$19
+
+
+;LeftLowr	equ	(LA-LA)*16+0
+;LeftUppr	equ	(LA-LA)*16+1	
+;RightLowr	equ	(LA-LA)*16+2
+;RightUppr	equ	(LA-LA)*16+3
+
+;Cane1		equ	(LA-LA)*16+4
+;cane2		equ	(LA-LA)*16+5
+;Cane3		equ	(LA-LA)*16+6
+;Cane4		equ	(LA-LA)*16+7
+
+
+;Cane5		equ	(LB-LA)*16+0
+;Cane6		equ	(LB-LA)*16+1
+;Cane7		equ	(LB-LA)*16+2
+;Cane8		equ	(LB-LA)*16+3
+
+;Cane9		equ	(LB-LA)*16+4
+;LeftLowr	equ	(LB-LA)*16+2
+LeftUp		equ	(LB-LA)*16+3	
+Cane1		equ	(LB-LA)*16+5
+Cane2		equ	(LB-LA)*16+6
+
+Cane3		equ	(LB-LA)*16+7
+;		equ	(LB-LA)*16+2
+;		equ	(LB-LA)*16+1
+;		equ	(LB-LA)*16+0
+
+Cane4		equ	(LA-LA)*16+0
+Cane5		equ	(LA-LA)*16+1
+Cane6		equ	(LA-LA)*16+2
+Cane7		equ	(LA-LA)*16+3
+
+Cane8		equ	(LA-LA)*16+4
+Cane9		equ	(LA-LA)*16+5
+RightUp		equ	(LA-LA)*16+6
+;RightLowr	equ	(LA-LA)*16+7
+
+
+
+RTCC_ON = %10000000 ;Enables RTCC at address $01 (RTW hi)
+;*WREG at address $01 (RTW lo) by default
+RTCC_ID = %01000000 ;Disables RTCC edge interrupt (RTE_IE hi)
+;*RTCC edge interrupt (RTE_IE lo) enabled by default
+RTCC_INC_EXT = %00100000 ;Sets RTCC increment on RTCC pin transition (RTS hi)
+;*RTCC increment on internal instruction (RTS lo)is default
+RTCC_FE = %00010000 ;Sets RTCC to increment on falling edge (RTE_ES hi)
+;*RTCC to increment on rising edge (RTE_ES lo) isdefault
+RTCC_PS_ON = %00000000 ;Assigns prescaler to RTCC (PSA lo)
+RTCC_PS_OFF = %00001000 ;Assigns prescaler to WDT (PSA hi)
+PS_000 = %00000000 ;RTCC = 1:2, WDT = 1:1
+PS_001 = %00000001 ;RTCC = 1:4, WDT = 1:2
+PS_010 = %00000010 ;RTCC = 1:8, WDT = 1:4
+PS_011 = %00000011 ;RTCC = 1:16, WDT = 1:8
+PS_100 = %00000100 ;RTCC = 1:32, WDT = 1:16
+PS_101 = %00000101 ;RTCC = 1:64, WDT = 1:32
+PS_110 = %00000110 ;RTCC = 1:128, WDT = 1:64
+PS_111 = %00000111 ;RTCC = 1:256, WDT = 1:128
+
+
+;
+;	ISR
+;
+
+isr	org	0
+;
+;	Set flgFRAME every Ticks ticks of the rtcc
+;
+	djnz	rtccTIKR,isrEND
+	mov	rtccTIKR,#Ticks
+	setb	flgFRAME
+
+isrEND
+	reti
+
+
+;		XEQ routine
+
+xeq
+	test	Wait
+	jz	xeqOp
+	decsz	Wait
+	  ret
+	jmp	xeqOp
+
+;
+;	Execute next command (Increment PC)
+;	
+xeqNxt
+	call	xeqPCInc
+
+;
+;	Execute command @ PC0-PC1
+;
+xeqOp
+	mov	m,PC0
+	mov	w,PC1
+
+	iread
+
+	mov	oprnd,w
+	mov	w,m
+
+;
+;	Jump table for parameterized commands
+;
+	jmp	pc+w
+xeqTbl		equ	$
+opWAIT		equ	($-xeqTbl)*256
+		jmp	xeqWAIT
+opON		equ	($-xeqTbl)*256
+		jmp	xeqON
+opOFF		equ	($-xeqTbl)*256
+		jmp	xeqOFF
+opSWAP		equ	($-xeqTbl)*256
+		jmp	xeqSWAP
+opJUMP		equ	($-xeqTbl)*256
+		jmp	xeqJUMP
+opJUMPBACK	equ	($-xeqTbl)*256
+		jmp	xeqJUMPBACK
+opSETREPS	equ	($-xeqTbl)*256
+		jmp	xeqSETREPS
+opREPEAT	equ	($-xeqTbl)*256
+		jmp	xeqREPEAT
+opSETINTERVAL	equ	($-xeqTbl)*256
+		jmp	xeqSETINTERVAL
+opRANDOMSKIP	equ	($-xeqTbl)*256
+		jmp	xeqRANDOMSKIP
+
+;		Add new parameterized opcodes here
+
+opCMD		equ	($-xeqTbl)*256
+		mov	w,oprnd
+
+;
+;	Jump table for non-parameterized commands
+;
+		jmp	pc+w
+opCmdTbl	equ	$
+opWAITINTERVAL	equ	opCMD+($-opCmdTbl)
+		jmp	xeqWAITINTERVAL
+opSETBB		equ	opCMD+($-opCmdTbl)
+		jmp	xeqSETBB
+
+;		Add new command (non-parameterized) opcodes here
+
+
+;
+;	Decode oprnd into fsr (containing a pointer to LA - LD) and w (containing bitmask) for given element
+;
+blbdec
+	swap	oprnd
+	mov	w,#$0f
+	and	w,oprnd
+	xor	oprnd,w
+	or	w,#LA
+	mov	fsr,w
+	mov	w,<>oprnd
+	call	blbdec1
+	retp
+
+;
+;	decode index value in w (0-7) into bitmask in w (x01 - x80)
+;
+blbdec1
+	jmp	pc+w
+	retw	$01
+	retw	$02
+	retw	$04
+	retw	$08
+	retw	$10
+	retw	$20
+	retw	$40
+	retw	$80
+
+;
+;	Increment PC
+;
+xeqPCInc
+	inc	PC1
+	snz
+	  inc	PC0
+	ret
+
+;     		 flg[t] = true;
+;                l++;
+;                int z = ((t >> 3) ^ (t >> 4) ^ (t >> 2) ^ (t >> 0)) & 1;
+;                t = (byte)((t >> 1) | (z * 0x80));
+
+randomer
+	clr	wrk
+	snb	randomno.0
+	  inc	wrk
+	snb	randomno.2
+	  inc	wrk
+	snb	randomno.3
+	  inc	wrk
+	snb	randomno.4
+	  inc	wrk
+	rr	wrk
+	rr	randomno
+	
+	retp
+
+;
+;		Command implementations
+;
+;
+;	Wait for specified #'frames
+;
+xeqWAIT
+	mov	WAIT,oprnd
+	call	xeqPCInc
+	ret
+
+;
+;	Wait for specified interval
+;
+xeqWAITINTERVAL
+	mov	WAIT,interval
+	call	xeqPCInc
+	ret
+
+;
+;	Wait for motion detector (RC.0)
+;
+xeqWAITMD
+	snb	flgMD
+	  ret
+	call	xeqPCInc
+	ret
+
+;
+;	Turn specified element ON
+;
+xeqON
+	call	@hlpon
+	jmp	xeqNxt
+
+;
+;	helper routine for xeqOn - turn specified element on
+;
+hlpOn
+	mov	fsrsav,fsr
+	mov	oprndsav,oprnd
+
+	cjb	oprndsav,#Cane1,:not1
+	cja	oprndsav,#Cane5,:not1
+
+	mov	oprnd,#Cane1
+	call	blbdec
+	or	ind,w
+	xor	ind,w
+
+	mov	oprnd,#Cane2
+	call	blbdec
+	or	ind,w
+	xor	ind,w
+
+	mov	oprnd,#Cane3
+	call	blbdec
+	or	ind,w
+	xor	ind,w
+
+	mov	oprnd,#Cane4
+	call	blbdec
+	or	ind,w
+	xor	ind,w
+
+	mov	oprnd,#Cane5
+	call	blbdec
+	or	ind,w
+	xor	ind,w
+
+:not1
+	cjb	oprndsav,#Cane5,:not2
+	cja	oprndsav,#Cane9,:not2
+
+	mov	oprnd,#Cane5
+	call	blbdec
+	or	ind,w
+	xor	ind,w
+
+	mov	oprnd,#Cane6
+	call	blbdec
+	or	ind,w
+	xor	ind,w
+
+	mov	oprnd,#Cane7
+	call	blbdec
+	or	ind,w
+	xor	ind,w
+
+	mov	oprnd,#Cane8
+	call	blbdec
+	or	ind,w
+	xor	ind,w
+
+	mov	oprnd,#Cane9
+	call	blbdec
+	or	ind,w
+	xor	ind,w
+
+:not2
+	mov	oprnd,oprndsav
+	call	blbdec
+	or	ind,w
+
+	mov	fsr,fsrsav
+	retp
+
+;
+;	Turn specified element off
+;
+xeqOFF	
+	call	@hlpoff
+	jmp	xeqNxt
+
+;
+;	helper routine for xeqOff - turn specified element off
+;
+hlpoff
+	mov	fsrsav,fsr
+	mov	oprndsav,oprnd
+
+	call	blbdec
+	or	ind,w
+	xor	ind,w
+
+	mov	fsr,fsrsav
+	retp
+
+xeqSWAP	
+	call	hlpswap
+	jmp	xeqNxt
+
+;
+;	helper routine for xeqSWAP - toggle specified element on/off
+;
+hlpswap
+	mov	fsrsav,fsr
+	mov	oprndsav,oprnd
+
+	call	blbdec
+	xor	ind,w
+
+	mov	fsr,fsrsav
+	retp
+
+
+hlpTest
+	mov	fsrsav,fsr
+	call	blbdec
+	and	w,ind
+	jnz	hlpTest1
+
+	mov	fsr,fsrsav
+	stz
+	ret
+
+hlpTest1
+	mov	fsr,fsrsav
+	clz
+	ret
+
+
+;
+;	Jump - resets program counter to beginning
+;
+xeqJUMP
+	add	PC1,oprnd
+	snc
+	  inc	PC0
+	jmp	xeqOp
+
+
+;
+;	Jump back - resets program counter to beginning
+;
+xeqJUMPBACK
+	sub	PC1,oprnd
+	sc
+	  dec	PC0
+	jmp	xeqOp
+
+
+;
+;	All elements off
+;
+xeqRESETBB
+	clr	w
+;		positionally dependent code
+	skip
+
+
+;
+;	All elements On
+;
+xeqSETBB
+	mov	w,#$ff
+;		end of positionally dependent code
+
+	mov	LA,w
+	mov	LB,w
+	mov	LC,w
+	mov	LD,w
+	jmp	xeqNXT
+
+
+xeqSETREPS
+	swap	oprnd
+	mov	w,#$0f
+	and	w,oprnd
+	xor	oprnd,w
+	and	w,randomno
+	swap	oprnd
+	add	w,oprnd
+	mov	reps,w
+	jmp	xeqNxt
+
+xeqREPEAT
+	djnz	reps,xeqJUMP
+	jmp	xeqNxt
+
+
+xeqSETINTERVAL
+	swap	oprnd
+	mov	w,#$0f
+	and	w,oprnd
+	xor	oprnd,w
+	and	w,randomno
+	swap	oprnd
+	add	w,oprnd
+	mov	interval,w
+	jmp	xeqNxt
+
+xeqRANDOMSKIP
+	call	xeqPCInc
+	call	randomer
+
+	mov	w,randomno
+	and	w,oprnd
+	jz	xeqNxt
+	jmp	xeqOp
+
+
+
+;		Start-up and main loop
+
+start
+	clr 	fsr			;Clear
+:clrRAM					;.
+	sb 	fsr.4			;.
+	  setb 	fsr.3			;.
+	clr 	ind			;.
+	ijnz 	fsr,:clrRAM		;.   all ram
+
+	mov	!OPTION,#RTCC_ON+RTCC_PS_ON+PS_110		; rtcc internal, prescaler = 256, rtcc interrupts on
+
+	mode	modTRIS			;Setup for direction regs
+	mov	!RA,#%00000001		;All outputs for RA
+	mov	!RB,#%00000000		;All outputs for RB
+	mov	!RC,#%00000000		;All outputs for RC
+
+	mode	modPULLUP		;Setup for pull-up regs
+	mov	w,#%11111110		;All pull-ups DISABLED=1 EXCEPT RA.0
+	mov	!RA,w			;.   for RA
+	mov	w,#%11111111		;All pull-ups DISABLED=1
+	mov	!RB,w			;.   RB
+	mov	!RC,w			;.   RC
+
+	mode	modLEVEL		;Setup for read level regs
+	mov	w,#%11111111		;All read levels TTL=1
+	mov	!RA,w			;.   for RA
+	mov	!RB,w			;.   RB
+	mov	!RC,w			;.   RC
+
+
+	mode	modSCHMITT		;Setup for schmitt trigger regs
+	mov	w,#%11111111		;All schmitt triggers DISABLED=1
+	mov	!RA,w			;.   for RA
+	mov	!RB,w			;.   RB
+	mov	!RC,w			;.   RC
+
+	mov	RA,#%00000001		;All outputs on (Latch Enable on) for RA
+	mov	RB,#%10101010		;All outputs on (RELAY OFF) for RB
+	mov	RC,#%01010101		;All outputs on (RELAY OFF) for RC
+
+	bank	$10
+	clr	Wait
+	mov	PC0,#pgmMAIN/256
+	mov	PC1,#pgmMAIN//256
+
+	bank	$10
+	mov	rtccTIKR,#1
+	mov	randomno,#1
+
+xeqLOOP
+xeqFRAME
+	call	randomer
+
+	jnb	flgFRAME,xeqFRAME
+
+	clrb	flgFRAME
+	
+	bank	$10
+	call	xeq
+
+	bank	$10
+	mov	w,/LA
+	mov	RB,w
+	
+	mov	w,/LB
+	mov	RC,w
+	
+	jmp	xeqLOOP
+
+
+	org	$200
+pgmMAIN
+	dw	opON+Cane5
+	dw	opON+Cane1
+	dw	opOFF+LeftUp
+	dw	opOFF+RightUp
+
+	dw	opRANDOMSKIP+$04
+	dw	opJUMP+(pgmSHEnd-$)
+
+pgmSingleHand
+	dw	opSETREPS+RepsRule
+	dw	opSETINTERVAL+IntervalRule
+	dw	opWAIT+LongWait
+
+pgmSHLup
+	dw	opON+LeftUp
+	dw	opON+Cane2
+	dw	opWaitInterval
+
+	dw	opON+Cane3
+	dw	opWAITINTERVAL
+
+	dw	opOFF+LeftUp
+	dw	opON+Cane4
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane5
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane6
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane7
+	dw	opON+RightUp
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane8
+	dw	opWAITINTERVAL
+
+	dw	opOFF+RightUp
+	dw	opON+Cane9
+	dw	opWAIT+RepeatWait
+
+	dw	opON+RightUp
+	dw	opON+Cane8
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane7
+	dw	opWAITINTERVAL
+
+	dw	opOFF+RightUp
+	dw	opON+Cane6
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane5
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane4
+	dw	opWAITINTERVAL
+
+	dw	opON+LeftUp
+	dw	opON+Cane3
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane2
+	dw	opWAITINTERVAL
+
+	dw	opOFF+LeftUp
+	dw	opON+Cane1
+	dw	opWAIT+RepeatWait
+
+	dw	opREPEAT+($-pgmSHLup)
+
+pgmSHEnd
+	dw	opRANDOMSKIP+$20
+	dw	opJUMP+(pgmWLEnd-$)
+
+pgmWaveLeft
+	dw	opOFF+Cane1
+	dw	opOFF+Cane9
+	dw	opSETREPS+RepsRule
+	dw	opSETINTERVAL+IntervalRule2
+	dw	opWAIT+LongWait
+
+pgmWLLup
+	dw	opON+LeftUp
+	dw	opWAITINTERVAL
+
+	dw	opOFF+LeftUp
+	dw	opWAITINTERVAL
+
+	dw	opREPEAT+($-pgmWLLup)
+
+pgmWLEnd
+	dw	opRANDOMSKIP+$40
+	dw	opJUMP+(pgmWREnd-$)
+
+pgmWaveRight
+	dw	opON+Cane5
+	dw	opOFF+Cane5
+	dw	opSETREPS+RepsRule
+	dw	opSETINTERVAL+IntervalRule2
+	dw	opWAIT+LongWait
+
+pgmWRLup
+	dw	opON+RightUp
+	dw	opWAITINTERVAL
+
+	dw	opOFF+RightUp
+	dw	opWAITINTERVAL
+
+	dw	opREPEAT+($-pgmWRLup)
+
+pgmWREnd
+	dw	opRANDOMSKIP+$10
+	dw	opJUMP+(pgmBHEnd-$)
+
+opBothHands
+	dw	opON+Cane5
+	dw	opON+Cane1
+	dw	opON+Cane9
+	dw	opSETREPS+RepsRule
+	dw	opSETINTERVAL+IntervalRule
+	dw	opWAIT+LongWait
+
+pgmBHLup
+	dw	opON+LeftUp
+	dw	opON+Cane2
+	dw	opON+RightUp
+	dw	opON+Cane8
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane3
+	dw	opON+Cane7
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane4
+	dw	opON+Cane6
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane5
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane6
+	dw	opON+Cane4
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane7
+	dw	opON+Cane3
+	dw	opWAITINTERVAL
+
+	dw	opON+Cane8
+	dw	opON+Cane2
+	dw	opWAITINTERVAL
+
+	dw	opOFF+RightUp
+	dw	opON+Cane9
+	dw	opOFF+LeftUp
+	dw	opON+Cane1
+	dw	opWAIT+RepeatWait
+	dw	opREPEAT+($-pgmBHLup)
+
+pgmBHEnd
+
+	dw	opRANDOMSKIP+$80
+	dw	opJUMP+(pgmWSEnd-$)
+
+pgmWaveSync
+	dw	opON+Cane5
+	dw	opOFF+Cane5
+	dw	opSETREPS+RepsRule
+	dw	opSETINTERVAL+IntervalRule2
+	dw	opWAIT+LongWait
+
+pgmWSLup
+	dw	opON+LeftUp
+	dw	opON+RightUp
+	dw	opWAITINTERVAL
+
+	dw	opOFF+LeftUp
+	dw	opOFF+RightUp
+	dw	opWAITINTERVAL
+
+	dw	opREPEAT+($-pgmWSLup)
+
+pgmWSEnd
+	dw	opRANDOMSKIP+$08
+	dw	opJUMP+(pgmWAEnd-$)
+
+pgmWaveASync
+	dw	opON+Cane5
+	dw	opOFF+Cane5
+	dw	opSETREPS+RepsRule
+	dw	opSETINTERVAL+IntervalRule2
+	dw	opWAIT+LongWait
+
+pgmWALup
+	dw	opON+LeftUp
+	dw	opOFF+RightUp
+	dw	opWAITINTERVAL
+
+	dw	opOFF+LeftUp
+	dw	opON+RightUp
+	dw	opWAITINTERVAL
+
+	dw	opREPEAT+($-pgmWALup)
+
+	dw	opOFF+RightUp
+
+pgmWAEnd
+	dw	opWAIT+LongWait
+	dw	opJUMPBACK+($-pgmMAIN)
+
+	end

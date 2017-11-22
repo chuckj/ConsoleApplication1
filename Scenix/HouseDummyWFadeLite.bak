@@ -1,0 +1,742 @@
+
+DEVICE SX18L, TURBO, STACKX, OSCHS2
+IRC_CAL IRC_FAST
+FREQ 50_000_000
+RESET start
+
+
+featureSize	equ	5000/20		;5000 ns / 20 ns (clock time for SX @ 50MHz)
+
+modTRIS		equ	$0f
+modPULLUP 	equ	$0e
+modLEVEL	equ	$0d
+modSCHMITT	equ	$0c
+
+	org	$07
+timo	ds	1			;time out down counter
+
+addr	ds	1
+g	ds	1
+b	ds	1
+r	ds	1
+gx	ds	1	
+bx	ds	1
+rx	ds	1
+	org	gx
+inten	ds	1
+byte	ds	1
+bits	ds	1
+
+adr0	ds	1
+adr1	ds	1
+msk	ds	1
+
+lupr	ds	1
+offcur	ds	1
+offprv	ds	1
+fade	ds	1
+
+randomno	ds	1
+randomno0	ds	1
+wrk		ds	1
+
+flags		ds	1
+flgTwinkP	equ	flags.0
+flgTwinkR	equ	flags.1
+flgChaseP	equ	flags.4
+flgChaseR	equ	flags.5
+mskTwinkP	equ	$01
+mskTwinkR	equ	$02
+mskChaseP	equ	$10
+mskChaseR	equ	$20
+
+chasecnt	ds	1
+chaseval	ds	1
+
+
+RTCC_ON = %10000000 ;Enables RTCC at address $01 (RTW hi)
+;*WREG at address $01 (RTW lo) by default
+RTCC_ID = %01000000 ;Disables RTCC edge interrupt (RTE_IE hi)
+;*RTCC edge interrupt (RTE_IE lo) enabled by default
+RTCC_INC_EXT = %00100000 ;Sets RTCC increment on RTCC pin transition (RTS hi)
+;*RTCC increment on internal instruction (RTS lo)is default
+RTCC_FE = %00010000 ;Sets RTCC to increment on falling edge (RTE_ES hi)
+;*RTCC to increment on rising edge (RTE_ES lo) isdefault
+RTCC_PS_ON = %00000000 ;Assigns prescaler to RTCC (PSA lo)
+RTCC_PS_OFF = %00001000 ;Assigns prescaler to WDT (PSA hi)
+PS_000 = %00000000 ;RTCC = 1:2, WDT = 1:1
+PS_001 = %00000001 ;RTCC = 1:4, WDT = 1:2
+PS_010 = %00000010 ;RTCC = 1:8, WDT = 1:4
+PS_011 = %00000011 ;RTCC = 1:16, WDT = 1:8
+PS_100 = %00000100 ;RTCC = 1:32, WDT = 1:16
+PS_101 = %00000101 ;RTCC = 1:64, WDT = 1:32
+PS_110 = %00000110 ;RTCC = 1:128, WDT = 1:64
+PS_111 = %00000111 ;RTCC = 1:256, WDT = 1:128
+
+
+	org	0
+xfade	jmp	xfadefar
+roll	jmp	rollfar
+
+rollit
+	mov	w,#11-6
+	mov	addr,w
+	add	fsr,w
+	mov	byte,ind
+:lup
+	dec	fsr
+	mov	w,ind
+	inc	fsr
+	mov	ind,w
+	dec	fsr
+	djnz	addr,:lup
+
+	mov	ind,byte
+	ret
+
+send
+	mov	byte,addr
+	call	send6bits
+	mov	byte,inten
+	call	send8bits
+	mov	byte,b
+	call	send4bits
+	mov	byte,g
+	call	send4bits
+	mov	byte,r
+	call	send4bits
+	or	rb,msk
+	call	wait5us
+	xor	rb,msk
+	mov	bits,#30*3
+:idle
+	call	wait5us
+	djnz	bits,:idle
+	ret
+	
+send4bits
+	mov	bits,#4
+	swap	byte
+	jmp	sendbits
+
+send6bits
+	mov	bits,#6
+	rl	byte
+	rl	byte
+	jmp	sendbits
+
+send8bits
+	mov	bits,#8
+
+sendbits
+	or	RB,msk
+	call	wait5us
+	xor	RB,msk
+	call	wait5us
+
+	mov	w,msk
+	rl	byte
+	sc
+	  or	  RB,w
+	call	wait5us
+	djnz	bits,sendbits
+	ret
+
+wait5us
+	mov	timo,#243/(14+7)
+
+:lup
+	jmp	$+1
+	jmp	$+1
+	jmp	$+1
+	jmp	$+1
+	jmp	$+1
+	jmp	$+1
+	djnz	timo,:lup
+	ret
+
+randomer
+	clr	wrk
+	snb	randomno.0
+	  inc	wrk
+	snb	randomno.2
+	  inc	wrk
+	snb	randomno.3
+	  inc	wrk
+	snb	randomno.5
+	  inc	wrk
+	rr	wrk
+	rr	randomno0
+	rr	randomno
+	ret
+
+wait1ms
+	mov	bits,#200
+:lup
+	call	wait5us
+	djnz	bits,:lup
+	ret
+
+wait33ms
+	mov	byte,#33
+	jmp	waitms
+
+wait40ms
+	mov	byte,#40
+	jmp	waitms
+
+wait100ms
+	mov	byte,#100
+
+waitms
+	call	wait1ms
+	djnz	byte,waitms
+	ret
+
+
+START
+	clr 	fsr			;Clear
+:clrRAM					;.
+	sb 	fsr.4			;.
+	  setb 	fsr.3			;.
+	clr 	ind			;.
+	ijnz 	fsr,:clrRAM		;.   all ram
+
+	mode	modTRIS			;Setup for direction regs
+	mov	!RA,#%11111111		;All inputs for RA
+	mov	!RB,#%00000000		;All outputs for RB
+
+	mode	modPULLUP		;Setup for pull-up regs
+	mov	w,#%11111111		;All pull-ups DISABLED=1
+	mov	!RA,w			;.   for RA
+	mov	!RB,w			;.   RB
+
+	mode	modLEVEL		;Setup for read level regs
+	mov	w,#%11111111		;All read levels TTL=1
+	mov	!RA,w			;.   for RA
+	mov	!RB,w			;.   RB
+
+	mode	modSCHMITT		;Setup for schmitt trigger regs
+	mov	w,#%11111111		;All schmitt triggers DISABLED=1
+	mov	!RA,w			;.   for RA
+	mov	!RB,w			;.   RB
+
+	mov	RA,#%00000000		;All outputs off RA
+	mov	RB,#%00000000		;All outputs off for RB
+
+	inc	randomno
+;
+;	wait 1.5 seconds for power supplies to all settle...
+;
+waitawhile
+	mov	fade,#15
+
+:waitlup
+	call	wait100ms
+	djnz	fade,:waitlup
+
+;
+;	fade in to new value
+;
+:nxtoff
+	mov	fade,#15
+	clr	flags
+
+:top
+	call	@xfade
+	call	sendeach
+
+	djnz	fade,:top
+
+	call	@xfade
+	call	sendeach
+
+;	pickup twink/chase parms
+
+	mov	m,#$6
+	mov	w,offcur
+
+	iread
+
+	mov	flags,w
+
+	mov	m,#$6
+	mov	w,#1
+	add	w,offcur
+
+	iread
+
+	mov	chaseval,w
+
+	mov	lupr,#200	
+	mov	chasecnt,chaseval
+
+:ovrfade
+	call	sendeach
+
+	test	chasecnt
+	jz	:nochase
+	djnz	chasecnt,:nochase
+
+	call	roll
+	mov	chasecnt,chaseval
+
+:nochase
+	djnz	lupr,:ovrfade
+
+	mov	offprv,offcur
+
+	add	offcur,#8
+	csb	offcur,#palend
+	  clr	  offcur
+
+	jmp	:nxtoff
+
+sendeach
+	mov	adr0,#S1/256
+	mov	adr1,#S1//256
+	mov	msk,#$01
+	call	sendall
+
+;	mov	adr0,#S2/256
+;	mov	adr1,#S2//256
+;	mov	msk,#$02
+;	call	sendall
+
+	mov	adr0,#S3/256
+	mov	adr1,#S3//256
+	mov	msk,#$04
+	call	sendall
+
+	mov	adr0,#S4/256
+	mov	adr1,#S4//256
+	mov	msk,#$08
+	call	sendall
+
+	mov	adr0,#S5/256
+	mov	adr1,#S5//256
+	mov	msk,#$10
+	call	sendall
+
+	mov	adr0,#S6/256
+	mov	adr1,#S6//256
+	mov	msk,#$20
+	call	sendall
+
+	mov	adr0,#S7/256
+	mov	adr1,#S7//256
+	mov	msk,#$40
+
+sendall
+	call	randomer
+	clr	addr
+
+:lup
+	mov	m,adr0
+	mov	w,adr1
+
+	iread
+
+	mov	b,w
+	csne	b,#255
+	  ret
+
+	cje	b,#b0,:doit
+	cjb	b,#r1,:post
+	jnb	flgTwinkR,:doit
+	jmp	:chk
+:post
+	jnb	flgTwinkP,:doit
+:chk
+	cjne	adr1,randomno,:doit
+
+	mov	w,#$0f
+	mov	b,w	
+	mov	g,w
+	mov	r,w
+	mov	inten,#$c0
+	jmp	:sendit
+
+:doit
+	mov	fsr,b
+	add	fsr,#$30
+	mov	b,ind
+	add	fsr,#$20
+	mov	g,ind
+	add	fsr,#$20
+	mov	r,ind
+	add	fsr,#$20
+	mov	inten,ind
+
+	clr	fsr
+
+:sendit
+	call	send
+
+	inc	addr
+	inc	adr1
+	snz
+	  inc	  adr0
+	jmp	:lup
+
+
+
+
+
+xfadefar
+	mov	addr,#11
+
+:lup
+	mov	m,#$6
+	mov	w,#2
+	add	w,offcur
+	add	w,addr
+
+	iread
+
+	mov	b,w
+	and	w,#$f0
+	xor	b,w
+	mov	g,w
+	swap	g
+
+	mov	w,m
+	mov	r,w
+	sb	fade.0
+	  add	  w,r
+	rl	r
+	sb	fade.1
+	  add	  w,r
+	rl	r
+	sb	fade.2
+	  add	  w,r
+	rl	r
+	sb	fade.3
+	  add	  w,r
+	mov	r,w
+
+	mov	w,g
+	sb	fade.0
+	  add	  w,g
+	rl	g
+	sb	fade.1
+	  add	  w,g
+	rl	g
+	sb	fade.2
+	  add	  w,g
+	rl	g
+	sb	fade.3
+	  add	  w,g
+	mov	g,w
+
+	mov	w,b
+	sb	fade.0
+	  add	  w,b
+	rl	b
+	sb	fade.1
+	  add	  w,b
+	rl	b
+	sb	fade.2
+	  add	  w,b
+	rl	b
+	sb	fade.3
+	  add	  w,b
+	mov	b,w
+
+
+
+	mov	m,#$6
+	mov	w,#2
+	add	w,offprv
+	add	w,addr
+
+	iread
+
+	mov	bx,w
+	and	w,#$f0
+	xor	bx,w
+	mov	gx,w
+	swap	gx
+	mov	rx,m
+
+	clr	w
+	snb	fade.0
+	  add	  w,rx
+	rl	rx
+	snb	fade.1
+	  add	  w,rx
+	rl	rx
+	snb	fade.2
+	  add	  w,rx
+	rl	rx
+	snb	fade.3
+	  add	  w,rx
+	add	r,w
+
+	clr	w
+	snb	fade.0
+	  add	  w,gx
+	rl	gx
+	snb	fade.1
+	  add	  w,gx
+	rl	gx
+	snb	fade.2
+	  add	  w,gx
+	rl	gx
+	snb	fade.3
+	  add	  w,gx
+	add	g,w
+
+	clr	w
+	snb	fade.0
+	  add	  w,bx
+	rl	bx
+	snb	fade.1
+	  add	  w,bx
+	rl	bx
+	snb	fade.2
+	  add	  w,bx
+	rl	bx
+	snb	fade.3
+	  add	  w,bx
+	add	b,w
+
+	mov	w,#$0f
+	swap	r
+	and	r,w
+	swap	g
+	and	g,w
+	swap	b
+	and	b,w
+
+	mov	fsr,addr
+	add	fsr,#$31
+	mov	ind,b
+	add	fsr,#$20
+	mov	ind,g
+	add	fsr,#$20
+	mov	ind,r
+
+	mov	inten,#$ff
+	cjne	b,#$0f,:notwht
+	cjne	g,#$0f,:notwht
+	cjne	r,#$0f,:notwht
+	mov	inten,#$b0
+
+:notwht
+	add	fsr,#$20
+	mov	ind,inten
+
+	clr	fsr
+	
+	test	addr
+	snz	
+	  ret
+
+	dec	addr
+	jmp	:lup
+
+rollfar
+	jnb	flgChaseP,:nopost
+
+	mov	fsr,#$31
+	call	rollit
+
+	mov	fsr,#$51
+	call	rollit
+
+	mov	fsr,#$71
+	call	rollit
+
+	mov	fsr,#$91
+	call	rollit
+
+:nopost
+	jnb	flgChaseR,:noroof
+
+	mov	fsr,#$37
+	call	rollit
+
+	mov	fsr,#$57
+	call	rollit
+
+	mov	fsr,#$77
+	call	rollit
+
+	mov	fsr,#$97
+	call	rollit
+
+:noroof
+	clr	fsr
+	ret
+
+
+	
+	org	$200
+
+;	porch right
+S1
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+;	dw	p3,p4,p5,p6,p1,p2
+;	dw	p3,p4,p5,p6,p1,p2
+	dw	p2,p1,p6,p5,p4,p3
+	dw	p2,p1,p6,p5,p4,p3
+	dw	pend
+
+;	porch roof
+S2
+;	dw	b0,b0,b0
+;	dw	b0,b0,b0,b0,b0,b0
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4
+	dw	pend
+
+;	2nd floor roof over porch
+S3
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+	dw	pend
+
+;	porch left
+S4
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+;	dw	b0,b0,b0,b0,b0,b0
+;	dw	b0,b0
+	dw	p2,p1,p6,p5,p4,p3
+	dw	p2,p1,p6,p5,p4,p3
+	dw	pend
+
+;	garage door
+S5	
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5
+;	dw	p6
+;	dw	p1,p2,p3,p4,p5,p6
+;	dw	p1,p2,p3,p4
+	dw	p5,p4,p3,p2,p1
+	dw	p6,p5,p4,p3,p2,p1
+	dw	p6,p5,p4,p3,p2,p1
+	dw	p6,p5,p4,p3,p2,p1
+	dw	pend
+
+;	garage right
+S6
+	dw	p5,p6,p1,p2,p3,p4
+	dw	p5,p6,p1,p2,p3,p4
+;	dw	r5,r4,r3,r2,r1
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2
+	dw	pend
+
+;	garage left
+S7	
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4
+;	dw	r1,r2,r3,r4,r5
+;	dw	r1,r2,r3,r4,r5,r6
+;	dw	r1,r2,r3,r4,r5,r6
+	dw	pend
+
+	
+
+	org	$600
+pend	equ	255
+b0	equ	0
+p1	equ	1
+p2	equ	2
+p3	equ	3
+p4	equ	4
+p5	equ	5
+p6	equ	6
+
+r1	equ	7
+;r2	equ	8
+;r3	equ	9
+;r4	equ	10
+;r5	equ	11
+;r6	equ	12
+
+palettes
+	dw	mskChaseP+mskTwinkR,3
+	dw	$00f,$0ff,$0f0,$ff0,$f00,$f0f	; multi chase
+;	dw	$fff,$fff,$fff,$fff,$fff,$fff
+
+	dw	0,0
+	dw	$f00,$f00,$f00,$f00,$f00,$f00	; red
+;	dw	$f00,$f00,$f00,$f00,$f00,$f00
+
+	dw	0,0
+	dw	$999,$999,$999,$999,$999,$999	; white
+
+	dw	3,0
+	dw	$f00,$0f0,$fff,$f00,$0f0,$fff	; red/green/white
+;	dw	$fff,$fff,$fff,$fff,$fff,$fff
+
+	dw	0,0
+	dw	$e10,$e10,$e10,$e10,$e10,$e10	; orange
+
+	dw	mskChaseP+mskTwinkR,2
+	dw	$fff,$f00,$f00,$fff,$f00,$f00	; red/white
+;	dw	$f00,$f00,$f00,$f00,$f00,$f00
+
+	dw	0,0
+	dw	$0f0,$0f0,$0f0,$0f0,$0f0,$0f0	; green
+;	dw	$f00,$f00,$f00,$f00,$f00,$f00
+
+	dw	mskChaseP+mskTwinkR,0
+	dw	$00f,$0ff,$0f0,$ff0,$f00,$f0f	; multi
+;	dw	$f00,$f00,$f00,$f00,$f00,$f00
+
+	dw	0,0
+	dw	$f0f,$f0f,$f0f,$f0f,$f0f,$f0f	; ??
+
+	dw	mskChaseP+mskTwinkR,2
+	dw	$fff,$0f0,$0f0,$fff,$0f0,$0f0	; green/white
+;	dw	$0f0,$0f0,$0f0,$0f0,$0f0,$0f0
+
+;	dw	mskChaseR+mskTwinkR,0
+;	dw	$000,$000,$000,$000,$000,$000
+;	dw	$00f,$0ff,$0f0,$ff0,$f00,$f0f
+
+	dw	0,0
+	dw	$0ff,$0ff,$0ff,$0ff,$0ff,$0ff	; ??
+
+	dw	mskChaseP+mskTwinkR,2
+	dw	$fff,$fff,$00f,$00f,$00f,$00f	; blue/white
+;	dw	$00f,$00f,$00f,$00f,$00f,$00f
+
+	dw	0,0
+	dw	$ff0,$ff0,$ff0,$ff0,$ff0,$ff0	; ??
+
+palend	equ	$-palettes

@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USB_DMX_Test", "USB_DMX_Tes
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Propellor", "Propellor\Propellor.vcxitems", "{45D41ACC-2C3C-43D2-BC10-02AA73FFC7C7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scenix", "Scenix\Scenix.vcxitems", "{45D41ACC-2C3C-43D2-BC10-02AA73FFC7C8}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsDMXTest", "WindowsFormsDMXTest\WindowsFormsDMXTest.csproj", "{038032CF-D3D9-4811-9265-92CBA95873C9}"
 EndProject
 Global

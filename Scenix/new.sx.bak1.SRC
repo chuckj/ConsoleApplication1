@@ -1,0 +1,461 @@
+
+DEVICE SX18L, TURBO, STACKX, OSCHS2
+IRC_CAL IRC_FAST
+FREQ 50_000_000
+RESET start
+
+
+CANES	equ	4			; should be 4 or 19
+DEBUG	equ	1			; should be 0 (false) or 1 (true)	
+
+featureSize	equ	5000/20		;5000 ns / 20 ns (clock time for SX @ 50MHz)
+
+seri	equ	RA.0			;serial data in
+
+	org	$08
+acc	ds	1			;accumulator for fields
+lupr	ds	1			;loop counter for bits within fields
+mask	ds	1			;mask for bit within output register (fsr has register address)
+timo	ds	1			;time out down counter
+inten	ds	1			;intensity value
+rgb	ds	1			;accumulated color values
+
+modTRIS		equ	$0f
+modPULLUP 	equ	$0e
+modLEVEL	equ	$0d
+modSCHMITT	equ	$0c
+
+state	equ	$10
+s0	equ	$11
+s1	equ	$12
+s2	equ	$13
+flgs	equ	$14
+flgTO	equ	flgs.1
+flgBIT	equ	flgs.2
+
+xRA	equ	$15
+xRB	equ	$16
+xRC	equ	$17
+
+RTCC_ON = %10000000 ;Enables RTCC at address $01 (RTW hi)
+;*WREG at address $01 (RTW lo) by default
+RTCC_ID = %01000000 ;Disables RTCC edge interrupt (RTE_IE hi)
+;*RTCC edge interrupt (RTE_IE lo) enabled by default
+RTCC_INC_EXT = %00100000 ;Sets RTCC increment on RTCC pin transition (RTS hi)
+;*RTCC increment on internal instruction (RTS lo)is default
+RTCC_FE = %00010000 ;Sets RTCC to increment on falling edge (RTE_ES hi)
+;*RTCC to increment on rising edge (RTE_ES lo) isdefault
+RTCC_PS_ON = %00000000 ;Assigns prescaler to RTCC (PSA lo)
+RTCC_PS_OFF = %00001000 ;Assigns prescaler to WDT (PSA hi)
+PS_000 = %00000000 ;RTCC = 1:2, WDT = 1:1
+PS_001 = %00000001 ;RTCC = 1:4, WDT = 1:2
+PS_010 = %00000010 ;RTCC = 1:8, WDT = 1:4
+PS_011 = %00000011 ;RTCC = 1:16, WDT = 1:8
+PS_100 = %00000100 ;RTCC = 1:32, WDT = 1:16
+PS_101 = %00000101 ;RTCC = 1:64, WDT = 1:32
+PS_110 = %00000110 ;RTCC = 1:128, WDT = 1:64
+PS_111 = %00000111 ;RTCC = 1:256, WDT = 1:128
+
+
+;
+;	ISR
+;
+
+isr	org	0
+	mov	pc,state
+
+State0
+	jnb	seri,isrEND
+
+	mov	state,#State1
+	jmp	isrEND
+
+State1
+	jb	seri,isrEND
+
+	mov	state,#State2
+	mov	s0,#256-50
+	jmp	isrEND
+
+State2
+	inc	s0
+	jz	State2TO
+	jnb	seri,isrEND
+
+	mov	s1,s0
+	mov	s2,#256-50
+	mov	state,#State3
+	jmp	isrEND
+
+State2TO
+	mov	state,#State0
+	setb	flgTO
+	jmp	isrEND
+
+State3
+	inc	s2
+	jz	State3TO
+	jb	seri,isrEND
+
+	setb	flgBIT
+
+	mov	state,#State2
+	mov	s0,#256-50		; TO in 50us
+
+isrEND
+	mov	w,#-50			; interrupt every 1us
+	retiw
+
+State3TO
+	setb	flgTO
+	mov	state,#State1
+	jmp	isrEND
+
+
+
+
+getFld8
+	mov	w,#8			;Set l'field
+	jmp	getFld
+
+getFld6
+	mov	w,#6			;Set l'field
+	jmp	getFld
+
+getFld4
+	mov	w,#4			;Set l'field 
+
+getFld
+	mov	lupr,w			;Move l'field to safe area
+	clr	acc			;Clear accum
+:getNxt
+	call	getBit
+	snc				;Error?
+	  ret				;Yes - return w/'error' status
+
+	cja	s1,s2,:getOne
+	
+	clc
+	skip
+
+:getOne
+	stc
+
+:getShift
+	rl	acc			;Slide accum, inserting new bit
+
+	djnz	lupr,:getNxt		;If not entire field rcvd, loop
+
+	clc				;Clear carry (set 'success' status)
+	mov	w,acc			;.  & copy acc
+	ret				;.  & return w/value
+getFldx
+
+
+
+getBit
+	jb	flgTO,:getErr
+	jnb	flgBIT,getBit
+
+	clr	flgs
+
+	clc				;Reset carry (normal status)
+	ret				;.  & return
+	
+:getErr
+	clr	flgs
+
+	stc				;Show error
+	ret				;.  & return
+
+getBitx
+
+
+
+converttomask
+	jmp	pc+w
+	retw	$01
+	retw	$02
+	retw	$04
+	retw	$08
+	retw	$10
+	retw	$20
+	retw	$40
+	retw	$80
+
+dtatbl	
+	jmp	pc+w
+	retw	0			;$00 - error
+	retw	0			;$01 - error
+	retw	0			;$02 - error
+	retw	0			;$03 - error
+	retw	0			;$04 - error
+	retw	0			;$05 - error
+	retw	0			;$06 - error
+	retw	0			;$07 - error
+
+	retw	0			;$08 - error
+	retw	0			;$09 - error
+	retw	0			;$0A - error
+	retw	0			;$0B - error
+	retw	0			;$0C - error
+	retw	0			;$0D - error
+	retw	0			;$0E - error
+	retw	0			;$0F - error
+
+	retw	0			;$10 - error
+	retw	0			;$11 - error
+	retw	0			;$12 - error
+	retw	0			;$13 - error
+	retw	0			;$14 - error
+	retw	0			;$15 - error
+	retw	0			;$16 - error
+	retw	0			;$17 - error
+
+	retw	0			;$18 - error
+	retw	0			;$19 - error
+	retw	0			;$1A - error
+	retw	0			;$1B - error
+	retw	0			;$1C - error
+	retw	0			;$1D - error
+	retw	0			;$1E - error
+	retw	0			;$1F - error
+
+	if	CANES = 19
+
+	retw	RA+1*16			;$20 - use RA
+	retw	RA+2*16			;$21 - use RA
+	retw	RA+3*16			;$22 - use RA
+	retw	RB+0*16			;$23 - use RB
+	retw	RB+1*16			;$24 - use RB
+	retw	RB+2*16			;$25 - use RB
+	retw	RB+3*16			;$26 - use RB
+	retw	RB+4*16			;$27 - use RB
+
+	retw	RB+5*16			;$28 - use RB
+	retw	RB+6*16			;$29 - use RB
+	retw	RB+7*16			;$2A - use RB
+	retw	RC+0*16			;$2B - use RC
+	retw	RC+1*16			;$2C - use RC
+	retw	RC+2*16			;$2D - use RC
+	retw	RC+3*16			;$2E - use RC
+	retw	RC+4*16			;$2F - use RC
+
+	retw	RC+5*16			;$30 - use RC
+	retw	RC+6*16			;$31 - use RC
+	retw	RC+7*16			;$32 - use RC
+
+	endif
+
+	if 	CANES = 4
+
+	retw	RB+0*16			;$20 - use RB
+	retw	RB+1*16			;$21 - use RB
+	retw	RB+2*16			;$22 - use RB
+	retw	RB+3*16			;$23 - use RB
+	retw	RB+4*16			;$24 - use RB
+	retw	RB+5*16			;$25 - use RB
+	retw	RB+6*16			;$26 - use RB
+	retw	RB+7*16			;$27 - use RB
+
+	retw	0			;$28 - error
+	retw	0			;$29 - error
+	retw	0			;$2A - error
+	retw	0			;$2B - error
+	retw	0			;$2C - error
+	retw	0			;$2D - error
+	retw	0			;$2E - error
+	retw	0			;$2F - error
+
+	retw	0			;$30 - error
+	retw	0			;$31 - error
+	retw	0			;$32 - error
+
+	endif
+
+
+	retw	0			;$33 - error
+	retw	0			;$34 - error
+	retw	0			;$35 - error
+	retw	0			;$36 - error
+	retw	0			;$37 - error
+	retw	0			;$38 - error
+	retw	0			;$39 - error
+	retw	0			;$3a - error
+	retw	0			;$3b - error
+	retw	0			;$3c - error
+	retw	0			;$3d - error
+	retw	0			;$3e - error
+	retw	0			;$3f - error
+
+
+
+START
+	clr 	fsr			;Clear
+:clrRAM					;.
+	sb 	fsr.4			;.
+	  setb 	fsr.3			;.
+	clr 	ind			;.
+	ijnz 	fsr,:clrRAM		;.   all ram
+
+	mov	state,#State0
+	mov	!OPTION,#RTCC_ON+RTCC_PS_OFF	; rtcc interrupts on/PS assigned to WDT
+
+	mode	modTRIS			;Setup for direction regs
+	mov	!RA,#%00000001		;All outputs EXCEPT RA.0
+	mov	!RB,#%00000000		;All outputs for RB
+	mov	!RC,#%00000000		;All outputs for RC
+
+	mode	modPULLUP		;Setup for pull-up regs
+	mov	w,#%11111111		;All pull-ups DISABLED=1
+	mov	!RA,w			;.   for RA
+	mov	!RB,w			;.   RB
+	mov	!RC,w			;. & RC
+
+	mode	modLEVEL		;Setup for read level regs
+	mov	w,#%11111111		;All read levels TTL=1
+	mov	!RA,w			;.   for RA
+	mov	!RB,w			;.   RB
+	mov	!RC,w			;. & RC
+
+	mode	modSCHMITT		;Setup for schmitt trigger regs
+	mov	w,#%11111111		;All schmitt triggers DISABLED=1
+	mov	!RA,w			;.   for RA
+	mov	!RB,w			;.   RB
+	mov	!RC,w			;. & RC
+
+	if	CANES = 19
+	mov	RA,#%00001110		;All outputs on (RELAY OFF) EXCEPT RA.0
+	endif
+	mov	RB,#%11111111		;All outputs on (RELAY OFF) for RB
+	if	CANES = 19
+	mov	RC,#%11111111		;All outputs on (RELAY OFF) for RC
+	endif
+
+loopTO
+	if	CANES = 4
+	if	DEBUG = 1
+	setb	ra.2
+	endif
+	endif
+	jnb	flgTO,loopTO
+	if	CANES = 4
+	if	DEBUG = 1
+	clrb	ra.2
+	endif
+	endif
+	clr	flgs
+
+loop
+
+;	Wait for new burst
+
+	if	DEBUG = 1
+	endif
+
+;	Get Address field
+	call	getFld6			;Get Address field (length 6)
+	jc	loopTO			;False start - resync
+
+	cje	acc,#63,setAll		;63 (Global reference) - set all on/off
+
+	and	acc,#$3f
+	mov	w,acc			;Get @'register/bit number
+	call	dtatbl
+
+	mov	acc,w
+	and	w,#$0f
+	jz	loop
+	xor	acc,w
+	mov	fsr,w
+
+	mov	w,<>acc
+	call	converttomask
+	mov	mask,w			;Copy mask
+
+
+;	Get Intensity field
+	
+	call	getFld8			;Get Intensity field *8 bits)
+	jc	loopTO			;False start - resync
+	mov	inten,w			;Save intensity value
+
+
+;	Get B field
+	
+	call	getFld4			;Get 'R' field
+	jc	loopTO			;False start - resync
+
+;	Get G field
+	
+	call	getFld4			;Get 'G' field - 4 bits
+	jc	loopTO			;False start - resync
+
+;	Get R field
+	
+	call	getFld4			;Get 'B' field
+	jc	loopTO			;False start - resync
+
+	test	acc
+	jz	:savOff
+
+:savOn
+	mov	w,mask			;Prepare to set/reset bit
+	xor	w,#$ff			;Invert the mask
+
+	setb	fsr.4			;Point to save area
+	and	ind,w			;Turn bit off (RELAY ON)	
+	clrb	fsr.4			;Restore pointer to i/o area
+
+	test	inten			;RGB is on - Is inten on as well?
+	jz	:setOff			;No - turn port off
+
+:setOn
+	mov	w,mask			;Prepare to set/reset bit
+	xor	w,#$ff			;Invert the mask
+	and	ind,w			;.   & turn the bit off (RELAY ON)
+	jmp	loopTO
+
+:savOff
+	mov	w,mask			;Prepare to set/reset bit
+	setb	fsr.4			;Point to save area
+	or	ind,w			;.   & turn the bit on (RELAY OFF)
+	clrb	fsr.4			;Restore pointer to i/o area
+
+:setOff
+	mov	w,mask			;Prepare to set/reset bit
+	or	ind,w			;.   & turn the bit on (RELAY OFF)
+	jmp	loopTO
+
+
+setAll
+	call	getFld8			;Get intensity field			
+	jc	loopTO			;False start - resync
+
+	mov	w,acc	
+	jnz	:allOn			
+
+:allOff
+	if	CANES = 19
+	mov	RA,#%00001110		;All outputs on (RELAY OFF) EXCEPT RA.0
+	endif
+	mov	RB,#%11111111		;All outputs on (RELAY OFF) for RB
+	if	CANES = 19
+	mov	RC,#%11111111		;All outputs on (RELAY OFF) for RC
+	endif
+	jmp	loopTO
+
+:allOn
+	if	CANES = 19
+	mov	w,xRA
+	and	w,#%00001110		;Turn all (EXCEPT seri)
+	mov	RA,w			;.
+	endif
+	mov	w,xRB
+	mov	RB,w			;.
+	if	CANES = 19
+	mov	w,xRC
+	mov	RC,w			;.   on
+	endif
+
+	jmp	loopTO

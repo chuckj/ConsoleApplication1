@@ -1,0 +1,381 @@
+
+DEVICE SX18L, TURBO, STACKX, OSCHS2
+IRC_CAL IRC_FAST
+FREQ 50_000_000
+RESET start
+
+
+featureSize	equ	5000/20		;5000 ns / 20 ns (clock time for SX @ 50MHz)
+
+modTRIS		equ	$0f
+modPULLUP 	equ	$0e
+modLEVEL	equ	$0d
+modSCHMITT	equ	$0c
+
+	org	$08
+timo	ds	1			;time out down counter
+
+addr	ds	1
+inten	ds	1
+g	ds	1
+b	ds	1
+r	ds	1
+
+byte	ds	1
+bits	ds	1
+
+adr0	ds	1
+adr1	ds	1
+msk	ds	1
+offset	ds	1
+
+lupr	ds	1
+
+
+RTCC_ON = %10000000 ;Enables RTCC at address $01 (RTW hi)
+;*WREG at address $01 (RTW lo) by default
+RTCC_ID = %01000000 ;Disables RTCC edge interrupt (RTE_IE hi)
+;*RTCC edge interrupt (RTE_IE lo) enabled by default
+RTCC_INC_EXT = %00100000 ;Sets RTCC increment on RTCC pin transition (RTS hi)
+;*RTCC increment on internal instruction (RTS lo)is default
+RTCC_FE = %00010000 ;Sets RTCC to increment on falling edge (RTE_ES hi)
+;*RTCC to increment on rising edge (RTE_ES lo) isdefault
+RTCC_PS_ON = %00000000 ;Assigns prescaler to RTCC (PSA lo)
+RTCC_PS_OFF = %00001000 ;Assigns prescaler to WDT (PSA hi)
+PS_000 = %00000000 ;RTCC = 1:2, WDT = 1:1
+PS_001 = %00000001 ;RTCC = 1:4, WDT = 1:2
+PS_010 = %00000010 ;RTCC = 1:8, WDT = 1:4
+PS_011 = %00000011 ;RTCC = 1:16, WDT = 1:8
+PS_100 = %00000100 ;RTCC = 1:32, WDT = 1:16
+PS_101 = %00000101 ;RTCC = 1:64, WDT = 1:32
+PS_110 = %00000110 ;RTCC = 1:128, WDT = 1:64
+PS_111 = %00000111 ;RTCC = 1:256, WDT = 1:128
+
+
+	org	0
+START
+	clr 	fsr			;Clear
+:clrRAM					;.
+	sb 	fsr.4			;.
+	  setb 	fsr.3			;.
+	clr 	ind			;.
+	ijnz 	fsr,:clrRAM		;.   all ram
+
+	mode	modTRIS			;Setup for direction regs
+	mov	!RA,#%11111111		;All inputs for RA
+	mov	!RB,#%00000000		;All outputs for RB
+	mov	!RC,#%11111111		;All inputs for RC
+
+	mode	modPULLUP		;Setup for pull-up regs
+	mov	w,#%11111111		;All pull-ups DISABLED=1
+	mov	!RA,w			;.   for RA
+	mov	!RB,w			;.   RB
+	mov	!RC,w			;. & RC
+
+	mode	modLEVEL		;Setup for read level regs
+	mov	w,#%11111111		;All read levels TTL=1
+	mov	!RA,w			;.   for RA
+	mov	!RB,w			;.   RB
+	mov	!RC,w			;. & RC
+
+	mode	modSCHMITT		;Setup for schmitt trigger regs
+	mov	w,#%11111111		;All schmitt triggers DISABLED=1
+	mov	!RA,w			;.   for RA
+	mov	!RB,w			;.   RB
+	mov	!RC,w			;. & RC
+
+	mov	RA,#%00000000		;All outputs off RA
+	mov	RB,#%00000000		;All outputs off for RB
+	mov	RC,#%00000000		;All outputs off for RC
+
+waitawhile
+	mov	addr,#15
+:waitlup
+	call	wait100ms
+	djnz	addr,:waitlup
+
+:clroff
+	clr	offset
+
+:nxtoff
+	mov	lupr,#200
+
+:top
+	mov	adr0,#S1/256
+	mov	adr1,#S1//256
+	mov	msk,#$01
+	call	sendall
+
+	mov	adr0,#S2/256
+	mov	adr1,#S2//256
+	mov	msk,#$02
+	call	sendall
+
+	mov	adr0,#S3/256
+	mov	adr1,#S3//256
+	mov	msk,#$04
+	call	sendall
+
+	mov	adr0,#S4/256
+	mov	adr1,#S4//256
+	mov	msk,#$08
+	call	sendall
+
+	mov	adr0,#S5/256
+	mov	adr1,#S5//256
+	mov	msk,#$10
+	call	sendall
+
+	mov	adr0,#S6/256
+	mov	adr1,#S6//256
+	mov	msk,#$20
+	call	sendall
+
+	mov	adr0,#S7/256
+	mov	adr1,#S7//256
+	mov	msk,#$40
+	call	sendall
+
+	djnz	lupr,:top
+	add	offset,#12
+	cjb	offset,#12*3,:nxtoff
+	jmp	:clroff
+
+sendall
+	clr	addr
+
+:lup
+	mov	m,adr0
+	mov	w,adr1
+
+	iread
+
+	mov	b,w
+	mov	w,m
+	or	w,b
+	snz
+	  ret
+
+	mov	w,b
+	add	w,offset
+
+	iread
+
+	mov	g,w
+	mov	b,m
+
+	mov	inten,#$ff
+	cjne	b,#$0f,:notwht
+	cjne	g,#$ff,:notwht
+	mov	inten,#212
+
+:notwht
+
+	mov	r,#$0f
+	and	r,g
+	xor	g,r
+	swap	g
+
+	call	send
+
+	inc	addr
+	inc	adr1
+	snz
+	  inc	  adr0
+	jmp	:lup
+
+
+
+send
+	mov	byte,addr
+	call	send6bits
+	mov	byte,inten
+	call	send8bits
+	mov	byte,b
+	call	send4bits
+	mov	byte,g
+	call	send4bits
+	mov	byte,r
+	call	send4bits
+	or	rb,msk
+	call	wait5us
+	xor	rb,msk
+	mov	bits,#30*3
+:idle
+	call	wait5us
+	djnz	bits,:idle
+	ret
+	
+send4bits
+	mov	bits,#4
+	swap	byte
+	jmp	sendbits
+
+send6bits
+	mov	bits,#6
+	rl	byte
+	rl	byte
+	jmp	sendbits
+
+send8bits
+	mov	bits,#8
+
+sendbits
+	or	RB,msk
+	call	wait5us
+	xor	RB,msk
+	call	wait5us
+
+	mov	w,msk
+	rl	byte
+	sc
+	  or	  RB,w
+	call	wait5us
+	djnz	bits,sendbits
+	ret
+
+wait5us
+	mov	timo,#243/(14+7)
+:lup
+	jmp	$+1
+	jmp	$+1
+	jmp	$+1
+	jmp	$+1
+	jmp	$+1
+	jmp	$+1
+	djnz	timo,:lup
+	ret
+
+wait1ms
+	mov	bits,#200
+:lup
+	call	wait5us
+	djnz	bits,:lup
+	ret
+
+wait33ms
+	mov	byte,#33
+	jmp	waitms
+
+wait40ms
+	mov	byte,#40
+	jmp	waitms
+
+wait100ms
+	mov	byte,#100
+
+waitms
+	call	wait1ms
+	djnz	byte,waitms
+	ret
+
+pend	equ	0
+p1	dw	$00f
+p2	dw	$0ff
+p3	dw	$0f0
+p4	dw	$ff0
+p5	dw	$f00
+p6	dw	$f0f
+
+r1	dw	$fff
+r2	dw	$fff
+r3	dw	$fff
+r4	dw	$fff
+r5	dw	$fff
+r6	dw	$fff
+
+	dw	$00f,$00f,$00f,$00f,$00f,$00f
+	dw	$00f,$00f,$00f,$00f,$00f,$00f
+
+	dw	$00f,$00f,$00f,$0f0,$0f0,$0f0
+	dw	$fff,$fff,$fff,$fff,$fff,$fff
+
+	org	$200
+S1
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	pend
+
+S2
+	dw	p6,p5,p4,p3,p2,p1
+	dw	p6,p5,p4
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4
+	dw	pend
+
+S3
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	pend
+
+S4
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4,p5,p6,p1,p2
+	dw	p3,p4
+	dw	p2,p1,p6,p5,p4,p3
+	dw	p2,p1,p6,p5,p4,p3
+	dw	pend
+
+S5	
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4
+	dw	p6,p5,p4,p3,p2,p1
+	dw	p6,p5,p4,p3,p2,p1
+	dw	pend
+
+S6
+	dw	p5,p6,p1,p2,p3,p4
+	dw	p5,p6,p1,p2,p3,p4
+	dw	r5,r4,r3,r2,r1
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2
+	dw	pend
+
+S7	
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4,p5,p6
+	dw	p1,p2,p3,p4
+	dw	r1,r2,r3,r4,r5
+	dw	r1,r2,r3,r4,r5,r6
+	dw	r1,r2,r3,r4,r5,r6
+	dw	pend
+
+	
+
+
+
+
+

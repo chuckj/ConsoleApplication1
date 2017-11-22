@@ -1,0 +1,2062 @@
+	include "setup48.inc"
+
+CR		equ	$0d
+MrqRunout		equ	41
+
+
+BitTime		equ	12
+HalfBitTime	equ	BitTime / 2
+
+
+;
+;	Registers
+;
+r0a	equ	$0a
+
+Ready		equ	r0a.0		;	'r'-eady command has been recvd
+HalfCycDun	equ	r0a.1
+InCycle		equ	r0a.2
+;		equ	r0a.3
+DisplayChanged	equ	r0a.4		;	changes in display or marquee
+SlideDun	equ	r0a.5
+RcvrBusy	equ	r0a.6
+XmitBusy	equ	r0a.7
+
+CmdChar		equ	$0b
+CmdWork		equ	$0c
+XmitChar	equ	$0d
+RcvrChar	equ	$0e
+;		equ	$0f
+
+
+ISRBank		equ	$10
+
+RcvBitCount	equ	$10
+RcvBitTime	equ	$11
+RcvBufferHead	equ	$12
+RcvBufferTail	equ	$13
+
+XmtBitCount	equ	$14
+XmtBitTime	equ	$15
+XmitBufferHead	equ	$16
+XmitBufferTail	equ	$17
+;
+SliceTime		equ	$18
+DMAAddrLo		equ	$19
+DMAAddrHi		equ	$1a
+DMAEvenOdd	equ	$1b
+SliceCount	equ	$1c
+ZXDebounce	equ	$1d
+;
+;
+XmitBuffer	equ	0x20	; - 0x3f
+RcvBuffer		equ	0x40	; - 0x5f
+;
+DMABank		equ	$60
+
+DMAr0		equ	$60
+DMAr1		equ	$61
+DMAr2		equ	$62
+DMAr3		equ	$63
+DMAr4		equ	$64
+DMAr5		equ	$65
+DMAr6		equ	$66
+DMAr7		equ	$67
+DMAr8		equ	$68
+DMAr9		equ	$69
+DMArA		equ	$6a
+DMArB		equ	$6b
+DMArC		equ	$6c
+DMArD		equ	$6d
+DMArE		equ	$6e
+DMArF		equ	$6f
+
+CmdBank		equ	$70
+
+CmdState	equ	$70
+CmdWork0	equ	$71
+CmdFlags	equ	$72
+CmdFlgMrqIdle	equ	CmdFlags.0	;r72.0 	Set when Marquee stops
+;CmdFlg1		equ	CmdFlags.1
+;CmdFlg2		equ	CmdFlags.2
+
+CmdAccuLo	equ	$73
+CmdAccuHi	equ	$74
+CmdAddrLo	equ	$75
+CmdAddrHi	equ	$76
+CmdDispLo	equ	$77
+CmdDispHi	equ	$78
+CmdDisp		equ	$79
+CmdBright	equ	$7a
+CmdCount	equ	$7b	  
+;
+;
+;
+MrqBank		equ	$80
+
+MrqState		equ	$80
+MarqueeBits	equ	$81
+MrqDontKno	equ	MarqueeBits.0		;- always '0'?
+MrqPacing	equ	MarqueeBits.1		;- Pacing
+MrqEvenOdd	equ	MarqueeBits.2		;- Even/Odd scan toggle
+MrqAddrLo	equ	$83
+MrqAddrHi	equ	$82
+MrqTblLo	equ	$85
+MrqTblHi	equ	$84
+MrqRunoutCtr	equ	$88
+MrqIntMsk	equ	$89
+PaceCtr		equ	$8a
+PaceVal		equ	$8b
+MrqHi		equ	$8c
+MrqLo		equ	$8d
+;
+;
+DisplayBank	equ	$90
+
+;DisplayCntrl	equ	$90, $94, $98, $9c
+Display0		equ	$90	; - $93
+Display1		equ	$94	; - $97
+Display2		equ	$98	; - $9b
+Display3		equ	$9c	; - $9f
+;
+AtBatBank		equ	$e0
+
+AbRow0		equ	$e0
+AbRow1		equ	$e1
+AbRow2		equ	$e2
+AbRow3		equ	$e3
+AbRow4		equ	$e4
+AbRow5		equ	$e5
+AbRow6		equ	$e6
+AbRow7		equ	$e7
+AbRow8		equ	$e8
+AbRow9		equ	$e9
+AbRowA		equ	$ea
+AbRowB		equ	$eb
+AbRowC		equ	$ec
+AbRowD		equ	$ed
+AbRowE		equ	$ee
+AbRowF		equ	$ef
+
+
+OnDeckBank	equ	$f0
+
+OdRow0		equ	$e0
+OdRow1		equ	$e1
+OdRow2		equ	$e2
+OdRow3		equ	$e3
+OdRow4		equ	$e4
+OdRow5		equ	$e5
+OdRow6		equ	$e6
+OdRow7		equ	$e7
+OdRow8		equ	$e8
+OdRow9		equ	$e9
+OdRowA		equ	$ea
+OdRowB		equ	$eb
+OdRowC		equ	$ec
+OdRowD		equ	$ed
+OdRowE		equ	$ee
+OdRowF		equ	$ef
+;
+;
+;
+;RA	8255 address
+;		00sssscc
+;			cc (lo-order 2 bits) 8255 Control reg select
+;			ssss (middle 4 bits) 8255 chip select
+;
+;
+ZeroCross		equ	RB.0		zero cross?
+RcvBit		equ	RB.1
+XmitBit		equ	RB.2
+x8255WR		equ	RB.3
+;			RB.4	-- unused
+;			RB.5	-- unused
+RamWr		equ	RB.6
+RamRd		equ	RB.7
+;
+;
+;RC	Data - bidirectional 
+;		RAM and 8255 share Data bus
+;
+;RE/RD	RAM address
+;
+;
+;
+;
+;ram
+;
+MrqArea		equ	$0000		; 334 (0x0000 -> 0x0158) Extra 32 bytes for Marquee 'lead-in' area
+DisplaySiz	equ	312		;
+MrqDisp		equ	$0020		; 312 * 1 (0x0020 -> 0x0158)
+Displays	equ	$0158		; 312 * 4 (0x0158 -> 0x0637) expanded
+;                                       ;
+LvlArry		equ	$0638		; 102 * 40 +/-
+LvlArrySiz	equ	4234		;	???
+;                                       ;
+MrqBuffr	equ	$1ec2		; text message for marquee
+FontArry	equ	$1fc2		; size = 0x60 * 16 bytes
+DispArry	equ	$25c2		; size - 200 * 40 bytes (uses 39 bytes of each entry (312 / 8))
+;		equ	$4502
+;
+
+
+_BANK	MACRO	1
+ expand
+	BANK	\1
+ noexpand
+	IF	\1 & %10000000
+ expand
+	SETB	FSR.7
+ noexpand
+	ELSE
+ expand
+	CLRB	FSR.7
+ noexpand
+	ENDIF
+	ENDM
+
+JmpTbl	MACRO	tbl,lbl
+_??lbl	equ	$-tbl		  
+	JMP	lbl
+	ENDM
+
+ISR
+	_BANK	ISRBank					; ISRBank
+	JB	XmitBusy,Xmit:Resume			; If xmit busy, continue
+	CJE	XmitBufferTail,XmitBufferHead,Xmit	; If chars to send, do it
+
+XmitDun
+	JB	RcvrBusy,Rcvr:Resume			; If rcvr busy, continue
+	JNB	RcvBit,Rcvr				; If start bit, start rcv
+
+RcvrDun	
+	CLC						; Debounce 
+	SNB	ZeroCross				;  zero-cross
+	  STC						;
+	RR	ZXDebounce				;
+	TEST	ZXDebounce				; If all zeros,
+	JZ	ClrEdg					; . process
+	
+	CJNE	ZXDebounce,#255,ChkSlc			; If not all ones, continue
+	JB	InCycle,ChkSlc				; If in cycle, continue
+	
+	SETB	InCycle					; indicate in-cycle
+	MOV	W,#50					;
+	MOV	SliceCount,W				; .  & re-set power index
+	JMP	NxtInt					; Start next interval
+
+ClrEdg	CLRB	InCycle					; Clear edge trigger
+
+ChkSlc	TEST	SliceTime				; Slice Time already zero?
+	SZ						; .  yes - don't decrement again
+	  DECSZ	SliceTime				; Decrement Slice Time - end of slice?
+	    JMP	XitInt					; .  no - xit
+
+DecInt	DJNZ	SliceCount,NxtInt			; Decrement Slice count - if zero, get next interval
+	
+	SETB	HalfCycDun				; start half-cycle
+	JMP	XitInt					; .   & xit
+
+NxtInt	SETB	SlideDun				; Set slice dun - (Need DMA NOW)
+	MOV	W,SliceCount				; Get
+	CALL	GetInt					; .  next
+	MOV	SliceTime,W				; .    interval
+							;
+XitInt	MOV	W,#39					; 256-39 = 217 ticks to next interrupt?
+	RETIW						; . Add W to RTCC and RETI
+
+Xmit	MOV	W,#XmitBuffer				; Index into xmit buffer
+	ADD	W,XmitBufferTail			;
+	MOV	FSR,W					;
+	MOV	W,INDF					; Load next char to send
+	MOV	XmitChar,W				;
+
+	MOV	FSR,#ISRBank				; restore bank 10
+	
+	MOV	W,++XmitBufferTail			; increment tail
+	AND	W,#$1f					;
+	MOV	XmitBufferTail,W			; .  & wrap
+	MOV	W,#10					;
+	MOV	XmtBitCount,W				; set #'bits to send
+	SETB	XmitBusy				; set xmit busy
+	JMP	:Xmit2					; send Start bit
+
+:Resume	DJNZ	XmtBitTime,XmitDun			; If bit time not expired, xit
+	DJNZ	XmtBitCount,:Xmit1			; If more bits to send, do it
+
+	CLRB	XmitBusy				; set Xmit idle
+	JMP	XmitDun					; . xit
+
+:Xmit1	STC						; Set carry in
+	RR	XmitChar				; Set
+	SNC						;
+	  SETB	XmitBit					; .  out
+	SC						;
+:Xmit2	  CLRB	XmitBit					; .    bit
+	MOV	W,#BitTime				; Set bit timer
+	MOV	XmtBitTime,W				;
+	JMP	XmitDun					; Done for now
+
+Rcvr	MOV	W,#BitTime+HalfBitTime			; start bit seen - set l'start bit + 1/2 first data bit
+	MOV	RcvBitTime,W				; 
+	MOV	W,#9					; set data bit count (+ 1)
+	MOV	RcvBitCount,W				; 
+	SETB	RcvrBusy				; set Rcvr busy
+	JMP	RcvrDun					; Done for now
+
+:Resume	
+	DJNZ	RcvBitTime,RcvrDun			; If time not expired, xit
+	DJNZ	RcvBitCount,:Rcvr1			; If more bits, get them
+
+	MOV	W,#RcvBuffer				; index into Rcv buffer w/RcvBufferHead
+	ADD	W,RcvBufferHead				;
+	MOV	FSR,W					;
+	MOV	W,RcvrChar				; . & stash new character
+	MOV	INDF,W					;
+
+	MOV	FSR,#ISRBank				; reset ISRBank
+	MOV	W,++RcvBufferHead			; Increment
+	AND	W,#$1f					; . & wrap
+	MOV	RcvBufferHead,W				;
+	CLRB	RcvrBusy				; clear Rcvr busy
+	JMP	RcvrDun					; . & xit
+
+:Rcvr1	CLC						; Get
+	SNB	RcvBit					; .  new bit
+	  STC						; .    in carry
+	RR	RcvrChar				; .  & accum into new char
+	MOV	RcvBitTime,#BitTime			; reset bit time
+	JMP	RcvrDun					; done for now
+
+GetInt	JMP	PC+W		;
+	NOP			;
+	RETW	50		; Time intervals between display updates
+	RETW	40		;
+	RETW	35		;
+	RETW	30		;
+	RETW	28		;
+	RETW	28		;
+	RETW	26		;
+	RETW	26		;
+	RETW	24		;
+	RETW	24		;
+	RETW	22		;
+	RETW	22		;
+	RETW	20		;
+	RETW	20		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	18		;
+	RETW	20		;
+	RETW	20		;
+	RETW	22		;
+	RETW	22		;
+	RETW	24		;
+	RETW	24		;
+	RETW	26		;
+	RETW	26		;
+	RETW	28		;
+	RETW	28		;
+	RETW	30		;
+	RETW	35		;
+	RETW	40		;
+	RETW	50		;
+	RETW	150		;
+	RETW	255		;
+				;
+Resets
+	JMP	@Init					; Long Jump Init
+
+	ORG	$200
+	
+Clr8255	MOV	W,#%00110011				; Set Chip selects & a1,a0 (0b00 1100 11)
+	MOV	RA,W					; .  Chip 13, Control port
+	MOV	W,#$80					; Set
+	MOV	RC,W					; .  8255 mode value (all ports - simple output)
+	MOV	W,#0					; RC
+	MOV	!RC,W					; .  to output mode
+	MOV	W,#4					; load decrement
+
+:Lup	CLRB	x8255WR					; Pulse
+	JMP	$+1					; .	nop
+	JMP	$+1					; .	nop
+	SETB	x8255WR					; .  RB.3 (8255 !WR)
+	JMP	$+1					; 
+
+	SUB	RA,W					; Decrement by 4 (skip over data addresses)
+	SNC						; Dun?
+	  JMP	:Lup					; . No - Lup:
+	
+	MOV	W,#255					; Reset RC
+	MOV	!RC,W					; .  to input mode
+
+	MOV	DMAAddrLo,#(LvlArry + 100) // 256	; Reset 
+	MOV	DMAAddrHi,#(LvlArry + 100) / 256	; . DMA @'s
+
+	NOT	DMAEvenOdd				; Bump r19 every other time (even vs odd half cycles)
+	SNB	DMAEvenOdd.0				;
+	  INC	DMAAddrLo				;
+	RETP						; Return
+
+
+Init	MOV	W,#28					; Mode = Read/write port Schmidt Trigger
+	MOV	M,W					; 
+	MOV	W,#255					; 
+	MOV	!RB,W					; 
+	MOV	W,#255					; 
+	MOV	!RC,W					; 
+	MOV	!RD,W					; 
+	MOV	!RE,W					; 
+	MOV	W,#29					; Mode = Write/Read port LVL regs
+	MOV	M,W					; 
+	MOV	W,#255					; 
+	MOV	!RA,W					; 
+	MOV	!RB,W					; 
+	MOV	!RC,W					; 
+	MOV	!RD,W					; 
+	MOV	!RE,W					; 
+	MOV	W,#30					; 
+	MOV	M,W					; Mode = Write/Read port Pull-up regs
+	MOV	W,#255					; 
+	MOV	!RA,W					; 
+	MOV	!RB,W					; 
+	MOV	!RC,W					; 
+	MOV	!RD,W					; 
+	MOV	!RE,W					;
+
+	MOV	RA,#15					; Set
+	MOV	RB,#252					; 
+	MOV	RC,#0					; 
+	MOV	RD,#0					; 
+	MOV	RE,#0					; . Initial values
+
+	MOV	W,#31					; 
+	MOV	M,W					; Mode = Write/Read port Direction regs
+	MOV	W,#3					; 
+	MOV	!rb,W					; RB - bits 0,1 input, others output
+	MOV	W,#0					; 
+	MOV	!ra,W					; RA - All output
+	MOV	W,#0					; 
+	MOV	!rc,W					; RC - All output
+	MOV	W,#0					; 
+	MOV	!rd,W					; RD - All output
+	MOV	W,#0					; 
+	MOV	!re,W					; RE - All output
+	MOV	W,#10					; Clear
+	MOV	FSR,W					; 
+:ClrReg	CLR	INDF					; .  All
+	INCSZ	FSR					; 
+	  JMP	:ClrReg					; .  Regs
+
+	_Bank	MrqBank					; Marquee bank
+				  
+	MOV	PaceVal,#4				; Default PaceVal 03b	r8b <= 4
+
+	_BANK	ISRBank		  
+				  
+ 	CLR	RE					; Clear RAM
+	CLR	RD					; 
+	CLR	RC					; 
+:ClrRAM	CLRB	RamWr					; Write
+	NOP						; 
+	SETB	RamWr					; .  Pulse (RAM !WR)
+	INCSZ	RD					; 
+	  JMP	:ClrRAM					;
+	INC	RE					; 
+	SB	RE.7					; 
+	  JMP	:ClrRAM					;
+
+	MOV	W,#255					; Set RC
+	MOV	!RC,W					; .  To input mode
+
+	CALL	Clr8255					;
+	MOV	W,#$88					; 
+	MOV	!OPTION,W				; Prescale = 1 / instruction cycle
+
+MainLup	BANK	$10					; Bank 10
+	CLRB	FSR.7					; 
+	SB	SlideDun				; Has display changed?
+	  JMP	#$096					; No - Skip DMA
+
+DMA	CLRB	SlideDun				; 
+	MOV	RA,#0					; Set to first 8255, data A reg
+	MOV	RD,DMAAddrLo				; Set
+	MOV	RE,DMAAddrHi				; .  RAM @
+
+	CLRB	RamRd					; 
+	MOV	CmdChar,#13				; Load #'Chips
+	MOV	W,#102					; load RAM @ increment value
+							; 
+DMALup:	CLRB	x8255WR					; Pulse
+	JMP	$+1					; .	nop
+	JMP	$+1					; .	nop
+	SETB	x8255WR					; .  RB.3 (8255 !WR)
+	NOP						; 
+							; 
+	INC	RA					; Increment to Data B port
+	ADD	RD,W					; Increment 
+	SNC						; 
+	  INC	RE					; .  RAM @
+							; 
+	NOP						; 
+	CLRB	x8255WR					; Pulse
+	JMP	$+1					;
+	JMP	$+1					;
+	SETB	x8255WR					; .  RB.3
+	NOP						; 
+
+	INC	RA					; Increment to Data C port
+	ADD	RD,W					; Increment
+	SNC						; 
+	  INC	RE					; .  RAM @
+
+	NOP						; 
+	CLRB	x8255WR					; Pulse
+	JMP	$+1					;
+	JMP	$+1					;
+	SETB	x8255WR					; .  RB.3
+	NOP						; 
+
+	INC	RA					; Increment to next Data A Port
+	INC	RA					; .  (Skip control)
+	ADD	RD,W					; Increment
+	SNC						; 
+	  INC	RE					; .  RAM @
+
+	DJNZ	CmdChar,DMALup				; Decrement Chip count - if not dun, lup
+
+	SETB	RamRd					; 
+	DEC	DMAAddrLo				; Decrement Slot pointer
+	DEC	DMAAddrLo				; .  (by 2 for even/odd half cycles)  
+
+	CALL	@SndStat				;
+	SB	HalfCycDun				;
+	  JMP	BypUpd					; No - bypass updates
+
+SkpDMA	CLRB	HalfCycDun				; 
+	CALL	Clr8255					; reset all outputs to off
+	CALL	@UpdMrq					; call marquee update
+	CALL	@UpdDsp					; copy active displays
+							; 
+	SNB	DisplayChanged				; Update needed
+	  CALL	BldDMA					;
+
+BypUpd	JMP	MainLup					;
+							;
+BldDMA
+	_BANK	DMABank
+	
+	CLRB	DisplayChanged				;
+
+	MOV	RD,#LvlArry // 256			; Set starting @
+	MOV	RE,#LvlArry / 256			; 
+	CLR	RC					; Clear value
+	MOV	W,#0					; Set RC
+	MOV	!RC,W					; .  as output
+	MOV	DMAr6,#LvlArrySiz // 256		; Set size to clear
+	MOV	DMAr4,#LvlArrySiz / 256			; 
+
+:Lup	CLRB	RamWr					; Write
+	NOP						; 
+	SETB	RamWr					; .  zeros
+	INC	RD					; Increment 
+	SNZ						; 
+	  INC	RE					; .  address
+
+	DJNZ	DMAr6,:Lup				; Decrement length - If not dun, lup
+	DJNZ	DMAr4,:Lup				; .
+
+	MOV	W,#255					; RC
+	MOV	!RC,W					; .  to Input mode
+
+	MOV	DMAr0,#MrqDisp // 256			; Set
+	MOV	DMAr1,#MrqDisp / 256			; 
+	MOV	DMAr2,#LvlArry // 256			; 
+	MOV	DMAr3,#Lvlarry / 256			; 
+	MOV	DMAr4,#39				;  #'bytes
+	MOV	DMAr7,#100				; 
+
+:Lup0	MOV	DMAr6,#128				; Initial bit
+
+:Lup1	MOV	RD,DMAr0				; Set
+	MOV	RE,DMAr1				; . @
+
+							; Get largest value of displays/marquee
+
+	CLRB	RamRd					; Prepare to read
+	NOP						; 
+	MOV	CmdChar,RC				; Get byte
+
+	MOV	W,#DisplaySiz // 256			; Add 308 to RAM @ (RE, RD)
+	ADD	RD,W					; 
+	SNC						; 
+	  INC	RE					; 
+	MOV	W,#DisplaySiz / 256			; 
+	ADD	RE,W					; 
+							; 
+	MOV	W,CmdChar				; 
+	MOV	W,RC-W					; 
+	MOV	W,RC					; 
+	SNC						; 
+	  MOV	CmdChar,W				; 
+							; 
+	MOV	W,#DisplaySiz // 256			; Add 308 to RAM @ (RE, RD)
+	ADD	RD,W					; 
+	SNC						; 
+	  INC	RE					; 
+	MOV	W,#DisplaySiz / 256			; 
+	ADD	RE,W					; 
+							; 
+	MOV	W,CmdChar				; 
+	MOV	W,RC-W					; 
+	MOV	W,RC					; 
+	SNC						; 
+	  MOV	CmdChar,W				; 
+							; 
+	MOV	W,#DisplaySiz // 256			; Add 308 to RAM @ (RE, RD)
+	ADD	RD,W					; 
+	SNC						; 
+	  INC	RE					; 
+	MOV	W,#DisplaySiz / 256			; 
+	ADD	RE,W					; 
+							; 
+	MOV	W,CmdChar				; 
+	MOV	W,RC-W					; 
+	MOV	W,RC					; 
+	SNC						; 
+	  MOV	CmdChar,W				; 
+							; 
+	MOV	W,#DisplaySiz // 256			; Add 308 to RAM @ (RE, RD)
+	ADD	RD,W					; 
+	SNC						; 
+	  INC	RE					; 
+	MOV	W,#DisplaySiz / 256			; 
+	ADD	RE,W					; 
+							; 
+	MOV	W,CmdChar				; 
+	MOV	W,RC-W					; 
+	MOV	W,RC					; 
+	SNC						; 
+	  MOV	CmdChar,W				; 
+							; 
+							; Largest value now in r0b
+							; 
+	MOV	W,DMAr7					; 
+	MOV	W,CmdChar-W				; 
+	MOV	W,CmdChar				; 
+	SNC						; > 100?
+	  MOV	W,DMAr7					; .  yes - use 100
+							; 
+	ADD	W,DMAr2					; add base @ (0x0638) to brightness
+	MOV	RD,W					; 
+	MOV	RE,DMAr3					; 
+	SNC						; 
+	  INC	RE					; 
+							; 
+	INC	DMAr0					; increment mrqdisp base @
+	SNZ						; 
+	  INC	DMAr1					; 
+							; 
+	MOV	W,DMAr6					; 'Or' new bit into byte array
+	OR	RC,W					; 
+	SETB	RamRd					; End read
+							; 
+	MOV	W,#0					; 
+	MOV	!RC,W					; Set for output
+	JMP	$+1					; .
+	CLRB	RamWr					; Write
+	NOP						; 
+	SETB	RamWr					; .  pulse
+							; 
+	MOV	W,#255					; Set for
+	MOV	!RC,W					; .  input
+	INC	RD					; Increment
+	SNZ						; 
+	  INC	RE					; .  RAM @
+							; 
+	CLRB	RamRd					; Read
+	NOP						; 
+	NOP						; 
+	MOV	W,DMAr6					; 
+	OR	RC,W					; 
+	SETB	RamRd					; .  pulse
+	JMP	$+1					; .	NOP
+							; 
+	MOV	W,#0					; Set RC
+	MOV	!RC,W					; .  as output
+	JMP	$+1					; .	NOP
+	CLRB	RamWr					; Write back to
+	NOP						; 
+	SETB	RamWr					; .  memory
+	MOV	W,#255					; Set for
+	MOV	!RC,W					; .  input
+							; 
+	CLC						; Slide bit for next byte
+	RR	DMAr6					; 
+	SC						; If not zero, continue with next byte
+	  JMP	:Lup1					;	Lup1
+							; 
+	MOV	W,#102					; 
+	ADD	DMAr2,W					; 
+	SNC						; 
+	  INC	DMAr3					; 
+	DJNZ	DMAr4,:Lup0				;
+							; 
+	_BANK	ISRBank					  
+	RETP						; . & return
+
+
+							;	Page $400
+
+	ORG	$400					;
+							; branch table
+AccmDec	JMP	@AccuDec				; Long Jump AccuDec
+WrRAM	JMP	@WriteRAM				; Long Jump WriteRAM
+RdRAM	JMP	@ReadRAM				; Long Jump ReadRAM
+DispAdr	JMP	@DspAdr					; Long Jump DspAdr
+AccmHex	JMP	@AccuHex					;
+
+Hexo	AND	W,#$0f			; 
+	JMP	PC+W			; 
+	RETW	'0'			; '0'
+	RETW	'1'			; 
+	RETW	'2'			; 
+	RETW	'3'			; 
+	RETW	'4'			; 
+	RETW	'5'			; 
+	RETW	'6'			; 
+	RETW	'7'			; 
+	RETW	'8'			; 
+	RETW	'9'			; '9'
+	RETW	'A'			; 'A'
+	RETW	'B'			; 
+	RETW	'C'			; 
+	RETW	'D'			; 
+	RETW	'E'			; 
+	RETW	'F'			; 'F'
+					
+QueStat	MOV	CmdChar,W		
+
+	_Bank	ISRBank
+	
+	MOV	W,#XmitBuffer				; XmitBufferHead => r20-3f = xmit buffer pointer
+	ADD	W,XmitBufferHead			; 
+	MOV	FSR,W					; 
+	MOV	INDF,CmdChar				; 
+	MOV	FSR,#16					; bank 10
+	MOV	W,++XmitBufferHead			; XmitBufferHead++
+	AND	W,#$1f					; .  and wrap
+	MOV	XmitBufferHead,W			; 
+
+Dun4Now
+SndStat	
+	_BANK	ISRBank					; bank 10				 
+							  
+	MOV	W,++XmitBufferHead			; chars
+	AND	W,#$1f					; 
+	MOV	W,XmitBufferTail-W			; .  to send?
+	SNZ						; 
+	  RETP						; no - return
+							; 
+	_BANK	CmdBank					; Command bank	  
+							  
+	TEST	CmdState				; 
+	JNZ	:Byp1					; 
+
+	SB	CmdFlgMrqIdle				; Has Marquee gone idle?
+	  JMP	:Byp1					; 	.  no  - 
+	  						  
+	CLRB	CmdFlgMrqIdle				; Reset 'oneshot'
+	MOV	W,#'I'					; .  & load 'I' - Idle - text has stopped
+	JMP	QueStat					; send status
+
+:Byp1	CJBE	CmdState,#19,CmdJmp			;
+
+	_BANK	ISRBank					; bank 10 
+							  
+	CSNE	RcvBufferHead,RcvBufferTail		; 
+	  RETP						; .  no - return
+
+	MOV	W,#RcvBuffer				; index into rcv buffer (0x40-5f) w/tail
+	ADD	W,RcvBufferTail				; 
+	MOV	FSR,W					; 
+	MOV	CmdChar,INDF				; 
+
+	MOV	FSR,#ISRBank				; bank 10 
+							  
+	MOV	W,++RcvBufferTail			; increment
+	AND	W,#$1f					; .  & wrap
+	MOV	RcvBufferTail,W				; 
+
+	_BANK	CmdBank			  		; Bank 70 for command service
+	  
+CmdJmp	MOV	W,CmdState				; 
+	JMP	PC+W					; Cmd state
+CmdTbl	equ	$			  
+	JmpTbl	CmdTbl,Cmd00			;  0 - check command char
+	JmpTbl	CmdTbl,CmdT1			;  1 - CmdT1
+	JmpTbl	CmdTbl,CmdT2			;  2 - CmdT2
+	JmpTbl	CmdTbl,CmdT3			;  3 - CmdT3
+	JmpTbl	CmdTbl,CmdL1			;  4 - CmdL1
+	JmpTbl	CmdTbl,CmdD1			;  5 - CmdD1
+	JmpTbl	CmdTbl,CmdA1			;  6 - CmdA1
+	JmpTbl	CmdTbl,CmdA2			;  7 - CmdA2
+	JmpTbl	CmdTbl,CmdA3			;  8 - CmdA3
+	JmpTbl	CmdTbl,CmdI1			;  9 - CmdI1
+	JmpTbl	CmdTbl,CmdI2			; 10 - CmdI2
+	JmpTbl	CmdTbl,CmdI3			; 11 - CmdI3
+	JmpTbl	CmdTbl,CmdP1			; 12 - CmdP1
+	JmpTbl	CmdTbl,CmdO1			; 13 - CmdO1
+	JmpTbl	CmdTbl,CmdX1			; 14 - CmdX1 - wait for next char
+	JmpTbl	CmdTbl,CmdL2			; 15 - CmdL2
+	JmpTbl	CmdTbl,CmdD2			; 16 - CmdD2
+	JmpTbl	CmdTbl,CmdD3			; 17 - CmdD3
+	JmpTbl	CmdTbl,CmdW8tCR			; 18 - error found - wait for <cr>
+	JmpTbl	CmdTbl,CmdQ1			; 19 - CmdQ1
+	JmpTbl	CmdTbl,CmdSendA			; 20 - SendA
+
+				;	?F<char>,>...<char><CR>
+				;	D<dsp#>,<<dsp byte>,>...<dsp byte><CR>
+				;	L<letter>,<<font byte>,>...<font byte><CR>
+				;	T<addr>?					display RAM byte
+				;	T<addr>,<<byte>,>...<byte><CR>		write to RAM
+
+Cmd00
+	CJE	CmdChar,#'o',CmdO	; O-utput string to Marquee
+	CJE	CmdChar,#'l',CmdL	; L-etter (font info)
+	CJE	CmdChar,#'a',CmdA
+	CJE	CmdChar,#'i',CmdI
+	CJE	CmdChar,#'d',CmdD
+	CJE	CmdChar,#'p',CmdP
+	CJE	CmdChar,#'t',CmdT
+	CJE	CmdChar,#'r',CmdR
+	CJE	CmdChar,#'q',CmdQ
+	CJE	CmdChar,#'x',CmdX
+	JMP	CmdW8tCR			; Unknown command
+
+CmdX
+	MOV	CmdState,#_CmdX1
+	CLR	CmdAddrLo		;
+	CLR	CmdAddrHi		;
+	JMP	Dun4Now			;
+
+CmdX1
+	CJE	CmdChar,#CR,SndOK	; <CR>? - OK
+	CJE	CmdChar,#'r',CmdXr	; 'r' (register)
+	CJE	CmdChar,#'m',CmdXm	; 'm' (memory)
+	CJB	CmdChar,#'0',W8forCR	; < '0' - error
+	CJBE	CmdChar,#'9',Dec0to9	; <= '9' - accumulate digits
+	CJB	CmdChar,#'a',W8forCR	; < 'a' - error
+	CJA	CmdChar,#'f',W8forCR	; > 'f' - error
+					;
+HexAtoF	SUB	CmdChar,#('a' - $3a)	; Convert 'a'-'f' to 0x3a-0x3f
+					;
+Dec0to9	SWAP	CmdAddrHi		; Accumulate into CmdAddrHi/CmdAddrLo
+	MOV	W,#$f0			; 
+	AND	CmdAddrHi,W		; 
+	SWAP	CmdAddrLo		; 
+	MOV	W,CmdAddrLo		; 
+	AND	W,#$0f			; 
+	XOR	CmdAddrLo,W		; 
+	OR	CmdAddrHi,W		; 
+	MOV	W,CmdChar		; 
+	AND	W,#$0f			; 
+	OR	CmdAddrLo,W		; 
+	JMP	Dun4Now			;
+
+CmdXr	MOV	FSR,CmdAddrLo		; Load reg value
+	MOV	W,INDF			; 
+	_BANK	CmdBank
+	
+	INC	CmdAddrLo		; ... (get next reg w/Xr cmd)
+	JMP	SndByt			; . SndByt
+
+CmdXm:	MOV	W,CmdAddrLo		; Load mem byte
+	MOV	RD,W			; 
+	MOV	W,CmdAddrHi		; 
+	MOV	RE,W			; 
+	CLRB	RamRd			; 
+	INC	CmdAddrLo		; ...(get next value w/Xm cmd)
+	SNZ				; 
+	  INC	CmdAddrHi		; 
+	MOV	W,RC			; 
+	SETB	RamRd			; 
+
+SndByt	MOV	CmdWork0,W		;
+	MOV	CmdState,#_CmdSendA	;
+	MOV	W,<>CmdWork0		;
+	CALL	Hexo			;	
+	JMP	QueStat			;
+
+CmdSendA
+	MOV	CmdState,#_CmdX1
+	
+	MOV	W,CmdWork0		;
+	CALL	Hexo			;	
+	JMP	QueStat			;
+
+CmdR	SETB	Ready			;	
+					;
+	_BANK	CmdBank
+					;
+CmdQ	MOV	CmdState,#_CmdQ1
+	JMP	Dun4Now			;
+					;
+CmdQ1	CJE	CmdChar,#CR,SndOK
+					;
+CmdW8tCR
+	CJE	CmdChar,#CR,SndErr
+					;
+W8forCR	MOV	CmdState,#_CmdW8tCR	; Wait for CR, then error
+	JMP	Dun4Now			; Done for now
+					; 
+SndErr	MOV	W,#'E'			; 'E'-rror
+	SKIP				; .  skip
+					; 
+SndOK	MOV	W,#'O'			; 'O'
+					; 
+	_BANK	CmdBank
+	
+	SB	Ready			; 
+	  MOV	W,#'R'			; 'R'-eset
+	MOV	CmdChar,W		; 
+	CLR	CmdState		; State <= waiting for cmd
+	JMP	#$01b			; 
+					;	
+CmdO	MOV	CmdState,#_CmdO1
+	MOV	CmdAddrLo,#MrqBuffr // 256	; Starting @ 
+	MOV	CmdAddrHi,#MrqBuffr / 256	; 
+	
+	_BANK	MrqBank
+	
+	TEST	MrqState		; Marquee busy?
+	JZ	Dun4Now			; .  no - continue
+
+	_BANK	CmdBank
+	JMP	W8forCR			; return error
+
+CmdO1	MOV	W,CmdChar		; Write
+	CALL	WrRAM			; . to RAM - inc CmdAddrHi, CmdAddrLo
+	CJNE	CmdChar,#CR,Dun4Now	; If not CR, Dun for now (wait for next char)
+
+	_BANK	MrqBank
+	
+	MOV	MrqState,#1		; Set marquee active now
+	JMP	SndOK			; . & return OK
+					;
+CmdT	CLR	CmdAccuLo		;
+	CLR	CmdAccuHi		;
+	MOV	CmdState,#_CmdT1	; Set next state
+	JMP	Dun4Now			; done for now
+
+CmdT1	CJE	CmdChar,#',',CmdT1a	; ',' - got <addr> - accum <val>
+	CJE	CmdChar,#'?',CmdT1a	; '?' - got <addr> - query for value
+	CJE	CmdChar,#CR,SndErr	; <CR> - error
+
+	CALL	AccmDec			; accumulate
+	JMP	Dun4Now			; .  & get next char
+
+CmdT1a	MOV	CmdAddrLo,CmdAccuLo	; T, or T? found
+	MOV	CmdAddrHi,CmdAccuHi	; Save <addr>	
+
+	CJE	CmdChar,#'?',CmdT1b	; if T<addr>?, go display value
+
+	CLR	CmdAccuLo		; Clear accum	
+	MOV	CmdState,#_CmdT2	; Set next state
+	JMP	Dun4Now			; done for now
+
+CmdT2	CJE	CmdChar,#',',CmdT2a	; ',' - stash <val>, then get next value
+	CJE	CmdChar,#CR,CmdT2b	; <cr> - stash final <val>, the send OK
+
+	CALL	AccmDec			; AccmDec
+	JMP	Dun4Now			; .  & loop
+					;
+CmdT2a	MOV	W,CmdAccuLo		; Write value
+	CALL	WrRAM			; .  to RAM
+	JMP	Dun4now			;
+
+CmdT2b	MOV	W,CmdAccuLo		; Write
+	CALL	WrRAM			; .  to RAM
+	SETB	DisplayChanged		; 
+	JMP	SndOK			; reurn OK
+
+CmdT1b	MOV	CmdState,#_CmdT3	; Set next state
+	JMP	Dun4Now			;
+
+CmdT3	CJNE	CmdChar,#CR,SndErr	; if not <CR>, error
+	JMP	CmdXm			; Display memory byte... (CmdXm)
+
+CmdL	MOV	CmdState,#_CmdL1	; Set next state
+	JMP	Dun4Now			;
+
+CmdL1	CJB	CmdChar,#' ',W8forCR	; if < space, error
+
+	MOV	W,<>CmdChar		; separate nybbles
+	MOV	CmdAddrLo,W		; 
+	AND	W,#$0f			; 
+	XOR	CmdAddrLo,W		; lo nybble << 4
+	MOV	CmdAddrHi,W		; hi nybble >> 4
+	MOV	W,#FontArry // 256	; 
+	ADD	CmdAddrLo,W		; (char - 0x20) * 16 + 0x1fc2
+	SNC				; 
+	  INC	CmdAddrHi		; 
+	MOV	W,#FontArry / 256	; 
+	ADD	CmdAddrHi,W		; 
+	
+	MOV	CmdState,#_CmdL2	; set next state
+	JMP	Dun4Now			;
+
+CmdL2	CJNE	CmdChar,#',',SndErr	; if not ',', error
+	
+	MOV	CmdState,#_CmdD2	; set next state (share code)
+	JMP	Dun4Now			;
+
+CmdD	CLR	CmdAccuLo		; clear	
+	CLR	CmdAccuHi		; . accums	
+	MOV	CmdState,#_CmdD1	; set next state
+	JMP	Dun4Now			;
+
+CmdD1	CJE	CmdChar,#',',CmdD1a	; ',' - got <disp>, get values
+	CJE	CmdChar,#CR,SndErr	; <CR> - error
+					;
+	CALL	AccmHex			; Accumualte value
+	JMP	Dun4Now			; . & get next char
+
+CmdD1a	CALL	DispAdr			;Compute @'display	
+	SNC				; 
+	  JMP	CmdW8tCR		; error - Dsp # too large
+					
+	CLR	CmdAccuLo		; clear acc
+	MOV	CmdState,#_CmdD2	; set next state
+	JMP	Dun4Now			;
+
+CmdD2	CJE	CmdChar,#CR,SndOK
+					;
+	CLR	CmdAccuLo		; clear accum
+	CALL	AccmHex			; Accumulate in r13
+	MOV	CmdState,#_CmdD3	; set next state
+	JMP	Dun4Now			; .  & get next char
+
+CmdD3	CmdChar,#CR,W8forCR
+					;
+	CALL	AccmHex			; Accumulate in r13
+	CALL	WrRAM			;
+	MOV	CmdState,#_CmdD2	; set next state
+	JMP	Dun4Now			; .  & get next char
+
+CmdD2b	MOV	W,CmdAccuLo		; Write final value to RAM
+	CALL	WrRAM			;	
+	JMP	SndOK			; . & return OK
+
+CmdP	CLR	CmdAccuLo		; clear accum
+	MOV	CmdState,#_CmdP1	; set next state
+	JMP	Dun4Now			;
+
+CmdP1	CJE	CmdChar,#CR,CmdP1a	; <CR> - save PACE value
+
+	CALL	AccmDec			; AccmDec
+	JMP	Dun4Now			; . & loop
+
+CmdP1a	MOV	W,CmdAccuLo		; copy accum value	
+	_BANK	MrqBank
+	MOV	PaceVal,W		; set PACe value
+	JMP	SndOK			; . & return OK
+
+CmdA	MOV	CmdState,#_CmdA1	; set next state
+	JMP	Dun4Now			;
+
+CmdI	MOV	CmdState,#_CmdI1	; set next state
+	JMP	Dun4Now			;
+
+CmdA1					;
+CmdI1	MOV	W,#'1'			; only 1-4 is valid
+	MOV	W,CmdChar-W		; 
+	SC				; 
+	 JMP	CmdW8tCR		; error pending
+					; 
+	MOV	W,#203			; 
+	ADD	W,CmdChar		; 
+	SNC				; 
+	  JMP	CmdW8tCR		; error pending
+					; 
+	DEC	CmdChar			; 
+	RL	CmdChar			; 
+	MOV	W,<<CmdChar		; 
+	AND	W,#$0c			; 
+	OR	W,#DisplayBank		; compute @'display info (0x90, 0x94, 0x98, 0x9c)
+	MOV	CmdDisp,W		; 
+					  
+	INC	CmdState		; Return to CmdA2,CmdI2
+	JMP	Dun4Now			;
+
+CmdI2
+CmdA2	CJNE	CmdChar,#',',CmdW8tCR	; not ',' - error
+
+	CLR	CmdAccuLo		; Clear
+	CLR	CmdAccuHi		;  . accums
+	INC	CmdState		; Set next state - Return to CmdA3,CmdI3
+	JMP	Dun4Now			; 
+
+CmdA3	CJE	CmdChar,#CR,CmdA3a	; <CR> - save value
+					;
+	CALL	AccmDec			; AccmDec
+	JMP	Dun4Now			;
+
+CmdA3a	CALL	DispAdr			; Compute @'display specified
+	SNC				;	
+	  JMP	CmdW8tCR		; invalid - error pending
+					
+	MOV	RD,CmdAddrLo		; Copy @'display
+	MOV	RE,CmdAddrHi		; 
+	MOV	FSR,CmdDisp		; set reg number (0x90, 0x94, ...)
+	MOV	INDF,#1			; set first byte to 1
+	INC	FSR			; 
+	INC	FSR			; skip second byte
+	MOV	INDF,RD			; set third & fourth bytes
+	INC	FSR			; 
+	MOV	INDF,RE			; .  to @'display
+	JMP	SndOK			; return OK
+
+CmdI3	CJE	CmdChar,#CR,CmdI3a	; if <CR> - save value
+					;
+	CALL	AccmDec			; accum
+	JMP	Dun4Now			;
+
+CmdI3a	MOV	CmdChar,CmdAccuLo	; copy accum
+	MOV	FSR,CmdDisp		; set reg number
+	MOV	INDF,#1			; set first reg (0x90, 0x94, ...) to 1 (active)
+	INC	FSR			; 
+	MOV	INDF,CmdChar		; Set accum into second byte (0x01, 0x95, ...) (intensity)
+	JMP	SndOK			; return OK
+
+
+					;	Page $800
+
+	ORG	$800
+AccuDec	MOV	W,CmdAccuHi		; Decimal accumulate value
+	MOV	CmdWork0,W		; 
+	MOV	W,CmdAccuLo		; 
+					; 
+	CLC				; (r14,r13) * 4
+	RL	CmdAccuLo		; 
+	RL	CmdAccuHi		; 
+	CLC				; 
+	RL	CmdAccuLo		; 
+	RL	CmdAccuHi		; 
+					; 
+	ADD	CmdAccuLo,W		; (r14,r13 * 4) + r13 
+	SNC				; 
+	INC	CmdAccuHi		; 
+					; 
+	MOV	W,CmdWork0		; (r14,r13 * 4) + r13 + r14
+	ADD	CmdAccuHi,W		; 
+					; 
+	CLC				; r14,r13 * 10
+	RL	CmdAccuLo		; 
+	RL	CmdAccuHi		; 
+					; 
+	MOV	W,CmdChar		; add new value
+	AND	W,#15			; 
+	ADD	CmdAccuLo,W		; 
+	SNC				; 
+	  INC	CmdAccuHi		; 
+	RETP				; 
+
+AccuHex CJBE    CmdChar,'9',:Dec
+	SUB	CmdChar,#('a' - $3a)	; Convert 'a'-'f' to 0x3a-0x3f
+					;
+:dec	SWAP	CmdAccuHi		; Accumulate into CmdAccuHi/CmdAccuLo
+	MOV	W,#$f0			; 
+	AND	CmdAccuHi,W		; 
+	SWAP	CmdAccuLo		; 
+	MOV	W,CmdAccuLo		; 
+	AND	W,#$0f			; 
+	XOR	CmdAccuLo,W		; 
+	OR	CmdAccuHi,W		; 
+	MOV	W,CmdChar		; 
+	AND	W,#$0f			; 
+	OR	CmdAccuLo,W		; 
+	RETP			;
+
+
+WriteRAM
+	MOV	RC,W			; Copy data
+	MOV	W,#0			; Set 
+	MOV	!RC,W			; .  RC for output
+	MOV	W,CmdAddrLo		; Copy
+	MOV	RD,W			; 
+	MOV	W,CmdAddrHi		; 
+	MOV	RE,W			; .  @
+	CLRB	RamWr			; Write
+	INC	CmdAddrLo		; 
+	SNZ				; 
+	  INC	CmdAddrHi		; 
+	SETB	RamWr			; .  Pulse
+	MOV	W,#255			; Set
+	MOV	!RC,W			; .  RC for input
+	RETP				; 
+
+
+ReadRAM	MOV	W,CmdAddrLo		; Copy
+	MOV	RD,W			; 
+	MOV	W,CmdAddrHi		; 
+	MOV	RE,W			; .  @
+	CLRB	RamRd			; Read
+	INC	CmdAddrLo		; 
+	SNZ				; 
+	  INC	CmdAddrHi		; 
+	MOV	W,RC			; (grab data)
+	SETB	RamRd			; .  Pulse
+	RETP				; 
+
+
+DspAdr	MOV	W,#254			; r14,r13 contain value
+	ADD	W,CmdAccuHi		; 
+	SNC				; 
+	  JMP	:DspErr			; 0 <= r14,r13 <= 199?  If NOT, error
+
+	MOV	W,CmdAccuLo		; 
+	MOV	CmdAddrLo,W		; 
+	MOV	W,CmdAccuHi		; 
+	MOV	CmdAddrHi,W		; 
+	CLC				; 
+	RL	CmdAddrLo		; val * 4
+	RL	CmdAddrHi		; 
+	RL	CmdAddrLo		; 
+	RL	CmdAddrHi		; 
+	MOV	W,CmdAccuLo		; (val * 4) + val
+	ADD	CmdAddrLo,W		; 
+	SNC				; 
+	  INC	CmdAddrHi		; 
+	MOV	W,CmdAccuHi		; 
+	ADD	CmdAddrHi,W		; 
+	CLC				; 
+	RL	CmdAddrLo		; ((val * 4) + val) * 8 = val * 40
+	RL	CmdAddrHi		; 
+	RL	CmdAddrLo		; 
+	RL	CmdAddrHi		; 
+	RL	CmdAddrLo		; 
+	RL	CmdAddrHi		; 
+	  
+	MOV	W,#DispArry // 256	; (val * 40) + base @ (0x25c2)
+	ADD	CmdAddrLo,W		; 
+	SNC				; 
+	  INC	CmdAddrHi		; 
+	MOV	W,#DispArry / 256	; 
+	ADD	CmdAddrHi,W		; 
+					; 
+	CLC				; No error - clear carry
+	RETP				; . & return 
+
+:DspErr	STC				; Error - set carry
+	RETP				; . & return
+
+
+					;	Copy active displays
+
+UpdDsp	CLR	CmdWork			; rc = 0
+	MOV	W,#Display0		; w = 0x90
+	CALL	ChkDsp			; 
+					  
+	MOV	CmdWork,#1		; rc = 1
+	MOV	W,#Display1		; w = 0x94
+	CALL	ChkDsp			;
+					  
+	MOV	CmdWork,#2		; rc = 2
+	MOV	W,#Display2		; w = 0x98
+	CALL	ChkDsp			; 
+					  
+	MOV	CmdWork,#3		; rc = 3
+	MOV	W,#Display3		; w = 0x9c
+	CALL	ChkDsp			; 
+	RETP				; 
+
+
+ChkDsp	MOV	FSR,W			; 
+	TEST	INDF			; active?
+	SNZ				; 
+	  RET				; .  no - return
+ 
+	CLR	INDF			; load
+	INC	FSR			; 
+	MOV	CmdChar,INDF		; 	(brightness)
+	INC	FSR			; .  control
+	MOV	RD,INDF			; 	(lo-order address)
+	INC	FSR			; 
+	MOV	W,INDF			; .    values
+
+	_BANK	CmdBank
+	
+	MOV	CmdAddrHi,W		; Copy hi-order addr
+	MOV	CmdAddrLo,W		; .  lo-order addr
+	MOV	CmdBright,CmdChar	; .  & brightness
+	MOV	CmdDispLo,#Displays // 256	; 
+	MOV	CmdDispHi,#Displays / 256	; 
+
+	TEST	CmdWork			; First display
+	JZ	:Byp1			; .  yes - dont need to adjust address
+					;
+:Lup1	MOV	W,#DisplaySiz // 256	; increment r77-78 by 0x0138 (312 decimal)
+	ADD	CmdDispLo,W		; 
+	SNC				; 
+	  INC	CmdDispHi		; 
+	MOV	W,#DisplaySiz / 256	; 
+	ADD	CmdDispHi,W		; 
+	DJNZ	CmdWork,:Lup1		; Decrement & loop 'til 0
+
+:Byp1	MOV	CmdAccuHi,#39		; Get #'bytes in row of display table
+					;
+:Lup2	MOV	W,#255			; Set for RAM input
+	MOV	!RC,W			; 
+	MOV	RD,CmdAddrLo		; 
+	MOV	RE,CmdAddrHi		; 
+
+	CLRB	RamRd			; Read
+	INC	CmdAddrLo		; 
+	SNZ				; 
+	  INC	CmdAddrHi		; 
+	MOV	W,RC			; (Grab byte)
+	MOV	CmdChar,W		; 
+	SETB	RamRd			; .  Pulse
+					; 
+	MOV	W,#8			; Get #'bits
+	MOV	CmdAccuLo,W		; .  in byte
+					; 
+	MOV	W,#0			; Set for
+	MOV	!RC,W			; .  RAM output
+					; 
+:Lup3	CLR	W			; Assume bit is zero
+	RL	CmdChar			; 
+	SNC				; .  yes - use 0 for value
+	  MOV	W,CmdBright		; .  no - use Dsp7a for value
+	MOV	RC,W			; 
+	MOV	W,CmdDispLo		; Set
+	MOV	RD,W			; 
+	MOV	W,CmdDispHi		; 
+	MOV	RE,W			; .  RAM address
+	JMP	$+1			; .	NOP
+	CLRB	RamWr			; Write
+	INC	CmdDispLo		; 
+	SNZ				; 
+	  INC	CmdDispHi		; 
+	SETB	RamWr			; .  RAM
+					;
+	DJNZ	CmdAccuLo,:Lup3		; If not complete byte, Lup3
+	DJNZ	CmdAccuHi,:Lup2		; If not complete display row, Lup2
+
+	SETB	DisplayChanged		;
+	RET				;
+
+
+					;	Page A00
+
+
+		ORG	$a00
+Smear	SNB	CmdChar.0		; 'smear'
+	  SETB	CmdChar.1		; 
+	SNB	CmdChar.1		; 
+	  SETB	CmdChar.2		; 
+	SNB	CmdChar.2		; .  pixels
+	  SETB	CmdChar.3		; 
+	SNB	CmdChar.3		; 
+	  SETB	CmdChar.4		; 
+	SNB	CmdChar.4		; 
+	  SETB	CmdChar.5		; .  right
+	SNB	CmdChar.5		; 
+	  SETB	CmdChar.6		; 
+	SNB	CmdChar.6		; 
+	  SETB	CmdChar.7		; .  to left
+					;
+	MOV	CmdWork,W		; 
+	MOV	W,#1			; Assume
+	MOV	RE,W			;   1 bit interference
+					; 
+:Lup	MOV	W,CmdChar		; characters
+	AND	W,CmdWork		; .  interfere?
+	SNZ				; 
+	  JMP	:Jmp1			; ;0a14	a19	Break
+					; 
+	CLC				; Slide
+	RL	CmdChar			; .  left
+	INC	RE			; Bump count
+	JMP	:Lup			; ;0a18	a11	. & Lup
+					; 
+:Jmp1	MOV	W,RD			; Greater than
+	MOV	W,RE-W			; .  Max so far?
+	SC				; 
+	  JMP	:Retrn			; ;0a1c	a1f	No - bypass move
+					; 
+	MOV	W,RE			; Save greatest # of interfering
+	MOV	RD,W			; .  pixels in RD
+:Retrn	RET				; return
+
+					; Call from AtBat/OnDeck from UpdMrq w/MrqBank
+
+RdRAMx	MOV	W,MrqAddrLo		; 
+	MOV	RD,W			; 
+	MOV	W,MrqAddrHi		; 
+	MOV	RE,W			; 
+					; 
+	CLRB	RamRd			; Read
+	INC	MrqAddrLo		; .		(bump
+	SNZ				; 
+	  INC	MrqAddrHi		; .			@)
+	MOV	W,RC			; .		(grab byte)
+	SETB	RamRd			; .  strobe
+	RETP				; 
+					; 
+Slide	SNB	MrqEvenOdd		; odd or even scan?
+	  JMP	:Odd			; .  odd - 
+					; 
+	SETB	MrqEvenOdd		; odd next time
+	MOV	W,#EvnNdxTbl // 256	; Set r85-84 to 0x0e80 (EvenNdxTbl)
+	JMP	:Jmp1			;	
+					; 
+:Odd	CLRB	MrqEvenOdd		; Even next time
+	MOV	W,#OddNdxTbl // 256	; Set r85-84 to 0x0ef0 (OddNdxTbl)
+					; 
+:Jmp1	MOV	MrqTblLo,W		; Set r85-84
+	MOV	W,#EvnNdxTbl / 256	; 
+	MOV	MrqTblHi,W		; 
+	SETB	DisplayChanged		; 
+	MOV	W,#255			; Set
+	MOV	!RC,W			; .  for input
+	JMP	:Lup0			; <Lup>
+					; 
+:NewRow	SNB	RE.2			; End-of-table?
+	  RET				; .  yes - exit
+					; 
+	MOV	W,RD			; 
+	MOV	FSR,W			; 
+	CLR	W			; Get value of
+	CLC				; .  0
+	RL	INDF			; .    or
+	SNC				; .      100
+	  MOV	W,#100			; .        for new lite value
+	MOV	CmdWork,W		; .  & save
+	MOV	W,#128			; Restore bank 80
+	MOV	FSR,W			; 
+					; 
+:Lup0	MOV	W,MrqTblHi		; 
+	MOV	M,W			; 
+	MOV	W,MrqTblLo		; 
+	INC	MrqTblLo		; 
+	SNZ				; 
+	  INC	MrqTblHi		; 
+	IREAD				; Program (M,W) => M,W
+	MOV	RD,W			; 
+	MOV	W,M			; 
+	MOV	RE,W			; 
+	MOV	W,#31			; restore M
+	MOV	M,W			; 
+	SNB	RE.3			; Is bit 3 set?
+	  JMP	:NewRow			; .  yes - <NewRow>...
+					; 
+	CLRB	RamRd			; Begin Read strobe
+	CLR	W			; Normalize
+	TEST	RC			; .  to
+	SZ				; .    0
+	  MOV	W,#100			; .      or 100
+	MOV	CmdChar,W		; Save for later use
+	SETB	RamRd			; End read strobe
+	MOV	W,#0			; Set
+	MOV	!RC,W			; .  for output
+	MOV	W,CmdWork		; 
+	MOV	RC,W			; 
+	JMP	$+1			; nop
+	CLRB	RamWr			; Write
+	NOP				; 
+	SETB	RamWr			; .  strobe
+	MOV	W,CmdChar		; 
+	MOV	CmdWork,W		; 
+	MOV	W,#255			; Set RC
+	MOV	!RC,W			; .  for input
+	JMP	:Lup0			; <Lup>
+					; 
+Pace	SNB	MrqDontKno		; Always zero - always skip
+	  JMP	:Byp			; 
+	DECSZ	PaceCtr			; 
+	  JMP	:Xit			; 	
+					; 
+:Lup	CLRB	MrqPacing		; 
+	MOV	PaceCtr,PaceVal		; Reset PaceCtr
+	CLC				; Clear carry
+	RET				; .  & xit
+					; 
+:Byp	SNB	MrqPacing		; 
+	  JMP	:Lup			; 	
+					; 
+:Xit	STC				; Set carry
+	RET				; .  & xit
+
+
+UpdMrq	_BANK	MrqBank
+	
+	MOV	W,MrqState		; reg 80 - state
+	JMP	PC+W			; 
+	JMP	:Xit			; Off   - just return to ISR
+	JMP	:Start			; Start -     
+	JMP	:Run			; Run   - 
+	JMP	:Quiese			; Quiese
+
+
+:Xit	_BANK	ISRBank
+	RETP				; return
+
+:Start	MOV	W,#MrqBuffr // 256	; Get @'text message
+	MOV	MrqAddrLo,W		; 
+	MOV	W,#MrqBuffr / 256	; 
+	MOV	MrqAddrHi,W		; .  @ 0x1ec2 (r82-83)
+	CALL	AtBat			; Load first char - <AtBat>
+	SC				; Char loaded - continue
+	  JMP	:Stopped		; . No char found - 
+
+:Load	CALL	OnDeck			; Load next char - <OnDeck>
+	SC				; Char found - continue
+	  JMP	:EndFnd			; No char found - endFnd
+
+	MOV	W,PaceVal		; Copy
+	MOV	PaceCtr,W		; .  ?????
+	SETB	MrqEvenOdd		; Set 'even/odd' flag??????
+
+:Slider	CALL	Slide			; Slide the Marquee
+	MOV	W,#2			; update state (now Run-ning)
+	MOV	MrqState,W		; 
+	JMP	:Xit			; <xit>
+
+:Run	CALL	Pace			; <Pae>
+	SNC				; 
+	  JMP	:Xit			; <xit>
+
+	SNB	MrqEvenOdd		; Even scan? no - skip
+	  DECSZ	MrqIntMsk		; Decrement count - ready for next?
+	    JMP	:Slider			; .  No - just slide
+
+	MOV	W,#OnDeckBank		; Merge 'on deck' (rf0-ff)
+	MOV	FSR,W			; .  to 'at bat' regs (re0-ef)
+
+:Lup	MOV	W,INDF			; 
+	CLRB	FSR.4			; Swap to AtBat
+	OR	INDF,W			; 
+	SETB	FSR.4			; Swap back to OnDeck
+	INCSZ	FSR			; 
+	  JMP	:Lup			;
+
+	MOV	W,#MrqBank		; restore bank 80
+	MOV	FSR,W			; 
+	JMP	:Load			; . & <Load> next char
+
+:EndFnd	CALL	Slide			; ;0aa1	92b	Slide the Marquee
+	MOV	W,#MrqRunout		; 'Clear the Marquee'
+	MOV	MrqRunoutCtr,W		; .   slide count
+	MOV	W,#3			; Update state - 
+	MOV	MrqState,W		; .  Quiese
+	JMP	:Xit			; .  then return to ISR
+
+:Quiese	CALL	Pace			; <Pace>
+	SNC				; 
+	  JMP	:Xit			; <xit>
+
+	CALL	Slide			; Slide the Marquee
+	DECSZ	MrqRunoutCtr		; More to slide?
+	  JMP	:Xit			; .  yes - <xit>
+
+:Stopped CLR	MrqState		; clear state (r80) - idle	
+	_BANK	CmdBank			  
+					  
+	SETB	CmdFlgMrqIdle		; setbit 72.0
+	JMP	:Xit			; <xit>
+					; 
+AtBat	MOV	W,#AtBatBank		; Bank e0 - 'at bat' char
+	SKIP				; Skip
+					  
+OnDeck	MOV	W,#OnDeckBank		; Bank f0 - 'on deck' char
+	MOV	CmdChar,W		; 
+	MOV	W,#255			; 
+	MOV	!RC,W			; Set RC for input
+	CALL	RdRAMx			; Read byte from (r12,r13)
+	MOV	RD,W			; .  & move to RD
+	MOV	W,#' '			; 
+	SUB	RD,W			; .  less 0x20 (' ')
+	SC				; if < space, skip
+	  RET				; 
+					; 
+	SWAP	RD			; (char - 0x20) * 16 + 0x1fc2
+	MOV	W,RD			; 
+	AND	W,#$0f			; 
+	XOR	RD,W			; 
+	MOV	RE,W			; 
+	MOV	W,#FontArry // 256	; 
+	ADD	RD,W			; 
+	SNC				; 
+	  INC	RE			; 
+	MOV	W,#FontArry / 256	; 
+	ADD	RE,W			; 
+					; 
+	CLRB	RamRd			; Set RAM OE
+	MOV	W,CmdChar		; Set Bank
+	MOV	FSR,W			; 
+	MOV	W,#16			; Set #'bytes of font info
+	MOV	CmdChar,W		; 
+					; 
+:Lup	MOV	W,RC			; Copy
+	MOV	INDF,W			; .  byte to register (8x or 9x)
+	INC	FSR			; Increment register
+	INC	RD			; 
+	SNZ				; 
+	  INC	RE			; .  & @
+	DECSZ	CmdChar			; 
+	  JMP	:Lup			; If not dun, loop
+					; 
+	SETB	RamRd			; Reset RAM OE
+	CLR	RD			; Clear Max #'interfering pixels
+					; 
+	MOV	W,#AtBatBank		; e0 regs ('at bat' character)
+	MOV	FSR,W			; 
+	MOV	W,AbRow1		; 
+	OR	W,AbRow2		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; switch to f0 regs (character 'on deck')
+	MOV	W,OdRow1		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					;
+	CLRB	FSR.4			; 
+	MOV	W,AbRow1		; 
+	OR	W,AbRow2		; 
+	OR	W,AbRow3		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRow2		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRow2		; 
+	OR	W,AbRow3		; 
+	OR	W,AbRow4		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRow3		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRow3		; 
+	OR	W,AbRow4		; 
+	OR	W,AbRow5		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRow4		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRow4		; 
+	OR	W,AbRow5		; 
+	OR	W,AbRow6		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRow5		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRow5		; 
+	OR	W,AbRow6		; 
+	OR	W,AbRow7		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRow6		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRow6		; 
+	OR	W,AbRow7		; 
+	OR	W,AbRow8		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRow7		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRow7		; 
+	OR	W,AbRow8		; 
+	OR	W,AbRow9		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRow8		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRow8		; 
+	OR	W,AbRow9		; 
+	OR	W,AbRowA		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRow9		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRow9		; 
+	OR	W,AbRowA		; 
+	OR	W,AbRowB		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRowA		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRowA		; 
+	OR	W,AbRowB		; 
+	OR	W,AbRowC		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRowB		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRowB		; 
+	OR	W,AbRowC		; 
+	OR	W,AbRowD		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRowC		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRowC		; 
+	OR	W,AbRowD		; 
+	OR	W,AbRowE		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRowD		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRowD		; 
+	OR	W,AbRowE		; 
+	OR	W,AbRowF		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRowE		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					; 
+	CLRB	FSR.4			; 
+	MOV	W,AbRowE		; 
+	OR	W,AbRowF		; 
+	OR	W,AbRow0		; 
+	MOV	CmdChar,W		; 
+	SETB	FSR.4			; 
+	MOV	W,OdRowF		; 
+	OR	W,OdRow0		; 
+	CALL	Smear			; Check for interference
+					;
+	MOV	W,#MrqBank		; Restore Bank 80
+	MOV	FSR,W			; 
+	MOV	MrqIntMsk,RD		; Copy interference mask into reg 0x89
+					; 
+	STC				; Set success
+	RET				; . & return
+
+	ORG	$e80
+EvnNdxTbl
+
+				;	These tables are used to drive the Marquee slide.  Entries with 0x8 in the hi-nybble contain
+				;	a register number in the lo-order byte.  This register contains a bit map of the character
+				;	to be loaded next into the Marquee.  Zero bits assume the value of 0, 1 bits become value of 100.
+				;	Other entries contain an offset to the bulb in the current value array in RAM.  Values cascade 
+				;	from right to left across the Marquee area.  The first entry below says to grab the hi-order bit 
+				;	from register 0xee.  The next enntry says to store that value in 0x09b in the current value array, 
+				;	then copy the previous value to 0x09c, and so on down to 0x0a2.
+			
+	dw	$8ee		;
+	dw	$09b		;
+	dw	$09c		;
+	dw	$09d		;
+	dw	$09e		;
+	dw	$020		;
+	dw	$021		;
+	dw	$022		;
+	dw	$023		;
+	dw	$024		;
+	dw	$025		;
+	dw	$026		;
+	dw	$027		;
+	dw	$09f		;
+	dw	$0a0		;
+	dw	$0a1		;
+	dw	$0a2		;
+	dw	$8ec		;
+	dw	$0aa		;
+	dw	$0ab		;
+	dw	$0ac		;
+	dw	$0ad		;
+	dw	$030		;
+	dw	$031		;
+	dw	$032		;
+	dw	$033		;
+	dw	$034		;
+	dw	$035		;
+	dw	$036		;
+	dw	$037		;
+	dw	$0ae		;
+	dw	$0af		;
+	dw	$0b0		;
+	dw	$0b1		;
+	dw	$8ea		;
+	dw	$010		;
+	dw	$0b9		;
+	dw	$0ba		;
+	dw	$0bb		;
+	dw	$040		;
+	dw	$041		;
+	dw	$042		;
+	dw	$043		;
+	dw	$044		;
+	dw	$045		;
+	dw	$046		;
+	dw	$047		;
+	dw	$0bc		;
+	dw	$0bd		;
+	dw	$0be		;
+	dw	$8e8		;
+	dw	$011		;
+	dw	$0c4		;
+	dw	$0c5		;
+	dw	$0c6		;
+	dw	$050		;
+	dw	$051		;
+	dw	$052		;
+	dw	$053		;
+	dw	$054		;
+	dw	$055		;
+	dw	$056		;
+	dw	$057		;
+	dw	$0c7		;
+	dw	$0c8		;
+	dw	$0c9		;
+	dw	$8e6		;
+	dw	$012		;
+	dw	$013		;
+	dw	$0cf		;
+	dw	$0d0		;
+	dw	$060		;
+	dw	$061		;
+	dw	$062		;
+	dw	$063		;
+	dw	$064		;
+	dw	$065		;
+	dw	$066		;
+	dw	$067		;
+	dw	$0d1		;
+	dw	$0d2		;
+	dw	$8e4		;
+	dw	$014		;
+	dw	$015		;
+	dw	$0d6		;
+	dw	$0d7		;
+	dw	$070		;
+	dw	$071		;
+	dw	$072		;
+	dw	$073		;
+	dw	$074		;
+	dw	$075		;
+	dw	$076		;
+	dw	$077		;
+	dw	$0d8		;
+	dw	$0d9		;
+	dw	$8e2		;
+	dw	$016		;
+	dw	$017		;
+	dw	$018		;
+	dw	$0e5		;
+	dw	$0e6		;
+	dw	$0e7		;
+	dw	$0e8		;
+	dw	$0e9		;
+	dw	$0ea		;
+	dw	$0eb		;
+	dw	$0ec		;
+	dw	$0ed		;
+	dw	$0ee		;
+	dw	$8e0		;0eee	8e0	(Slide 'stay out' byte as well)
+	dw	$fff		;0eef	fff	End-of-table
+
+
+	ORG	$ef0
+OddNdxTbl
+	dw	$8ef		;
+	dw	$08a		;
+	dw	$08b		;
+	dw	$08c		;
+	dw	$08d		;
+	dw	$08e		;
+	dw	$08f		;
+	dw	$090		;
+	dw	$091		;
+	dw	$092		;
+	dw	$093		;
+	dw	$094		;
+	dw	$095		;
+	dw	$096		;
+	dw	$097		;
+	dw	$098		;
+	dw	$099		;
+	dw	$09a		;
+	dw	$8ed		;
+	dw	$000		;
+	dw	$0a3		;
+	dw	$0a4		;
+	dw	$0a5		;
+	dw	$0a6		;
+	dw	$028		;
+	dw	$029		;
+	dw	$02a		;
+	dw	$02b		;
+	dw	$02c		;
+	dw	$02d		;
+	dw	$02e		;
+	dw	$02f		;
+	dw	$0a7		;
+	dw	$0a8		;
+	dw	$0a9		;
+	dw	$8eb		;
+	dw	$001		;
+	dw	$0b2		;
+	dw	$0b3		;
+	dw	$0b4		;
+	dw	$0b5		;
+	dw	$038		;
+	dw	$039		;
+	dw	$03a		;
+	dw	$03b		;
+	dw	$03c		;
+	dw	$03d		;
+	dw	$03e		;
+	dw	$03f		;
+	dw	$0b6		;
+	dw	$0b7		;
+	dw	$0b8		;
+	dw	$8e9		;
+	dw	$002		;
+	dw	$003		;
+	dw	$0bf		;
+	dw	$0c0		;
+	dw	$0c1		;
+	dw	$048		;
+	dw	$049		;
+	dw	$04a		;
+	dw	$04b		;
+	dw	$04c		;
+	dw	$04d		;
+	dw	$04e		;
+	dw	$04f		;
+	dw	$0c2		;
+	dw	$0c3		;
+	dw	$8e7		;
+	dw	$004		;
+	dw	$005		;
+	dw	$0ca		;
+	dw	$0cb		;
+	dw	$0cc		;
+	dw	$058		;
+	dw	$059		;
+	dw	$05a		;
+	dw	$05b		;
+	dw	$05c		;
+	dw	$05d		;
+	dw	$05e		;
+	dw	$05f		;
+	dw	$0cd		;
+	dw	$0ce		;
+	dw	$8e5		;
+	dw	$006		;
+	dw	$007		;
+	dw	$008		;
+	dw	$0d3		;
+	dw	$0d4		;
+	dw	$068		;
+	dw	$069		;
+	dw	$06a		;
+	dw	$06b		;
+	dw	$06c		;
+	dw	$06d		;
+	dw	$06e		;
+	dw	$06f		;
+	dw	$0d5		;
+	dw	$8e3		;
+	dw	$009		;
+	dw	$00a		;
+	dw	$00b		;
+	dw	$0da		;
+	dw	$0db		;
+	dw	$0dc		;
+	dw	$0dd		;
+	dw	$0de		;
+	dw	$0df		;
+	dw	$0e0		;
+	dw	$0e1		;
+	dw	$0e2		;
+	dw	$0e3		;
+	dw	$0e4		;
+	dw	$8e1		;
+	dw	$00c		;
+	dw	$00d		;
+	dw	$00e		;
+	dw	$00f		;
+	dw	$0ef		;
+	dw	$0f0		;
+	dw	$0f1		;
+	dw	$0f2		;
+	dw	$0f3		;
+	dw	$0f4		;
+	dw	$0f5		;
+	dw	$0f6		;
+	dw	$0f7		;
+	dw	$957		;0f70	957	????
+	dw	$fff		;0f71	fff	(code looks for 1xxx xxxx xxxx and x1xx xxxx xxxx)
+
+	ORG	$fff
+	JMP	Resets		;Reset
