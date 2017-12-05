@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -12,5 +12,29 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)BearBus.src" />
+    <None Include="$(MSBuildThisFileDirectory)dummy.src" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummy.src" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummyPalette.bak" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummyPalette.lst" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummyPalette.map" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummyPalette.SRC" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummyPalette.sym" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummyWFade.bak" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummyWFade.SRC" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummyWFadeLite.bak" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummyWFadeLite.SRC" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummyWFadeLite2Level.bak" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummyWFadeLite2Level.SRC" />
+    <None Include="$(MSBuildThisFileDirectory)HouseDummyWFadeLiteUltra.SRC" />
+    <None Include="$(MSBuildThisFileDirectory)new.sx.bak1.SRC" />
+    <None Include="$(MSBuildThisFileDirectory)new.sx.src" />
+    <None Include="$(MSBuildThisFileDirectory)Snowman.src" />
+    <None Include="$(MSBuildThisFileDirectory)sx.src" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="$(MSBuildThisFileDirectory)HouseDummyPalette.obj" />
   </ItemGroup>
 </Project>
