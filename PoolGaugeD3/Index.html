@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://d3js.org/d3.v3.min.js" language="JavaScript"></script>
+    <script src="/scripts/liquidFillGauge.js" language="JavaScript"></script>
+    <style>
+        .liquidFillGaugeText {
+            font-family: Helvetica;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <svg id="fillgauge1" width="97%" height="250" onclick="gauge1.update(NewValue());"></svg>
+   
+    <script language="JavaScript">
+        var config1 = liquidFillGaugeDefaultSettings();
+        config1.textVertPosition = 0.25;
+        config1.waveCount = 2;
+        config1.waveAnimateTime = 2000;
+        var gauge1 = loadLiquidFillGauge("fillgauge1", 55, config1);
+
+
+        function NewValue(){
+            if(Math.random() > .5){
+                return Math.round(Math.random()*100);
+            } else {
+                return (Math.random()*100).toFixed(1);
+            }
+        }
+    </script>
+</body>
+</html>

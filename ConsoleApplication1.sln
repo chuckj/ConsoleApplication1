@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApp\ConsoleApplication1.csproj", "{09DEFCE2-5843-4250-8825-9049C0565B64}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -19,6 +19,28 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scenix", "Scenix\Scenix.vcxitems", "{45D41ACC-2C3C-43D2-BC10-02AA73FFC7C8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsDMXTest", "WindowsFormsDMXTest\WindowsFormsDMXTest.csproj", "{038032CF-D3D9-4811-9265-92CBA95873C9}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PoolGaugeD3", "PoolGaugeD3\", "{6F574EFD-6675-4652-8912-2DAEE22E45F1}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.6.1"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_19596"
+		Debug.AspNetCompiler.PhysicalPath = "PoolGaugeD3\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_19596\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_19596"
+		Release.AspNetCompiler.PhysicalPath = "PoolGaugeD3\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_19596\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "19596"
+		SlnRelativePath = "PoolGaugeD3\"
+		DefaultWebSiteLanguage = "Visual C#"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,8 +112,23 @@ Global
 		{038032CF-D3D9-4811-9265-92CBA95873C9}.Release|x64.Build.0 = Release|Any CPU
 		{038032CF-D3D9-4811-9265-92CBA95873C9}.Release|x86.ActiveCfg = Release|Any CPU
 		{038032CF-D3D9-4811-9265-92CBA95873C9}.Release|x86.Build.0 = Release|Any CPU
+		{6F574EFD-6675-4652-8912-2DAEE22E45F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F574EFD-6675-4652-8912-2DAEE22E45F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F574EFD-6675-4652-8912-2DAEE22E45F1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6F574EFD-6675-4652-8912-2DAEE22E45F1}.Debug|x64.Build.0 = Debug|Any CPU
+		{6F574EFD-6675-4652-8912-2DAEE22E45F1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6F574EFD-6675-4652-8912-2DAEE22E45F1}.Debug|x86.Build.0 = Debug|Any CPU
+		{6F574EFD-6675-4652-8912-2DAEE22E45F1}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F574EFD-6675-4652-8912-2DAEE22E45F1}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{6F574EFD-6675-4652-8912-2DAEE22E45F1}.Release|x64.ActiveCfg = Debug|Any CPU
+		{6F574EFD-6675-4652-8912-2DAEE22E45F1}.Release|x64.Build.0 = Debug|Any CPU
+		{6F574EFD-6675-4652-8912-2DAEE22E45F1}.Release|x86.ActiveCfg = Debug|Any CPU
+		{6F574EFD-6675-4652-8912-2DAEE22E45F1}.Release|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E6765236-7ADB-49E8-AD0B-F698F9E23549}
 	EndGlobalSection
 EndGlobal
