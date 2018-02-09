@@ -31,6 +31,7 @@
     <None Include="$(MSBuildThisFileDirectory)ColorEffect5b.spin" />
     <None Include="$(MSBuildThisFileDirectory)ColorEffect6.binary" />
     <None Include="$(MSBuildThisFileDirectory)ColorEffect6.spin" />
+    <None Include="$(MSBuildThisFileDirectory)TreePropellor.spin" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="$(MSBuildThisFileDirectory)FlagSetClear.txt" />

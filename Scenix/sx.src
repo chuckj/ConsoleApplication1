@@ -528,7 +528,7 @@ DMALup:	CLRB	x8255WR					; Pulse
 	SNC						; 
 	  INC	RE					; .  RAM @
 
-	NOP						; 
+	NOP	
 	CLRB	x8255WR					; Pulse
 	JMP	$+1					;
 	JMP	$+1					;
