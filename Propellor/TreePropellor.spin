@@ -14,12 +14,7 @@ CON
         _CLKCLKS = _CLK1MS / _CLKTICKS                  '800
         
 
-        USBRxF = 8                                      'Bit 8 must be an input - USB writer uses MOVS
-        USBWr = 9
-        USBRd = 10
-        USBTxE = 11
-
-        '	Address info uses MOVS instruction - must be outa bits 8..0
+        '	Address info uses MOVS instruction - must be outa pins D8-D0
         TreeA0Bit = 0
         TreeA1Bit = 1
         TreeCS0Bit = 2
@@ -27,7 +22,7 @@ CON
         TreeCS2Bit = 4
         TreeCS3Bit = 5
 
-		'	Data info used MOVD instruction - ,must be bits 17-9
+		'	Data info used MOVD instruction - must be pins D17-D9
         TreeD0Bit = 9
         TreeD1Bit = 10
         TreeD2Bit = 11
@@ -41,15 +36,14 @@ CON
         TreeWr8255Bit = 18
 		TreeZeroCrossBit = 19
 
-        DmxBitOn = 29
-        DmxInBit = 28
+        DmxInBit = 20
 
 
         GblBase = $0
         GblDMXBuffer = GblBase + 0
 		GblDMXStartingSlot = 1
-		GblDMXSlotCnt = 312
-		GblDMXBufferSize = 2 * GblDMXSlotCnt
+		GblDMXSlots = 312
+		GblDMXBufferSize = 2 * GblDMXSlots
 
         GblTreeBuffer = GblDMXBuffer + GblDMXBufferSize
 		GblTreeBufferSize = 39 * 102
@@ -57,7 +51,15 @@ CON
         DmxRcvrCog = 1                              'DMX Receiver cog
         TreeCtlCog = 0								'Tree Control Cog                                
 
-        
+'        
+'	8255a-5 timing rules: (all times minimums)
+'		CS,A1,A0 stable before WR (leading edge) - 0ns
+'		CS,A1,A0 stable after WR - 20ns
+'		WR width - 300ns
+'		D7-D0 valid before WR (trailing edge) - 100ns
+'		D7-D0 valid adter WR - 30ns
+'
+
 Pub Start
 
     lockset(InitLock)
@@ -69,215 +71,6 @@ Pub Start
     coginit(TreeCtlCog, @TreeCtlEntry, 0)                 'Buffer manager service
                                                          
     
-DAT
-
-{{
-          IIIII  N   N  IIIII  TTTTT      /  DDDD   EEEEE  BBBB   U   U   GGGG
-            I    NN  N    I      T       /   D   D  E      B   B  U   U  G   
-            I    N N N    I      T      /    D   D  EEE    BBBB   U   U  G GGG
-            I    N  NN    I      T     /     D   D  E      B   B  U   U  G   G
-          IIIII  N   N  IIIII    T    /      DDDD   EEEEE  BBBB    UUU    GGG
-
-}}
-
-                        org     0
-InitEntry                                        
-
-:zap
-                        sub     iaddr,#4        wz      'Clear (Initial value = $8000)
-                        wrlong  it2,iaddr               '. (Initial value = 0)
-              if_nz     jmp     #:zap                   '. memory
-
-'
-'       Global
-'
-'                       mov     it1,#StateInit          '(Initial value = StateInit)
-                        wrbyte  it1,#GblState
-
-'
-'       Cog
-'
-                        add     iaddr,#GblBase + GblSiz
-                                                                        
-                        mov     icogtab,iaddr
-                        wrword  icogtab,#GblCogTbl
-                        add     iaddr,it3               '(it3 Initial value = CogTblSiz * CogTblCnt)
-
-                        
-
-                        wrword  it1,#GblFreeBgn         'End of allocated space - begin of buffer pool
-
-'                       
-'       Structures complete - let the other cogs run
-'
-                        lockclr iinitlock               'Init complete...
-
-
-'
-'       Wait for all of the protocol cogs to be ready for synchronous start
-'
-                        mov     it1,#ProtoCogCnt
-                        mov     it2,icogtab
-                        add     it2,it5
-
-:lup
-                        rdbyte  it3,it2
-                        cmp     it3,#StateSync  wz
-              if_nz     jmp     #:lup
-
-                        add     it2,#CogTblSiz
-                        djnz    it1,#:lup
-                        
-
-'
-'       Send running indication to serial port
-'
-                        mov     sbuff,#"H"
-                        call    #sender
-                        mov     sbuff,#"i"
-                        call    #sender
-
-                        
-'
-'       Debug code - Serial Transmitter
-'
-
-DbgEntry
-                        or      outa,dtxmask           'idle = 1
-                        or      dira,dtxmask           'Pin30 = output
-
-                        rdword  dCogTab,#GblCogTbl
-
-:cogTop
-                        mov     dCogCnt,#8
-                        mov     dCogCur,dCogTab
-                        jmp     #$+2
-
-:cogLup
-                        add     dCogCur,#CogTblSiz
-                        mov     dDbgTail,dCogCur
-                        add     dDbgTail,#CogDbgTail
-                        rdbyte  dBfrPtr,dDbgTail
-                        mov     dDbgHead,dCogCur
-                        add     dDbgHead,#CogDbgHead
-                        rdbyte  dBfrEnd,dDbgHead
-
-                        cmp     dBfrPtr,dBfrEnd wz
-              if_z      jmp     #:cogNxt                        
-
-                        mov     dtxbuff,#"8"            'Display
-                        sub     dtxbuff,dCogCnt         '. cogid
-                        call    #transmit               
-
-                        mov     dtxbuff,#":"            ':'
-                        call    #transmit
-
-                        mov     dtxbuff,#" "            '<space>'
-                        call    #transmit
-
-:charNxt
-                        mov     dtxbuff,dBfrPtr
-                        add     dtxbuff,dCogCur
-                        add     dtxbuff,#CogDbgBfr
-                        rdbyte  dtxbuff,dtxbuff
-                        call    #transmit
-
-                        add     dBfrPtr,#1
-                        cmpsub  dBfrPtr,#CogDbgBfrSiz
-                        wrbyte  dBfrPtr,dDbgTail
-                        
-                        rdbyte  dBfrEnd,dDbgHead
-
-                        cmp     dBfrPtr,dBfrEnd wz
-              if_nz     jmp     #:charNxt                        
-
-
-                        mov     dtxbuff,#$0d            '<cr>'
-                        call    #transmit
-
-:cogNxt
-                        djnz    dCogCnt,#:cogLup
-                        jmp     #:cogTop
-
-                                                
-transmit
-                        mov     dtxcnt,#10
-                        or      dtxbuff,#$100          'add stoppbit
-                        shl     dtxbuff,#1             'add startbit
-                        mov     dtime,cnt
-                        add     dtime,dbittime
-
-:sendbit
-                        shr     dtxbuff,#1    wc       'test LSB
-                        muxc    outa,dtxmask             'bit=0  or
-                        waitcnt dtime,dbittime         'wait 1 bit
-                        djnz    dtxcnt,#:sendbit        '10 times
-               
-                        waitcnt dtime,dbittime         '2 stopbits
-                        
-transmit_ret            ret
-
-
-sender
-                        cogid   s1
-                        shl     s1,#CogTblShft
-                        rdword  sCogTab,#GblCogTbl
-                        add     sCogTab,s1
-                        mov     sCogDbgHead,sCogTab
-                        add     sCogDbgHead,#CogDbgHead
-                        rdbyte  sBfrPtr,sCogDbgHead
-                        mov     s1,sBfrPtr
-                        add     s1,#CogDbgBfr
-                        add     s1,sCogTab
-                        wrbyte  sbuff,s1
-                        add     sBfrPtr,#1
-                        cmpsub  sBfrPtr,#CogDbgBfrSiz
-                        wrbyte  sBfrPtr,sCogDbgHead
-                                           
-sender_ret              ret
-
-
-sCogDbgHead             long    0
-sCogTab                 long    0
-s1                      long    0
-sbuff                   long    0
-sBfrPtr                 long    0
-
-
-
-
-iinitlock               long    InitLock
-it1                     long    StateInit
-it2                     long    0
-it3                     long    CogTblSiz * CogTblCnt
-it4                     long    ProtoCog * CogTblSiz + CogChanTab
-it5                     long    ProtoCog * CogTblSiz + CogState
-it6                     long    ProtoCog * CogTblSiz + CogTimBas
-it7                     long    DmxTimerCog * CogTblSiz + CogChanTab
-
-iaddr                   long    $8000
-icogtab                 long    0
-ichntab                 long    0
-                        
-
-
-
-dtime                   long    0
-dbittime                long    _CLKFREQ / BAUDRATE
-dtxmask                 long    1 << TXPIN
-dtxcnt                  long    0
-dtxbuff                 long    0
-
-dCogTab                 long    0
-dCogCnt                 long    0
-dCogCur                 long    0
-dDbgHead                long    0
-dDbgTail                long    0
-dBfrPtr                 long    0
-dBfrEnd                 long    0
-
-                        fit     496
-
 DAT
 {{
               DDDD   M   M  X   X         RRRR    CCC   V   V  RRRR
@@ -305,6 +98,7 @@ DmxRcvrEntry
 
 						'		======== set dira for dmxinbit ==============
 
+						andn	dira,inputbits
 
 						mov		ttimbas,cnt
 						add		ttimbas,#_CLK1uS
@@ -350,7 +144,7 @@ mab
 			  if_z		jmp		#break							'Framing error - possilby BREAK
 
 						mov		bufaddr,gbldmxbuffer
-						mov		bufcnt,gbldmxslotcnt
+						mov		bufcnt,gbldmxslots
 
 slots
 :lup
@@ -391,7 +185,10 @@ getbyt_ret				ret
 dmxinmask				long	1 << DmxInBit
 gbldmxbuffer			long	GblDMXBuffer
 gbldmxbuffersize		long	GblDMXBufferSize
-slotcnt					long	GblDMXBufferSize / 2
+gbldmsslots				long	GblDMXSlots
+
+inputbits				long	1 << DmxInBit
+dmxinmask				long	1 << DmxInBit
 
 ttimbas					long	0
 dmxbufaddr				long	0
@@ -426,12 +223,18 @@ TreeCtlEntry
 
 ReadyToGo
 						mov		evenoddflag,#0
+						or		dira,outputbits
+						andn	dira,inputbits
+
 
 '	Get latest values from main RAM, then index the menory array based on value and index, and set the corresponding bits
 
 '
 '	sync to line
 '
+resync
+						mov		debounce,ones					'init to ones
+
 :notzeros
 						test	ina,#zerocross	wc				'debounce
 						rcl		debounce,#1	wz					'. zero-cross - all zeros?
@@ -452,7 +255,7 @@ compute
 '	compute new array
 '
 						mov		bufaddr,buffer					'312
-						mov		bufcnt,buffersizewords			'312	
+						mov		bufcnt,gbldmxlots				'312	
 						mov		arraybase,#array+1				'dsbyte 102*40
 						mov		arraymsk,#$01010101
 
@@ -473,59 +276,66 @@ compute
 						rol		arraymask,#1	wc						'**Slide & save bit shifted into bit 0
 						wrbyte	byt,array						'. corresponding bit there too
 
-		  if_c			add		arraybase,#102					'If carry around, increment base
+			  if_c		add		arraybase,#102					'If carry around, increment base
               
 						djnz	bufcnt,#:lup
 
 '
 '	sync to line
 '
-						neg		debounce,#1						'setup
-:notones
+						mov		debounce,#0						'set to all zeros
+
+:lup
 						test	ina,#zerocross	wc				'debounce
 						rcl		debounce,#1						'. zero-cross
-						add		debounce,#1 nr wz				'all ones?
-			  if_nz		jmp		#:notones
+						cmp		debounce,ones	wz				'all ones?
+			  if_nz		jmp		#:lup
 
 
+						mov		arrayadr,array					'init to GblTreeBuffer + 100
 						xor		evenoddflag,#1	wc
-						mov		arrayaddr,#array+100			'or array+101 (even/add cycles)
-						addx	arrayadr,#0
+						addx	arrayadr,#0						'or array+101 (even/add cycles)
 
 
 blast
-						mov		arraycnt,#39
-						movs	outa,#0
-						mov		loopcnt,#13
-						mov		workadr,arrayadr
-
-						ldbyte	byt,workadr
+						movs	outa,#0							'set chip select 0, A1.A0 = zeros (first port)
+						mov		chipcnt,#13						'set for all 13 chips
+						mov		workadr,arrayadr				'set initial address
+						jmp		#:skip
 
 :lup
-						andn	outa,wr8255
-						movd	outa,byt
-						add		workadr,@102
-						ldbyte	byt,workadr
-						or		outa,wr8255
-						add		outa,#1
+						add		outa,#2							'set to next chip select, A1.A0 to 0b00
 
-						andn	outa,wr8255
-						movd	outa,byt
-						add		workadr,@102
-						nop		'							-- no cost --
-						ldbyte	byt,workadr
-						or		outa,wr8255
-						add		outa,#1
+:skip
+						andn	outa,wr8255						'begin wr
+						ldbyte	byt,workadr						'load first byte
+						movd	outa,byt						'. & send to 8255s
+						add		workadr,@102					'. & increment to next data row
+						nop
+						nop
+						or		outa,wr8255						'end wr
 
-						andn	outa,wr8255
-						movd	outa,byt
-						add		workadr,@102
-						nop		'							-- no cost --
-						ldbyte	byt,workadr
-						or		outa,wr8255
-						add		outa,#2
+						nop
+						add		outa,#1							'set A1.A0 to 0b01
+						andn	outa,wr8255						'begin wr
+						ldbyte	byt,workadr						'load next byte
+						movd	outa,byt						'. & send to 8255s
+						add		workadr,@102					'. & increment to next data row
+						nop
+						nop
+						or		outa,wr8255						'end wr
 
-						djnz	loopcnt,#:lup
+						nop
+						add		outa,#1							'set A1.A0 to 0b10
+						andn	outa,wr8255						'begin wr
+						ldbyte	byt,workadr						'load next byte
+						movd	outa,byt						'. & send to 8255s
+						add		workadr,@102					'. & increment to next data row
+						nop
+						nop
+						or		outa,wr8255						'end wr
+
+						djnz	chipcnt,#:lup					'loop for all 13 chips
 
 						
 						sub		arrayadr,#2
@@ -536,51 +346,64 @@ blast
 
 
 reset
-						movs	outa,#3
-						movd	outa,#$80
-						mov		loopcnt,#13
+						movs	outa,#3							'select first chip, a1&a0=control reg
+						movd	outa,cmd8255init				'cmd = 0x80 - all ports - simple output
+						mov		chipcnt,#13						'set loop for all 13 chips
 
 :lup
-						andn	outa,wr8255
+						andn	outa,wr8255						'begin  write
+						nop		'								'. wait a while (min wr is 300ns = 6 inst)
 						nop		'
 						nop		'
 						nop		'
 						nop		'
 						nop		'
+						or		outa,wr8255						'end write
 						nop		'
-						or		outa,wr8255
-						nop		'
-						add		outa,#4
-						djnz	loopcnt,#:lup
+						add		outa,#4							'next chip
+						djnz	chipcnt,#:lup					'. & init all of them
 
-
-
-
-
-
-
-
-
-
+						jmp		resync							'begin next cycle
 
 
 zero					long	0
 ones					long	-1
 
+bufaddr					long	GblDMXBuffer
+bufcnt					long	GblDMXSlots
+wr2855					long	1 << TreeWr8255Bit
 zerocross				long	1 << TreeZeroCrossBit
-array					long	GblTreeBuffer
+cmd3255init				long	$80						' all 3 ports - simple output
+
+outputbits				long	1 << TreeA0Bit  |
+								1 << TreeA1Bit 	|
+								1 << TreeCS0Bit	|
+								1 << TreeCS1Bit	|
+								1 << TreeCS2Bit	|
+								1 << TreeCS3Bit	|
+								1 << TreeD0Bit 	|
+								1 << TreeD1Bit 	|
+								1 << TreeD2Bit 	|
+								1 << TreeD3Bit 	|
+								1 << TreeD4Bit 	|
+								1 << TreeD5Bit 	|
+								1 << TreeD6Bit 	|
+								1 << TreeD7Bit 	|
+								1 << TreeWr8255Bit
+inputbits				long	1 << TreeZeroCrossBit
+
+
+array					long	GblTreeBuffer+100
 arraysizewords			long	GblTreeBufferSize/2
 buffer					long	GblDMXBuffer
-buffersizewords			long	GblDMXBufferSize/2
-
+gbldmxslots				long	GblDMXSlots
 
 debounce				long	0
-arrayaddr				long	0
-arraycnt				long	0
-bufaddr					long	GblDMXBuffer
-bufcnt					long	GblDMXBufferSize/2
+arrayadr				long	0
+chipcnt					long	0
 
-work					long	0
+workaddr				long	0
+byt						long	0
 
 
                         fit     496
