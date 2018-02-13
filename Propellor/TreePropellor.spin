@@ -101,6 +101,15 @@ DmxRcvrEntry
 						or		dira,doutputbits				'setup i/o
 						andn	dira,dinputbits					'  ports
 
+                        mov		dslotadr,ddmxbuffer
+						mov		dslotcnt,ddmxslots
+:tmp
+                        wrbyte  dslotadr,dslotadr
+                        add     dslotadr,#1
+                        djnz    dslotcnt,#:tmp
+                        jmp     $
+
+
 						mov		dtimbas,cnt						'set for intital 1uS
 						add		dtimbas,#_CLK1uS				'. interval
 
@@ -177,13 +186,13 @@ getbyt
                         waitcnt dtimbas,#_BITTIME				'wait for next bit
 
 						test    ina,ddmxinmask  wz				'move data bit
-						muxz	dbyt,dbitmask						'. into byte
-						shl		dbitmask,#1						'adjust mask
-			  if_nz		djnz	dbitcnt,#:lup					'. No, loop
+						muxnz	dbyt,dbitmask					'. into byte
+						shl		dbitmask,#1                     'adjust mask
+			  	        djnz	dbitcnt,#:lup					'Decrement bit count - if non-zero, loop
 
                         waitcnt dtimbas,#_CLK1uS				'wait for next bit
 
-						test    outa,ddmxinmask  wz				'stop bit?  Z if stop bit missing - possibly BREAK start
+						test    ina,ddmxinmask  wz				'stop bit?  Z if stop bit missing - possibly BREAK start
 getbyt_ret				ret
 
 dinitlock               long    InitLock
@@ -249,7 +258,7 @@ sync
 						mov		tdebounce,tones					'init to ones
 
 :notzeros
-						test	ina,#tzerocross	wc				'debounce
+						test	ina,tzerocross	wc				'debounce
 						rcl		tdebounce,#1	wz				'. zero-cross - all zeros?
 			  if_nz		jmp		#:notzeros						'No - continue
 
@@ -271,7 +280,7 @@ compute
 '
 						mov		tslotadr,tdmxbuffer				'@'dmx data buffer
 						mov		tslotcnt,tdmxslots				'312	
-						mov		tarraybase,tarray101			'GblTreeBuffer+101
+						mov		tarraybase,tarray1  			'GblTreeBuffer+1
 						mov		tarraymask,tarraymaskinit
 
 :lup
@@ -301,7 +310,7 @@ resync
 						mov		tdebounce,#0					'set to all zeros
 
 :lup
-						test	ina,#tzerocross	wc				'debounce
+						test	ina,tzerocross	wc				'debounce
 						rcl		tdebounce,#1					'. zero-cross
 						cmp		tdebounce,tones	wz				'all ones?
 			  if_nz		jmp		#:lup
@@ -312,9 +321,9 @@ resync
 						mov		tinterval,tintervals			'get first one
 						mov		ttimbas,cnt						'. & current time
 
-						mov		tarrayaddr,tarray101			'init to GblTreeBuffer + 100
-						xor		tevenoddflag,#1
-						add		tarrayaddr,tevenoddflag			'or GblTreeBuffer+101 (even/add cycles)
+						mov		tarrayaddr,tarray100			'init to GblTreeBuffer + 100
+						xor		tevenoddflag,#1 wc
+						addx	tarrayaddr,#0       			'. or GblTreeBuffer+101 (even/add cycles)
 						mov		tblastcnt,#50					'50 steps per cycle
 
 blast
@@ -409,7 +418,8 @@ tcmd8255init			long	$80								' all 3 ports - simple output
 tdmxbuffer				long	GblDMXBuffer
 tdmxslots				long	GblDMXSlots
 tarray					long	GblTreeBuffer
-tarray101				long	GblTreeBuffer+101
+tarray1                 long    GblTreeBuffer+1
+tarray100				long	GblTreeBuffer+100
 tarraysizewords			long	GblTreeBufferSize/2
 tarraymaskinit			long	$01010101
 tarraybase				long	0
