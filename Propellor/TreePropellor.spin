@@ -67,7 +67,7 @@ CON
 '		D7-D0 valid adter WR - 30ns
 '
 
-Pub Start
+PUB Start
 
     lockset(InitLock)
 
@@ -107,7 +107,7 @@ DmxRcvrEntry
                         wrbyte  dslotadr,dslotadr
                         add     dslotadr,#1
                         djnz    dslotcnt,#:tmp
-                        jmp     $
+                        jmp     #$
 
 
 						mov		dtimbas,cnt						'set for intital 1uS
@@ -236,6 +236,11 @@ DAT
 '
 
 TreeCtlEntry
+                        or      outa,toutputson                 'setup i/o
+                        andn    outa,toutputsoff                '
+						or		dira,toutputbits				'
+						andn	dira,tinputbits					'  ports
+                        call    #reset
 
 						mov		tslotadr,tdmxbuffer
 						mov		tslotcnt,tdmxslots
@@ -245,9 +250,8 @@ TreeCtlEntry
 						djnz	tslotcnt,#:clear
 
 						lockclr tinitlock						 'Init complete...
-
-						or		dira,toutputbits				'setup i/o
-						andn	dira,tinputbits					'  ports
+                        mov     tdebugtimer,cnt
+                        add     tdebugtimer,tdebughalfcycle
 
 '	Get latest values from main RAM, then index the menory array based on value and index, and set the corresponding bits
 
@@ -262,7 +266,13 @@ sync
 						rcl		tdebounce,#1	wz				'. zero-cross - all zeros?
 			  if_nz		jmp		#:notzeros						'No - continue
 
+                        waitcnt tdebugtimer,tdebughalfcycle
+
 						andn	outa,tphasebit
+
+                        mov     ttimbas,cnt
+                        add     ttimbas,tcomputeidle
+                        waitcnt ttimbas,#0
 
 compute
 '
@@ -296,7 +306,7 @@ compute
 
 						rdbyte	twrk,tarrayaddr					'set
 						or		twrk,tarraymask					'
-						rol		tarraymask,#1	wc					'**Slide & save bit shifted into bit 0
+						rol		tarraymask,#1 wc					'**Slide & save bit shifted into bit 0
 						wrbyte	twrk,tarrayaddr					'. corresponding bit there too
 
 			  if_c		add		tarraybase,#102					'If carry around, increment base
@@ -315,16 +325,22 @@ resync
 						cmp		tdebounce,tones	wz				'all ones?
 			  if_nz		jmp		#:lup
 
-						or		outa,tphasebit
+'                        waitcnt tdebugtimer,tdebughalfcycle
 
+						mov		ttimbas,cnt						'get current time
+                        
+                        or		outa,tphasebit
 						mov		tintervaladr,#tintervals		'get @'time intervals
-						mov		tinterval,tintervals			'get first one
-						mov		ttimbas,cnt						'. & current time
-
 						mov		tarrayaddr,tarray100			'init to GblTreeBuffer + 100
-						xor		tevenoddflag,#1 wc
-						addx	tarrayaddr,#0       			'. or GblTreeBuffer+101 (even/add cycles)
+						xor		tevenoddflag,#1 wz
+			  if_nz     add 	tarrayaddr,#1       			'. or GblTreeBuffer+101 (even/add cycles)
 						mov		tblastcnt,#50					'50 steps per cycle
+                        jmp     #blast
+
+reblast
+						add		tintervaladr,#1
+                        add     ttimbas,twrk
+                        waitcnt ttimbas,#0          '38
 
 blast
 						movs	outa,#0							'set chip select 0, A1.A0 = zeros (first port)
@@ -340,41 +356,42 @@ blast
 						rdbyte	twrk,tworkadr					'load first byte
 						movd	outa,twrk						'. & send to 8255s
 						add		tworkadr,#102					'. & increment to next data row
-						nop
-						nop
+						rdbyte	twrk,tworkadr					'load next byte
 						or		outa,twr8255					'end wr
 
 						nop
 						add		outa,#1							'set A1.A0 to 0b01
 						andn	outa,twr8255					'begin wr
-						rdbyte	twrk,tworkadr					'load next byte
-						movd	outa,twrk						'. & send to 8255s
 						add		tworkadr,#102					'. & increment to next data row
+						movd	outa,twrk						'. & send to 8255s
+						rdbyte	twrk,tworkadr					'load next byte
 						nop
-						nop
+                        nop
 						or		outa,twr8255					'end wr
 
 						nop
 						add		outa,#1							'set A1.A0 to 0b10
 						andn	outa,twr8255					'begin wr
-						rdbyte	twrk,tworkadr					'load next byte
 						movd	outa,twrk						'. & send to 8255s
 						add		tworkadr,#102					'. & increment to next data row
 						nop
 						nop
+						nop
+						nop
 						or		outa,twr8255					'end wr
 
-						djnz	tchipcnt,#:lup					'loop for all 13 chips
+						djnz	tchipcnt,#:lup		'57			'loop for all 13 chips
 						
+                        movs    outa,#$03c                      'deselect all chips
 						sub		tarrayaddr,#2					'adjust array base for next blast
 
-						add		ttimbas,tinterval
-						waitcnt	ttimbas,#0
+						movs	:indx,tintervaladr
+                        nop
+:indx                   mov		twrk,$-$	wz
+			  if_nz     jmp     #reblast
 
-						add		tintervaladr,#1
-						movs	$+1,tintervaladr
-						mov		tinterval,$-$	wz
-			  if_nz		jmp		blast
+                        call    #reset
+                        jmp     #sync                           'start new cycle
 
 reset
 						or		outa,tresetbit
@@ -398,22 +415,28 @@ reset
 
 						andn	outa,tresetbit
 
-						jmp		sync							'begin next cycle
+reset_ret               ret
 
+tdebug                  long    $80000
+tdebugtimer             long 0
+tdebughalfcycle         long    80000000/120
 
 tzero					long	0
 tones					long	-1
 
 tinitlock               long    InitLock
 
-toutputbits				long	(1 << TreeA0Bit)|(1 << TreeA1Bit)|(1 << TreeCS0Bit)|(1 << TreeCS1Bit)|(1 << TreeCS2Bit)	|(1 << TreeCS3Bit)|(1 << TreeD0Bit)|(1 << TreeD1Bit)|(1 << TreeD2Bit)|(1 << TreeD3Bit)|(1 << TreeD4Bit)|(1 << TreeD5Bit)|(1 << TreeD6Bit)|(1 << TreeD7Bit)|(1 << TreeWr8255Bit)|(1 << TreePhaseBit)|(1 << TreeResetBit)
+toutputbits				long	(1 << TreeA0Bit)|(1 << TreeA1Bit)|(1 << TreeCS0Bit)|(1 << TreeCS1Bit)|(1 << TreeCS2Bit)|(1 << TreeCS3Bit)|(1 << TreeD0Bit)|(1 << TreeD1Bit)|(1 << TreeD2Bit)|(1 << TreeD3Bit)|(1 << TreeD4Bit)|(1 << TreeD5Bit)|(1 << TreeD6Bit)|(1 << TreeD7Bit)|(1 << TreeWr8255Bit)|(1 << TreePhaseBit)|(1 << TreeResetBit)
 tinputbits				long	1 << TreeZeroCrossBit
+toutputson              long    (1 << TreeCS0Bit)|(1 << TreeCS1Bit)|(1 << TreeCS2Bit)|(1 << TreeCS3Bit)|(1 << TreeWr8255Bit)   'disable CS, WR off
+toutputsoff             long    (1 << TreePhaseBit)|(1 << TreeResetBit)
 twr8255					long	1 << TreeWr8255Bit
 tzerocross				long	1 << TreeZeroCrossBit
 tphasebit				long	1 << TreePhaseBit
 tresetbit				long	1 << TreeResetBit
 
 tcmd8255init			long	$80								' all 3 ports - simple output
+tcomputeidle            long    666000 - 80000                  ' half-cycle (80M/120) - time to build array)
 
 tdmxbuffer				long	GblDMXBuffer
 tdmxslots				long	GblDMXSlots
@@ -438,59 +461,57 @@ tworkadr				long	0
 twrk					long	0
 
 ttimbas					long	0
-tinterval				long	0
 tintervaladr			long	0
-tintervals				long	6384
-						long	5107
-						long	4469
-						long	3830
-						long	3575
-						long	3575
-						long	3320
-						long	3320
-						long	3064
-						long	3064
-						long	2809
-						long	2809
-						long	2553
-						long	2553
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2298
-						long	2553
-						long	2553
-						long	2809
-						long	2809
-						long	3064
-						long	3064
-						long	3320
-						long	3320
-						long	3575
-						long	3575
-						long	3830
-						long	4469
-						long	5107
-						long	6384
-						long	19153
-						long	0
-
+tintervals				long    76612
+                        long    25536
+                        long    20428
+                        long    17876
+                        long    15320
+                        long    14300
+                        long    14300
+                        long    13280
+                        long    13280
+                        long    12256
+                        long    12256
+                        long    11236
+                        long    11236
+                        long    10212
+                        long    10212
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    9192
+                        long    10212
+                        long    10212
+                        long    11236
+                        long    11236
+                        long    12256
+                        long    12256
+                        long    13280
+                        long    13280
+                        long    14300
+                        long    14300
+                        long    15320
+                        long    17876
+                        long    20428
+                        long    25536
+                        long    0
 
                         fit     496
                         
