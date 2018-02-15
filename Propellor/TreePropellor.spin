@@ -27,7 +27,7 @@ CON
 		TreeCS2Bit = 4
 		TreeCS3Bit = 5
 		
-		'	Tree Data info used MOVD instruction - must be pins D17-D9
+		'	Tree Data info used MOVD instruction - must be outa pins D17-D9
 		TreeD0Bit = 9
 		TreeD1Bit = 10
 		TreeD2Bit = 11
@@ -169,9 +169,6 @@ slots
 						call	#getbyt
 			  if_z		jmp		#break							'Framing error - may be break
 
-			  			cmp		dbyt,#100	wz,wc				'normalize
-			  if_a		mov		dbyt,#100						'. value to <= 100
-
 						wrbyte	dbyt,dslotadr					'write word
 						add		dslotadr,#1						'. & bump @
 						djnz	dslotcnt,#:lup					'no - loop
@@ -251,7 +248,7 @@ TreeCtlEntry
 
 						lockclr tinitlock						 'Init complete...
                         mov     tdebugtimer,cnt
-                        add     tdebugtimer,tdebughalfcycle
+                        add     tdebugtimer,#20
 
 '	Get latest values from main RAM, then index the menory array based on value and index, and set the corresponding bits
 
@@ -262,9 +259,9 @@ sync
 						mov		tdebounce,tones					'init to ones
 
 :notzeros
-						test	ina,tzerocross	wc				'debounce
-						rcl		tdebounce,#1	wz				'. zero-cross - all zeros?
-			  if_nz		jmp		#:notzeros						'No - continue
+'						test	ina,tzerocross	wc				'debounce
+'						rcl		tdebounce,#1	wz				'. zero-cross - all zeros?
+'			  if_nz		jmp		#:notzeros						'No - continue
 
                         waitcnt tdebugtimer,tdebughalfcycle
 
@@ -279,10 +276,10 @@ compute
 '	clear prior array values
 '
 						mov		tarrayaddr,tarray
-						mov		tarraycnt,tarraysizewords
+						mov		tarraycnt,tarraysizelongs
 :clear
-						wrword	tzero,tarrayaddr				'clear
-						add		tarrayaddr,#2					'. the
+						wrlong	tzero,tarrayaddr				'clear
+						add		tarrayaddr,#4					'. the
 						djnz	tarraycnt,#:clear				'.  array
 
 '
@@ -295,14 +292,15 @@ compute
 
 :lup
 						rdbyte	tarrayaddr,tslotadr				'load value
+                        max     tarrayaddr,#100
 						add		tarrayaddr,tarraybase			'. + base
-						add		tslotadr,#1						'bump @
 						
 						rdbyte	twrk,tarrayaddr					'set
 						or		twrk,tarraymask					'
 						wrbyte	twrk,tarrayaddr					'. corresponding bit in byte
 
 						sub		tarrayaddr,#1					'Bump @ to next sequence
+						add		tslotadr,#1						'bump @
 
 						rdbyte	twrk,tarrayaddr					'set
 						or		twrk,tarraymask					'
@@ -320,12 +318,12 @@ resync
 						mov		tdebounce,#0					'set to all zeros
 
 :lup
-						test	ina,tzerocross	wc				'debounce
-						rcl		tdebounce,#1					'. zero-cross
-						cmp		tdebounce,tones	wz				'all ones?
-			  if_nz		jmp		#:lup
+'						test	ina,tzerocross	wc				'debounce
+'						rcl		tdebounce,#1					'. zero-cross
+'						cmp		tdebounce,tones	wz				'all ones?
+'			  if_nz		jmp		#:lup
 
-'                        waitcnt tdebugtimer,tdebughalfcycle
+                        waitcnt tdebugtimer,tdebughalfcycle
 
 						mov		ttimbas,cnt						'get current time
                         
@@ -335,12 +333,6 @@ resync
 						xor		tevenoddflag,#1 wz
 			  if_nz     add 	tarrayaddr,#1       			'. or GblTreeBuffer+101 (even/add cycles)
 						mov		tblastcnt,#50					'50 steps per cycle
-                        jmp     #blast
-
-reblast
-						add		tintervaladr,#1
-                        add     ttimbas,twrk
-                        waitcnt ttimbas,#0          '38
 
 blast
 						movs	outa,#0							'set chip select 0, A1.A0 = zeros (first port)
@@ -380,15 +372,18 @@ blast
 						nop
 						or		outa,twr8255					'end wr
 
-						djnz	tchipcnt,#:lup		'57			'loop for all 13 chips
+						djnz	tchipcnt,#:lup					'loop for all 13 chips
 						
                         movs    outa,#$03c                      'deselect all chips
 						sub		tarrayaddr,#2					'adjust array base for next blast
 
 						movs	:indx,tintervaladr
-                        nop
-:indx                   mov		twrk,$-$	wz
-			  if_nz     jmp     #reblast
+						add		tintervaladr,#1
+:indx                   add     ttimbas,$-$ wz
+                        waitcnt ttimbas,#0          
+
+                        cmp     tintervaladr,#tintervalsdone wz 'done?
+			  if_nz     jmp     #blast
 
                         call    #reset
                         jmp     #sync                           'start new cycle
@@ -396,8 +391,8 @@ blast
 reset
 						or		outa,tresetbit
 
-						movs	outa,#3							'select first chip, a1&a0=control reg
 						movd	outa,tcmd8255init				'cmd = 0x80 - all ports - simple output
+						movs	outa,#3							'select first chip, a1&a0=control reg
 						mov		tchipcnt,#13					'set loop for all 13 chips
 
 :lup
@@ -413,6 +408,7 @@ reset
 						add		outa,#4							'next chip
 						djnz	tchipcnt,#:lup					'. & init all of them
 
+                        movs    outa,#$03c                      'deselect all chips
 						andn	outa,tresetbit
 
 reset_ret               ret
@@ -443,7 +439,7 @@ tdmxslots				long	GblDMXSlots
 tarray					long	GblTreeBuffer
 tarray1                 long    GblTreeBuffer+1
 tarray100				long	GblTreeBuffer+100
-tarraysizewords			long	GblTreeBufferSize/2
+tarraysizelongs			long	GblTreeBufferSize/4
 tarraymaskinit			long	$01010101
 tarraybase				long	0
 tarraycnt				long	0	
@@ -462,56 +458,57 @@ twrk					long	0
 
 ttimbas					long	0
 tintervaladr			long	0
-tintervals				long    76612
-                        long    25536
-                        long    20428
-                        long    17876
-                        long    15320
-                        long    14300
-                        long    14300
-                        long    13280
-                        long    13280
-                        long    12256
-                        long    12256
-                        long    11236
-                        long    11236
-                        long    10212
-                        long    10212
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    9192
-                        long    10212
-                        long    10212
-                        long    11236
-                        long    11236
-                        long    12256
-                        long    12256
-                        long    13280
-                        long    13280
-                        long    14300
-                        long    14300
-                        long    15320
-                        long    17876
-                        long    20428
-                        long    25536
-                        long    0
+tintervals				long    97951
+                        long    26550
+                        long    19106
+                        long    15563
+                        long    13432
+                        long    11990
+                        long    10942
+                        long    10144
+                        long    9518
+                        long    9015
+                        long    8601
+                        long    8255
+                        long    7970
+                        long    7723
+                        long    7520
+                        long    7343
+                        long    7192
+                        long    7069
+                        long    6960
+                        long    6875
+                        long    6805
+                        long    6748
+                        long    6709
+                        long    6682
+                        long    6669
+                        long    6669
+                        long    6682
+                        long    6709
+                        long    6749
+                        long    6805
+                        long    6874
+                        long    6962
+                        long    7067
+                        long    7194
+                        long    7342
+                        long    7519
+                        long    7724
+                        long    7969
+                        long    8258
+                        long    8600
+                        long    9015
+                        long    9516
+                        long    10146
+                        long    10941
+                        long    11988
+                        long    13432
+                        long    15564
+                        long    19108
+                        long    26550
+                        long    26550
+tintervalsdone          long    0
 
                         fit     496
                         
