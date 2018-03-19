@@ -11,7 +11,7 @@ function liquidFillGaugeDefaultSettings(){
         maxValue: 100, // The gauge maximum value.
         circleThickness: 0.05, // The outer circle thickness as a percentage of it's radius.
         circleFillGap: 0.05, // The size of the gap between the outer circle and wave circle as a percentage of the outer circles radius.
-        circleColor: "#178BCA", // The color of the outer circle.
+        circleColor: "#ff00", // The color of the outer circle.
         waveHeight: 0.05, // The wave height as a percentage of the radius of the wave circle.
         waveCount: 1, // The number of full waves per width of the wave circle.
         waveRiseTime: 1000, // The amount of time in milliseconds for the wave to rise from 0 to it's final height.
@@ -30,6 +30,7 @@ function liquidFillGaugeDefaultSettings(){
     };
 }
 
+var clr = 0;
 function loadLiquidFillGauge(elementId, value, config) {
     if(config == null) config = liquidFillGaugeDefaultSettings();
 
@@ -53,7 +54,9 @@ function loadLiquidFillGauge(elementId, value, config) {
     var textPixels = (config.textSize*radius/2);
     var textFinalValue = parseFloat(value).toFixed(2);
     var textStartValue = config.valueCountUp?config.minValue:textFinalValue;
-    var percentText = config.displayPercent?"&deg;":"";
+    var percentText = config.displayPercent ? "&deg;" : "";
+    var bigvee = "&Downarrow;"; //"&bigvee;"
+    var bigwedge = "&Uparrow;"; //"&bigwedge;";
     var circleThickness = config.circleThickness * radius;
     var circleFillGap = config.circleFillGap * radius;
     var fillCircleMargin = circleThickness + circleFillGap;
@@ -115,12 +118,13 @@ function loadLiquidFillGauge(elementId, value, config) {
         .innerRadius(gaugeCircleY(radius-circleThickness));
     gaugeGroup.append("path")
         .attr("d", gaugeCircleArc)
-        .style("fill", config.circleColor)
+        .style("fill", config.circleColor + ("0" + clr.toString(16)).slice(-2))
         .attr('transform','translate('+radius+','+radius+')');
+    clr++;
 
     // Text where the wave does not overlap.
     var text1 = gaugeGroup.append("text")
-        .html(textRounder(textStartValue) + percentText)
+        .html(textRounder(textStartValue) + percentText + bigwedge)
         .attr("class", "liquidFillGaugeText")
         .attr("text-anchor", "middle")
         .attr("font-size", textPixels + "px")
@@ -128,12 +132,12 @@ function loadLiquidFillGauge(elementId, value, config) {
         .attr('transform','translate('+radius+','+textRiseScaleY(config.textVertPosition)+')');
 
     var text1airtemp = gaugeGroup.append("text")
-        .html('90' + percentText)
+        .html('90' + percentText + bigvee) //<i class='fas fa-arrow-up'></i>")
         .attr("class", "liquidFillGaugeText")
         .attr("text-anchor", "middle")
         .attr("font-size", textPixels + "px")
         .style("fill", config.textColor)
-        .attr('transform', 'translate(' + radius + ',' + textRiseScaleY(.75) + ')');
+        .attr('transform', 'translate(' + radius + ',' + textRiseScaleY(.80) + ')');
 
     // The clipping wave area.
     var clipArea = d3.svg.area()
@@ -159,7 +163,7 @@ function loadLiquidFillGauge(elementId, value, config) {
 
     // Text where the wave does overlap.
     var text2 = fillCircleGroup.append("text")
-        .html(textRounder(textStartValue) + percentText)
+        .html(textRounder(textStartValue) + percentText + bigwedge)
         .attr("class", "liquidFillGaugeText")
         .attr("text-anchor", "middle")
         .attr("font-size", textPixels + "px")
