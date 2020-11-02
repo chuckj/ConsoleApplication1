@@ -464,11 +464,11 @@
       <line pt1="-12.5,234,-8" pt2="-12.5,234,224" color="Hidden" />
       <line pt1="611.5,237.5,37" pt2="611.5,327.5,212" color="Hidden" />
 
-      <!--<rgb row="0" col="0" repeat="28" rowinc="1" pt="132.5,330,-4" ptoffset="0,0,8" class="ridge roof"/> --><!-- addition --><!--
-      <rgb row="0" col="0" repeat="61" rowinc="1" pt="613,330,217" ptoffset="-8,0,0" class="ridge roof"/> --><!-- main --><!--
-      <rgb row="0" col="0" repeat="32" rowinc="1" pt="275,238,38" ptoffset="-4.475,3,5.6" class="valley roof"/> --><!-- valley --><!--
-      <rgb row="0" col="0" repeat="30" rowinc="1" pt="-14,234,-8" ptoffset="0,0,8" class="facia leftside"/> --><!-- addition - left side --><!--
-      <rgb row="0" col="0" repeat="26" rowinc="1" pt="613,237.5,37" ptoffset="0,3.6,7" class="facia rightside"/> --><!-- main roof - right edge -->
+      <!-- --><rgb row="0" col="0" repeat="28" rowinc="1" pt="132.5,330,-4" ptoffset="0,0,8" class="ridge roof"/> <!-- --><!-- addition -->
+      <!-- --><rgb row="0" col="0" repeat="61" rowinc="1" pt="613,330,217" ptoffset="-8,0,0" class="ridge roof"/> <!-- --><!-- main -->
+      <!-- --><rgb row="0" col="0" repeat="32" rowinc="1" pt="275,238,38" ptoffset="-4.475,3,5.6" class="valley roof"/> <!-- --><!-- valley -->
+      <!-- --><rgb row="0" col="0" repeat="30" rowinc="1" pt="-14,234,-8" ptoffset="0,0,8" class="facia leftside"/> <!-- --><!-- addition - left side -->
+      <!-- --><rgb row="0" col="0" repeat="26" rowinc="1" pt="613,237.5,37" ptoffset="0,3.6,7" class="facia rightside"/> <!-- --><!-- main roof - right edge -->
     </View>
 
     <View nm="upperroof" offset="0,0,0">
